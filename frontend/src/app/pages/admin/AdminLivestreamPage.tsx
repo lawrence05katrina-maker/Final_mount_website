@@ -195,15 +195,15 @@ export const AdminLivestreamPage: React.FC = () => {
 
   const getStatusBadge = (stream: LivestreamData) => {
     if (stream.is_active) {
-      return <Badge className="bg-red-600 text-white">Live</Badge>;
+      return <Badge className="bg-red-600 text-white border-0">Live</Badge>;
     }
     if (stream.is_scheduled && stream.scheduled_at && new Date(stream.scheduled_at) > new Date()) {
-      return <Badge className="bg-blue-600 text-white">Scheduled</Badge>;
+      return <Badge className="bg-blue-600 text-white border-0">Scheduled</Badge>;
     }
     if (stream.ended_at) {
-      return <Badge variant="outline" className="border-gray-300 text-gray-600">Ended</Badge>;
+      return <Badge className="bg-gray-200 text-gray-600 border-0">Ended</Badge>;
     }
-    return <Badge variant="outline" className="border-gray-300 text-gray-600">Draft</Badge>;
+    return <Badge className="bg-gray-200 text-gray-600 border-0">Draft</Badge>;
   };
 
   if (loading) {
@@ -241,7 +241,7 @@ export const AdminLivestreamPage: React.FC = () => {
 
       {/* Stats Cards */}
       <div className="grid md:grid-cols-4 gap-6 mb-8">
-        <Card>
+        <Card className="border-0 shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -253,7 +253,7 @@ export const AdminLivestreamPage: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-0 shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -267,7 +267,7 @@ export const AdminLivestreamPage: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-0 shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -281,7 +281,7 @@ export const AdminLivestreamPage: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-0 shadow-sm">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -442,7 +442,7 @@ export const AdminLivestreamPage: React.FC = () => {
         ) : (
           <div className="grid gap-4">
             {livestreams.map((stream) => (
-              <Card key={stream.id} className="border-l-4 border-l-green-500">
+              <Card key={stream.id} className="border-0 shadow-sm border-l-4 border-l-green-500">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -496,7 +496,8 @@ export const AdminLivestreamPage: React.FC = () => {
                     <div className="flex items-center gap-2 ml-4">
                       <Button
                         size="sm"
-                        variant="outline"
+                        variant="ghost"
+                        className="bg-gray-100 hover:bg-gray-200"
                         onClick={() => window.open(stream.stream_url, '_blank')}
                       >
                         <ExternalLink className="w-4 h-4" />
@@ -504,7 +505,8 @@ export const AdminLivestreamPage: React.FC = () => {
                       
                       <Button
                         size="sm"
-                        variant="outline"
+                        variant="ghost"
+                        className="bg-gray-100 hover:bg-gray-200"
                         onClick={() => handleEdit(stream)}
                       >
                         <Edit className="w-4 h-4" />
@@ -513,8 +515,8 @@ export const AdminLivestreamPage: React.FC = () => {
                       {stream.is_active ? (
                         <Button
                           size="sm"
-                          variant="outline"
-                          className="border-red-200 text-red-700 hover:bg-red-50"
+                          variant="ghost"
+                          className="bg-red-100 text-red-700 hover:bg-red-200"
                           onClick={() => handleEnd(stream.id)}
                         >
                           <Square className="w-4 h-4" />
@@ -522,8 +524,8 @@ export const AdminLivestreamPage: React.FC = () => {
                       ) : (
                         <Button
                           size="sm"
-                          variant="outline"
-                          className="border-green-200 text-green-700 hover:bg-green-50"
+                          variant="ghost"
+                          className="bg-green-100 text-green-700 hover:bg-green-200"
                           onClick={() => handleStart(stream.id)}
                           disabled={stream.ended_at !== null}
                         >
@@ -533,8 +535,8 @@ export const AdminLivestreamPage: React.FC = () => {
                       
                       <Button
                         size="sm"
-                        variant="outline"
-                        className="border-red-200 text-red-700 hover:bg-red-50"
+                        variant="ghost"
+                        className="bg-red-100 text-red-700 hover:bg-red-200"
                         onClick={() => handleDelete(stream.id)}
                       >
                         <Trash2 className="w-4 h-4" />

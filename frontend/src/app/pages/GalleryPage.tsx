@@ -84,7 +84,7 @@ interface GalleryItem {
   is_featured: boolean;
   file_type: string;
   created_at: string;
-  type?: 'photo' | 'video'; // Add type for photos/videos
+  type?: 'photo' | 'video'; 
 }
 
 interface VideoItem {
@@ -296,25 +296,27 @@ export const GalleryPage: React.FC = () => {
 
         {/* Animated Filter Tabs */}
         <div className={`flex justify-center mb-8 ${isVisible ? 'animate-scaleIn stagger-2' : 'opacity-0'}`}>
-          <div className="flex bg-gray-100 rounded-lg p-1 gap-1 shadow-sm hover-glow">
+          <div className="flex bg-green-50 rounded-lg p-1 gap-1 shadow-sm hover-glow border border-green-100">
             <button
               onClick={() => setActiveTab('all')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 transform hover:scale-105 ${
+              className={`px-6 py-3 rounded-md text-sm font-medium transition-all duration-200 transform hover:scale-105 ${
                 activeTab === 'all'
-                  ? 'bg-green-600 text-white shadow-md scale-105 tab-shimmer'
-                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-200'
+                  ? 'bg-green-600 hover:bg-green-700 text-white shadow-md scale-105 tab-shimmer !bg-green-600'
+                  : 'text-green-700 hover:text-green-800 hover:bg-green-100 bg-transparent'
               }`}
+              style={activeTab === 'all' ? { backgroundColor: '#16a34a', color: 'white' } : {}}
             >
               All
             </button>
             
             <button
               onClick={() => setActiveTab('photos')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-2 transform hover:scale-105 ${
+              className={`px-6 py-3 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-2 transform hover:scale-105 ${
                 activeTab === 'photos'
-                  ? 'bg-green-600 text-white shadow-md scale-105 tab-shimmer'
-                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-200'
+                  ? 'bg-green-600 hover:bg-green-700 text-white shadow-md scale-105 tab-shimmer !bg-green-600'
+                  : 'text-green-700 hover:text-green-800 hover:bg-green-100 bg-transparent'
               }`}
+              style={activeTab === 'photos' ? { backgroundColor: '#16a34a', color: 'white' } : {}}
             >
               <svg 
                 className={`w-4 h-4 transition-transform duration-200 ${
@@ -333,11 +335,12 @@ export const GalleryPage: React.FC = () => {
             
             <button
               onClick={() => setActiveTab('videos')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-2 transform hover:scale-105 ${
+              className={`px-6 py-3 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-2 transform hover:scale-105 ${
                 activeTab === 'videos'
-                  ? 'bg-green-600 text-white shadow-md scale-105 tab-shimmer'
-                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-200'
+                  ? 'bg-green-600 hover:bg-green-700 text-white shadow-md scale-105 tab-shimmer !bg-green-600'
+                  : 'text-green-700 hover:text-green-800 hover:bg-green-100 bg-transparent'
               }`}
+              style={activeTab === 'videos' ? { backgroundColor: '#16a34a', color: 'white' } : {}}
             >
               <svg 
                 className={`w-4 h-4 transition-transform duration-200 ${

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, LayoutDashboard, IndianRupee, Calendar, Radio, Image, MapPin, MessageCircle, FileText, LogOut, Heart, Megaphone, Home } from 'lucide-react';
+import { Menu, X, LayoutDashboard, IndianRupee, Calendar, Radio, Image, MapPin, MessageCircle, FileText, LogOut, Heart, Megaphone, Home, Users } from 'lucide-react';
 import { Button } from './ui/button';
 import { useShrineAuth } from '../context/ShrineAuthContext';
 
@@ -19,7 +19,8 @@ export const AdminNavigation: React.FC = () => {
     { path: '/admin/testimonies', label: 'Testimonies', shortLabel: 'Testimonies', icon: MessageCircle },
     { path: '/admin/gallery', label: 'Gallery', shortLabel: 'Gallery', icon: Image },
     { path: '/admin/livestream', label: 'Livestream', shortLabel: 'Stream', icon: Radio },
-    { path: '/admin/homepage-announcements', label: 'Homepage Announcements', shortLabel: 'Homepage', icon: Home },
+    { path: '/admin/announcements', label: 'Announcements', shortLabel: 'Announcements', icon: Megaphone },
+    { path: '/admin/management', label: 'Management Team', shortLabel: 'Management', icon: Users },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -140,7 +141,7 @@ export const AdminNavigation: React.FC = () => {
       </nav>
 
       {/* Custom scrollbar styles */}
-      <style jsx>{`
+      <style>{`
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;

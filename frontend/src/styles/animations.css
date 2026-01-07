@@ -253,3 +253,58 @@
   color: white;
   box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
 }
+
+/* Mobile-specific optimizations */
+@media (max-width: 640px) {
+  .card-hover:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .gallery-item:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Reduce animation intensity on mobile for better performance */
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+  
+  .animate-pulse-custom {
+    animation: pulse 3s ease-in-out infinite;
+  }
+}
+
+/* Touch-friendly button sizing */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Improved text readability on mobile */
+@media (max-width: 640px) {
+  .text-responsive {
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+  }
+}
+
+/* Mobile video player optimizations */
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
+/* Prevent zoom on double tap for video controls */
+.video-controls {
+  touch-action: manipulation;
+  user-select: none;
+}
+
+/* Mobile-friendly spacing */
+@media (max-width: 640px) {
+  .mobile-spacing {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}

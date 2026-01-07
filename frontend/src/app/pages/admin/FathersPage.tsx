@@ -83,6 +83,85 @@ const FathersPage: React.FC = () => {
         <Section title="Son of Soils" data={sonsOfSoil} />
         <Section title="Deacons" data={deacons} />
       </div>
+
+      <style>{`
+        .fathers-page {
+          padding: 2.5rem 1.5rem;
+          max-width: 1400px;
+          margin: auto;
+          font-family: "Inter", "Segoe UI", sans-serif;
+          background: #f7faf7;
+        }
+
+        h1 {
+          font-size: 2rem;
+          font-weight: 600;
+          margin-bottom: 2rem;
+          color: #1f3d2b;
+          border-left: 5px solid #2f6b3f;
+          padding-left: 0.75rem;
+        }
+
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: 1.75rem;
+        }
+
+        .section-card {
+          background: #ffffff;
+          border-radius: 14px;
+          padding: 1.5rem;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+          border-top: 4px solid #2f6b3f;
+        }
+
+        .section-card h3 {
+          margin-bottom: 1rem;
+          font-size: 1.15rem;
+          color: #2f6b3f;
+          font-weight: 600;
+        }
+
+        ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        li {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.55rem 0;
+          border-bottom: 1px dashed #e2e8e2;
+          font-size: 0.9rem;
+        }
+
+        li:last-child {
+          border-bottom: none;
+        }
+
+        li span {
+          font-weight: 500;
+          color: #1f2937;
+        }
+
+        li em {
+          font-style: normal;
+          font-size: 0.8rem;
+          color: #6b7280;
+          white-space: nowrap;
+        }
+
+        @media (max-width: 640px) {
+          li {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+          }
+        }
+      `}</style>
     </div>
   );
 };

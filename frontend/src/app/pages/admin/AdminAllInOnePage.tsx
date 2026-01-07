@@ -378,7 +378,7 @@ export const AdminAllInOnePage: React.FC = () => {
                           <div className="flex gap-2">
                             <Button
                               size="sm"
-                              onClick={() => handleStatusChange(String(testimony.id), "approved")}
+                              onClick={() => handleStatusChange(testimony.id, "approved")}
                               className="bg-green-700 hover:bg-green-800"
                             >
                               <Check className="w-4 h-4 mr-1" />
@@ -388,7 +388,7 @@ export const AdminAllInOnePage: React.FC = () => {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => handleStatusChange(String(testimony.id), "rejected")}
+                              onClick={() => handleStatusChange(testimony.id, "rejected")}
                               className="border-red-600 text-red-600 hover:bg-red-50"
                             >
                               <X className="w-4 h-4 mr-1" />

@@ -123,12 +123,6 @@ export const PublicFooter: React.FC = () => {
           </p>
         </div>
       </div>
-
-      {/* Floating animation for background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-4 -right-4 w-24 h-24 bg-green-800/20 rounded-full animate-pulse"></div>
-        <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-green-800/10 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
-      </div>
     </footer>
   );
 };

@@ -139,7 +139,12 @@ class GalleryApi {
       return response.data;
     } catch (error) {
       console.error('Error deleting gallery item:', error);
-      throw this.handleError(error);
+      
+      // Return error object instead of throwing to prevent multiple error messages
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to delete gallery item'
+      };
     }
   }
 

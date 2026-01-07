@@ -136,7 +136,7 @@ export const AdminPrayerRequestsPage: React.FC = () => {
 
         {/* Stats Cards */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <Card>
+          <Card className="border-0 shadow-sm">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -148,7 +148,7 @@ export const AdminPrayerRequestsPage: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-0 shadow-sm">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -162,7 +162,7 @@ export const AdminPrayerRequestsPage: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-0 shadow-sm">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -176,7 +176,7 @@ export const AdminPrayerRequestsPage: React.FC = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-0 shadow-sm">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -194,7 +194,7 @@ export const AdminPrayerRequestsPage: React.FC = () => {
         </div>
 
         {/* Filters */}
-        <Card className="mb-6">
+        <Card className="mb-6 border-0 shadow-sm">
           <CardContent className="pt-6">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
@@ -229,7 +229,7 @@ export const AdminPrayerRequestsPage: React.FC = () => {
         {/* Prayer Requests List */}
         <div className="space-y-4">
           {filteredRequests.map(request => (
-            <Card key={request.id} className="hover:shadow-md transition-shadow">
+            <Card key={request.id} className="hover:shadow-md transition-shadow border-0 shadow-sm">
               <CardContent className="pt-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -264,8 +264,9 @@ export const AdminPrayerRequestsPage: React.FC = () => {
 
                   <div className="flex items-center gap-2 ml-4">
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
+                      className="bg-gray-100 hover:bg-gray-200"
                       onClick={() => setSelectedRequest(request)}
                     >
                       <Eye className="w-4 h-4" />
@@ -284,8 +285,9 @@ export const AdminPrayerRequestsPage: React.FC = () => {
                     
                     {request.status === 'prayed' && (
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
+                        className="bg-blue-100 text-blue-700 hover:bg-blue-200"
                         onClick={() => updateRequestStatus(request.id, 'archived')}
                       >
                         <XCircle className="w-4 h-4 mr-1" />
@@ -294,10 +296,10 @@ export const AdminPrayerRequestsPage: React.FC = () => {
                     )}
 
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
+                      className="bg-red-100 text-red-600 hover:bg-red-200"
                       onClick={() => setDeleteConfirm(request.id)}
-                      className="text-red-600 hover:text-red-700"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -388,7 +390,8 @@ export const AdminPrayerRequestsPage: React.FC = () => {
                   
                   {selectedRequest.status === 'prayed' && (
                     <Button
-                      variant="outline"
+                      variant="ghost"
+                      className="bg-blue-100 text-blue-700 hover:bg-blue-200"
                       onClick={() => {
                         updateRequestStatus(selectedRequest.id, 'archived');
                         setSelectedRequest(null);
@@ -415,7 +418,7 @@ export const AdminPrayerRequestsPage: React.FC = () => {
                 Are you sure you want to delete this prayer request? This action cannot be undone.
               </p>
               <div className="flex gap-2 justify-end">
-                <Button variant="outline" onClick={() => setDeleteConfirm(null)}>
+                <Button variant="ghost" className="bg-gray-100 hover:bg-gray-200" onClick={() => setDeleteConfirm(null)}>
                   Cancel
                 </Button>
                 <Button

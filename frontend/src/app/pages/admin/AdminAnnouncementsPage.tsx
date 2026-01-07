@@ -212,15 +212,15 @@ export const AdminAnnouncementsPage: React.FC = () => {
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case 'urgent':
-        return <Badge className="bg-red-100 text-red-800">Urgent</Badge>;
+        return <Badge className="bg-red-100 text-red-800 border-0">Urgent</Badge>;
       case 'high':
-        return <Badge className="bg-orange-100 text-orange-800">High</Badge>;
+        return <Badge className="bg-orange-100 text-orange-800 border-0">High</Badge>;
       case 'normal':
-        return <Badge className="bg-blue-100 text-blue-800">Normal</Badge>;
+        return <Badge className="bg-blue-100 text-blue-800 border-0">Normal</Badge>;
       case 'low':
-        return <Badge className="bg-gray-100 text-gray-800">Low</Badge>;
+        return <Badge className="bg-gray-100 text-gray-800 border-0">Low</Badge>;
       default:
-        return <Badge variant="outline">{priority}</Badge>;
+        return <Badge className="bg-gray-100 text-gray-800 border-0">{priority}</Badge>;
     }
   };
 
@@ -267,72 +267,82 @@ export const AdminAnnouncementsPage: React.FC = () => {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="border-green-200">
+          <Card className="border-0 shadow-sm bg-green-50">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-gray-600">Total</p>
-                <Megaphone className="w-5 h-5 text-green-700" />
+                <p className="text-sm text-green-700">Total</p>
+                <Megaphone className="w-5 h-5 text-green-600" />
               </div>
-              <p className="text-2xl font-bold text-gray-800">{statusCounts.all}</p>
+              <p className="text-2xl font-bold text-green-800">{statusCounts.all}</p>
+              <p className="text-xs text-green-600 mt-1">All announcements</p>
             </CardContent>
           </Card>
 
-          <Card className="border-green-200">
+          <Card className="border-0 shadow-sm bg-blue-50">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-gray-600">Active</p>
-                <Eye className="w-5 h-5 text-green-600" />
+                <p className="text-sm text-blue-700">Active</p>
+                <Eye className="w-5 h-5 text-blue-600" />
               </div>
-              <p className="text-2xl font-bold text-gray-800">{statusCounts.active}</p>
+              <p className="text-2xl font-bold text-blue-800">{statusCounts.active}</p>
+              <p className="text-xs text-blue-600 mt-1">Visible to public</p>
             </CardContent>
           </Card>
 
-          <Card className="border-red-200">
+          <Card className="border-0 shadow-sm bg-red-50">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-gray-600">Inactive</p>
+                <p className="text-sm text-red-700">Inactive</p>
                 <EyeOff className="w-5 h-5 text-red-600" />
               </div>
-              <p className="text-2xl font-bold text-gray-800">{statusCounts.inactive}</p>
+              <p className="text-2xl font-bold text-red-800">{statusCounts.inactive}</p>
+              <p className="text-xs text-red-600 mt-1">Hidden from public</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Filter Buttons */}
-        <div className="flex flex-wrap gap-3 mb-8">
-          {[
-            { key: 'all', label: 'All', count: statusCounts.all },
-            { key: 'active', label: 'Active', count: statusCounts.active },
-            { key: 'inactive', label: 'Inactive', count: statusCounts.inactive },
-          ].map(({ key, label, count }) => (
-            <Button
-              key={key}
-              variant={filter === key ? 'default' : 'outline'}
-              onClick={() => setFilter(key)}
-              className={filter === key ? 'bg-green-700 hover:bg-green-800' : 'border-green-200 hover:border-green-700'}
-            >
-              {label} ({count})
-            </Button>
-          ))}
-        </div>
+        <Card className="mb-6 border-0 shadow-sm bg-green-50">
+          <CardContent className="p-6">
+            <div className="flex flex-wrap gap-3">
+              {[
+                { key: 'all', label: 'All', count: statusCounts.all },
+                { key: 'active', label: 'Active', count: statusCounts.active },
+                { key: 'inactive', label: 'Inactive', count: statusCounts.inactive },
+              ].map(({ key, label, count }) => (
+                <Button
+                  key={key}
+                  variant={filter === key ? 'default' : 'ghost'}
+                  onClick={() => setFilter(key)}
+                  className={filter === key 
+                    ? 'bg-green-600 hover:bg-green-700 text-white' 
+                    : 'bg-white text-green-700 hover:bg-green-100 border-0'
+                  }
+                >
+                  {label} ({count})
+                </Button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Announcements List */}
         {filteredAnnouncements.length > 0 ? (
           <div className="space-y-6">
             {filteredAnnouncements.map(announcement => (
-              <Card key={announcement.id} className="border-green-200 hover:shadow-lg transition-shadow">
+              <Card key={announcement.id} className="border-0 shadow-sm hover:shadow-lg transition-shadow bg-white">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-xl font-semibold text-gray-800">{announcement.title}</h3>
+                        <h3 className="text-xl font-semibold text-gray-900">{announcement.title}</h3>
                         <div className="flex items-center gap-2">
                           {getPriorityBadge(announcement.priority)}
-                          <Badge className="bg-green-100 text-green-800 capitalize">
+                          <Badge className="bg-green-100 text-green-800 border-0 capitalize">
                             {announcement.announcement_type}
                           </Badge>
                           {!announcement.is_active && (
-                            <Badge variant="outline" className="text-red-600 border-red-200">
+                            <Badge className="bg-red-100 text-red-700 border-0">
                               Inactive
                             </Badge>
                           )}
@@ -360,30 +370,30 @@ export const AdminAnnouncementsPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-end gap-2 pt-4 border-t">
+                  <div className="flex items-center justify-end gap-2 pt-4 border-t border-gray-100">
                     <Button
                       size="sm"
-                      variant="outline"
+                      variant="ghost"
                       onClick={() => handleToggleActive(announcement.id)}
-                      className="border-green-200 text-green-700 hover:bg-green-50"
+                      className="bg-green-100 text-green-700 hover:bg-green-200 border-0"
                     >
                       {announcement.is_active ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </Button>
                     
                     <Button
                       size="sm"
-                      variant="outline"
+                      variant="ghost"
                       onClick={() => handleEdit(announcement)}
-                      className="border-blue-200 text-blue-700 hover:bg-blue-50"
+                      className="bg-blue-100 text-blue-700 hover:bg-blue-200 border-0"
                     >
                       <Edit className="w-4 h-4" />
                     </Button>
                     
                     <Button
                       size="sm"
-                      variant="outline"
+                      variant="ghost"
                       onClick={() => setDeleteConfirm(announcement.id)}
-                      className="border-red-200 text-red-700 hover:bg-red-50"
+                      className="bg-red-100 text-red-700 hover:bg-red-200 border-0"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -393,9 +403,11 @@ export const AdminAnnouncementsPage: React.FC = () => {
             ))}
           </div>
         ) : (
-          <Card className="border-green-200">
+          <Card className="border-0 shadow-sm bg-green-50">
             <CardContent className="p-12 text-center">
-              <Megaphone className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Megaphone className="w-10 h-10 text-green-600" />
+              </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">No announcements found</h3>
               <p className="text-gray-600 mb-6">
                 {filter === 'all' 
@@ -437,6 +449,7 @@ export const AdminAnnouncementsPage: React.FC = () => {
                   value={formData.title}
                   onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                   placeholder="Enter announcement title"
+                  className="border-0 bg-white focus:ring-2 focus:ring-green-400"
                   required
                 />
               </div>
@@ -448,6 +461,7 @@ export const AdminAnnouncementsPage: React.FC = () => {
                   value={formData.content}
                   onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
                   placeholder="Enter announcement content"
+                  className="border-0 bg-white focus:ring-2 focus:ring-green-400"
                   rows={6}
                   required
                 />
@@ -457,7 +471,7 @@ export const AdminAnnouncementsPage: React.FC = () => {
                 <div>
                   <Label htmlFor="type">Type</Label>
                   <Select value={formData.announcement_type} onValueChange={(value) => setFormData(prev => ({ ...prev, announcement_type: value }))}>
-                    <SelectTrigger>
+                    <SelectTrigger className="border-0 bg-white focus:ring-2 focus:ring-green-400">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -473,7 +487,7 @@ export const AdminAnnouncementsPage: React.FC = () => {
                 <div>
                   <Label htmlFor="priority">Priority</Label>
                   <Select value={formData.priority} onValueChange={(value) => setFormData(prev => ({ ...prev, priority: value }))}>
-                    <SelectTrigger>
+                    <SelectTrigger className="border-0 bg-white focus:ring-2 focus:ring-green-400">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -495,6 +509,7 @@ export const AdminAnnouncementsPage: React.FC = () => {
                     type="date"
                     value={formData.start_date}
                     onChange={(e) => setFormData(prev => ({ ...prev, start_date: e.target.value }))}
+                    className="border-0 bg-white focus:ring-2 focus:ring-green-400"
                   />
                 </div>
 
@@ -505,6 +520,7 @@ export const AdminAnnouncementsPage: React.FC = () => {
                     type="date"
                     value={formData.end_date}
                     onChange={(e) => setFormData(prev => ({ ...prev, end_date: e.target.value }))}
+                    className="border-0 bg-white focus:ring-2 focus:ring-green-400"
                   />
                 </div>
               </div>
@@ -518,15 +534,16 @@ export const AdminAnnouncementsPage: React.FC = () => {
                 <Label htmlFor="is_active">Active (visible to public)</Label>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t">
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="ghost"
                   onClick={() => {
                     setShowAddDialog(false);
                     setEditingAnnouncement(null);
                     resetForm();
                   }}
+                  className="bg-gray-100 hover:bg-gray-200"
                 >
                   Cancel
                 </Button>

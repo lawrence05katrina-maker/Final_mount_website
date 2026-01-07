@@ -32,7 +32,8 @@ import { AdminLivestreamPage } from './pages/admin/AdminLivestreamPage';
 import { AdminAllInOnePage } from './pages/admin/AdminAllInOnePage';
 import { AdminPrayerRequestsPage } from './pages/admin/AdminPrayerRequestsPage';
 import { AdminAnnouncementsPage } from './pages/admin/AdminAnnouncementsPage';
-import { AdminHomepageAnnouncementsPage } from './pages/admin/AdminHomepageAnnouncementsPage';
+import { AdminManagementPage } from './pages/admin/AdminManagementPage';
+import { ManagementPage } from './pages/ManagementPage';
 import FathersPage from './pages/admin/FathersPage';
 
 // Payment Page
@@ -173,6 +174,12 @@ const AppContent = () => {
         </PublicLayout>
       } />
       
+      <Route path="/management" element={
+        <PublicLayout>
+          <ManagementPage />
+        </PublicLayout>
+      } />
+      
       <Route path="/payment" element={
         <PublicLayout>
           <PaymentPage />
@@ -274,10 +281,10 @@ const AppContent = () => {
         </ProtectedRoute>
       } />
       
-      <Route path="/admin/homepage-announcements" element={
+      <Route path="/admin/management" element={
         <ProtectedRoute>
           <AdminLayout>
-            <AdminHomepageAnnouncementsPage />
+            <AdminManagementPage />
           </AdminLayout>
         </ProtectedRoute>
       } />

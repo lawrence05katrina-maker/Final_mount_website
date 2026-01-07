@@ -245,19 +245,19 @@ export const LiveStreamPage: React.FC = () => {
   }, [siteContent?.youtubeUrl]);
 
   return (
-    <div className="min-h-screen py-16 px-4 bg-gradient-to-br from-green-50 to-blue-50">
+    <div className="min-h-screen py-8 sm:py-16 px-4 bg-gradient-to-br from-green-50 to-blue-50">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className={`flex items-center justify-center gap-3 mb-6 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
+        <div className="text-center mb-8 sm:mb-12">
+          <div className={`flex flex-col sm:flex-row items-center justify-center gap-3 mb-4 sm:mb-6 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
             <div className="p-3 bg-gradient-to-r from-green-600 to-blue-600 rounded-full animate-float">
-              <Radio className="w-8 h-8 text-white" />
+              <Radio className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-green-800 to-blue-800 bg-clip-text text-transparent">
+            <h1 className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-green-800 to-blue-800 bg-clip-text text-transparent text-center">
               Live Mass Stream
             </h1>
           </div>
-          <p className={`text-gray-700 max-w-2xl mx-auto text-lg ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
+          <p className={`text-gray-700 max-w-2xl mx-auto text-base sm:text-lg px-4 ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
             Join us for live streaming of Holy Mass and special ceremonies from Devasahayam Mount Shrine
           </p>
           {loading && !dataLoaded && (
@@ -267,13 +267,13 @@ export const LiveStreamPage: React.FC = () => {
 
         {/* Active Stream Section */}
         {activeStream ? (
-          <div className={`mb-12 ${isVisible ? 'animate-scaleIn stagger-1' : 'opacity-0'}`}>
-            <div className="flex items-center gap-2 mb-6">
-              <Badge className="bg-red-600 text-white px-3 py-1 text-sm font-medium animate-pulse-custom">
+          <div className={`mb-8 sm:mb-12 ${isVisible ? 'animate-scaleIn stagger-1' : 'opacity-0'}`}>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
+              <Badge className="bg-red-600 text-white px-3 py-1 text-sm font-medium animate-pulse-custom w-fit">
                 <div className="w-2 h-2 bg-white rounded-full animate-pulse mr-2"></div>
                 LIVE NOW
               </Badge>
-              <div className="flex items-center gap-1 text-gray-600">
+              <div className="flex items-center gap-1 text-gray-600 text-sm sm:text-base">
                 <Users className="w-4 h-4" />
                 <span>{activeStream.viewer_count} watching</span>
               </div>
@@ -282,7 +282,7 @@ export const LiveStreamPage: React.FC = () => {
             <Card className="border-2 border-red-200 shadow-2xl overflow-hidden card-hover">
               <CardContent className="p-0">
                 {/* Video Player */}
-                <div className={`relative ${isFullscreen ? 'fixed inset-0 z-50 bg-black' : 'aspect-video'}`}>
+                <div className={`relative ${isFullscreen ? 'fixed inset-0 z-50 bg-black' : 'aspect-video'} touch-manipulation`}>
                   <iframe
                     src={getYouTubeEmbedUrl(activeStream.stream_url)}
                     title={activeStream.title}
@@ -293,60 +293,62 @@ export const LiveStreamPage: React.FC = () => {
                     referrerPolicy="strict-origin-when-cross-origin"
                   />
                   
-                  {/* Enhanced Video Controls Overlay */}
-                  <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between bg-black bg-opacity-70 rounded-lg p-3">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-2 text-white text-sm">
-                        <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                        <span>LIVE</span>
+                  {/* Enhanced Video Controls Overlay - Mobile optimized */}
+                  <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 right-2 sm:right-4 flex items-center justify-between bg-black bg-opacity-70 rounded-lg p-2 sm:p-3">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="flex items-center gap-1 sm:gap-2 text-white text-xs sm:text-sm">
+                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full animate-pulse"></div>
+                        <span className="hidden xs:inline">LIVE</span>
+                        <span className="xs:hidden">●</span>
                       </div>
-                      <div className="flex items-center gap-1 text-white text-sm">
-                        <Users className="w-4 h-4" />
-                        <span>{activeStream.viewer_count}</span>
+                      <div className="flex items-center gap-1 text-white text-xs sm:text-sm">
+                        <Users className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <span className="hidden xs:inline">{activeStream.viewer_count}</span>
+                        <span className="xs:hidden">{activeStream.viewer_count > 999 ? `${Math.floor(activeStream.viewer_count/1000)}k` : activeStream.viewer_count}</span>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 sm:gap-2">
                       <Button 
                         size="sm" 
                         variant="ghost" 
-                        className="text-white hover:bg-white hover:bg-opacity-20"
+                        className="text-white hover:bg-white hover:bg-opacity-20 p-1 sm:p-2 h-6 w-6 sm:h-8 sm:w-8"
                         onClick={() => handleShare(activeStream)}
                         title="Share stream"
                       >
-                        <Share2 className="w-4 h-4" />
+                        <Share2 className="w-3 h-3 sm:w-4 sm:h-4" />
                       </Button>
                       <Button 
                         size="sm" 
                         variant="ghost" 
-                        className="text-white hover:bg-white hover:bg-opacity-20"
+                        className="text-white hover:bg-white hover:bg-opacity-20 p-1 sm:p-2 h-6 w-6 sm:h-8 sm:w-8"
                         onClick={() => openInYouTube(activeStream)}
                         title="Open in YouTube (for chat and full features)"
                       >
-                        <ExternalLink className="w-4 h-4" />
+                        <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
                       </Button>
                       <Button 
                         size="sm" 
                         variant="ghost" 
-                        className="text-white hover:bg-white hover:bg-opacity-20"
+                        className="text-white hover:bg-white hover:bg-opacity-20 p-1 sm:p-2 h-6 w-6 sm:h-8 sm:w-8 hidden sm:flex"
                         onClick={() => setIsFullscreen(!isFullscreen)}
                         title="Toggle fullscreen"
                       >
-                        <Maximize className="w-4 h-4" />
+                        <Maximize className="w-3 h-3 sm:w-4 sm:h-4" />
                       </Button>
                     </div>
                   </div>
                 </div>
 
                 {/* Stream Info */}
-                <div className="p-6 bg-gradient-to-r from-red-50 to-pink-50">
-                  <div className="flex items-start justify-between mb-4">
+                <div className="p-4 sm:p-6 bg-gradient-to-r from-red-50 to-pink-50">
+                  <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 mb-4">
                     <div className="flex-1">
-                      <h2 className="text-2xl font-bold text-gray-900 mb-2">{activeStream.title}</h2>
+                      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">{activeStream.title}</h2>
                       {activeStream.description && (
-                        <p className="text-gray-700 mb-3">{activeStream.description}</p>
+                        <p className="text-gray-700 mb-3 text-sm sm:text-base">{activeStream.description}</p>
                       )}
-                      <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 mb-3">
                         <div className="flex items-center gap-1">
                           <Clock className="w-4 h-4" />
                           <span>Started {activeStream.started_at ? formatTime(activeStream.started_at) : 'recently'}</span>
@@ -359,39 +361,39 @@ export const LiveStreamPage: React.FC = () => {
                       
                       {/* YouTube Features Notice */}
                       <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                        <p className="text-sm text-blue-800">
+                        <p className="text-xs sm:text-sm text-blue-800">
                           <strong>💡 Tip:</strong> Click "Chat on YouTube" or "Full Features" to access live chat, 
                           super chat, and all YouTube interactive features!
                         </p>
                       </div>
                     </div>
                     
-                    <div className="flex flex-col sm:flex-row gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="border-red-200 text-red-700 hover:bg-red-50"
+                        className="border-red-200 text-red-700 hover:bg-red-50 text-xs sm:text-sm"
                         onClick={() => handleShare(activeStream)}
                       >
-                        <Share2 className="w-4 h-4 mr-1" />
+                        <Share2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                         Share
                       </Button>
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="border-red-200 text-red-700 hover:bg-red-50"
+                        className="border-red-200 text-red-700 hover:bg-red-50 text-xs sm:text-sm"
                         onClick={() => openInYouTube(activeStream)}
                       >
-                        <MessageCircle className="w-4 h-4 mr-1" />
+                        <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                         Chat on YouTube
                       </Button>
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="border-red-200 text-red-700 hover:bg-red-50"
+                        className="border-red-200 text-red-700 hover:bg-red-50 text-xs sm:text-sm"
                         onClick={() => openInYouTube(activeStream)}
                       >
-                        <ExternalLink className="w-4 h-4 mr-1" />
+                        <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                         Full Features
                       </Button>
                     </div>
@@ -402,14 +404,14 @@ export const LiveStreamPage: React.FC = () => {
           </div>
         ) : (
           /* No Active Stream */
-          <div className={`mb-12 ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
+          <div className={`mb-8 sm:mb-12 ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
             <Card className="border-green-200 bg-gradient-to-r from-green-50 to-blue-50 card-hover">
-              <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-float">
-                  <Radio className="w-8 h-8 text-green-600" />
+              <CardContent className="p-6 sm:p-8 text-center">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-float">
+                  <Radio className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">No Live Stream Currently</h3>
-                <p className="text-gray-600 mb-4">Check back during mass times or special events</p>
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">No Live Stream Currently</h3>
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">Check back during mass times or special events</p>
                 <QuickNotifyButton 
                   streamTitle="Live Mass Streams" 
                   streamTime="Get notified when we go live"
@@ -421,38 +423,38 @@ export const LiveStreamPage: React.FC = () => {
 
         {/* Upcoming Streams */}
         {upcomingStreams.length > 0 && (
-          <div className={`mb-12 ${isVisible ? 'animate-slideInLeft stagger-1' : 'opacity-0'}`}>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <Calendar className="w-6 h-6 text-green-600 animate-float" />
+          <div className={`mb-8 sm:mb-12 ${isVisible ? 'animate-slideInLeft stagger-1' : 'opacity-0'}`}>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center gap-2 px-2 sm:px-0">
+              <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 animate-float" />
               Upcoming Streams
             </h2>
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid gap-4 sm:gap-6 sm:grid-cols-2">
               {upcomingStreams.map((stream, index) => (
                 <Card key={stream.id} className={`border-green-200 hover:shadow-lg transition-shadow card-hover ${isVisible ? `animate-scaleIn stagger-${index + 2}` : 'opacity-0'}`}>
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div>
-                        <h3 className="font-semibold text-gray-900 mb-2">{stream.title}</h3>
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4 mb-4">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">{stream.title}</h3>
                         {stream.description && (
-                          <p className="text-sm text-gray-600 mb-3">{stream.description}</p>
+                          <p className="text-xs sm:text-sm text-gray-600 mb-3">{stream.description}</p>
                         )}
                       </div>
-                      <Badge variant="outline" className="border-green-200 text-green-700">
+                      <Badge variant="outline" className="border-green-200 text-green-700 text-xs w-fit">
                         {stream.scheduled_at ? getTimeUntilStream(stream.scheduled_at) : 'Soon'}
                       </Badge>
                     </div>
                     
-                    <div className="flex items-center justify-between">
-                      <div className="text-sm text-gray-600">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div className="text-xs sm:text-sm text-gray-600">
                         <div className="flex items-center gap-1">
                           <Clock className="w-4 h-4" />
-                          <span>{stream.scheduled_at ? formatDateTime(stream.scheduled_at) : 'Time TBA'}</span>
+                          <span className="break-words">{stream.scheduled_at ? formatDateTime(stream.scheduled_at) : 'Time TBA'}</span>
                         </div>
                       </div>
                       <QuickNotifyButton 
                         streamTitle={stream.title}
                         streamTime={stream.scheduled_at ? formatDateTime(stream.scheduled_at) : 'Time TBA'}
-                        className="text-sm h-8 px-3 border-green-200 text-green-700 hover:bg-green-50 bg-transparent border"
+                        className="text-xs h-8 px-3 border-green-200 text-green-700 hover:bg-green-50 bg-transparent border w-fit"
                       />
                     </div>
                   </CardContent>
@@ -463,22 +465,22 @@ export const LiveStreamPage: React.FC = () => {
         )}
 
         {/* Mass Timings */}
-        <div className={`grid md:grid-cols-2 gap-6 mb-12 ${isVisible ? 'animate-slideInRight stagger-1' : 'opacity-0'}`}>
+        <div className={`grid gap-4 sm:gap-6 lg:grid-cols-2 mb-8 sm:mb-12 ${isVisible ? 'animate-slideInRight stagger-1' : 'opacity-0'}`}>
           <Card className="border-green-200 card-hover">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-green-800">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-green-800 text-lg sm:text-xl">
                 <Clock className="w-5 h-5 animate-float" />
                 Daily Mass Timings
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-0">
               <div className="space-y-3">
                 {DEFAULT_MASS_TIMINGS.map((mass, index) => (
                   <div key={index} className={`flex justify-between items-center p-3 rounded-lg ${
                     mass.type === 'sunday' ? 'bg-blue-50' : 'bg-green-50'
                   }`}>
-                    <span className="text-gray-700 font-medium">{mass.name}</span>
-                    <Badge variant="outline" className={`${
+                    <span className="text-gray-700 font-medium text-sm sm:text-base">{mass.name}</span>
+                    <Badge variant="outline" className={`text-xs sm:text-sm ${
                       mass.type === 'sunday' ? 'border-blue-200 text-blue-700' : 'border-green-200 text-green-700'
                     }`}>
                       {mass.time}
@@ -490,18 +492,18 @@ export const LiveStreamPage: React.FC = () => {
           </Card>
 
           <Card className="border-green-200 card-hover">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-green-800">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-green-800 text-lg sm:text-xl">
                 <Calendar className="w-5 h-5 animate-float" style={{animationDelay: '0.5s'}} />
                 Special Events
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-0">
               <div className="space-y-3">
                 {DEFAULT_SPECIAL_EVENTS.map((event, index) => (
                   <div key={index} className="p-3 bg-green-50 rounded-lg">
-                    <p className="font-medium text-gray-900 mb-1">{event.name}</p>
-                    <p className="text-sm text-gray-600">{event.date}</p>
+                    <p className="font-medium text-gray-900 mb-1 text-sm sm:text-base">{event.name}</p>
+                    <p className="text-xs sm:text-sm text-gray-600">{event.date}</p>
                   </div>
                 ))}
               </div>
@@ -511,12 +513,12 @@ export const LiveStreamPage: React.FC = () => {
 
         {/* Recent Streams */}
         {recentStreams.length > 0 && (
-          <div className={`mb-12 ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <Play className="w-6 h-6 text-green-600 animate-pulse-custom" />
+          <div className={`mb-8 sm:mb-12 ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center gap-2 px-2 sm:px-0">
+              <Play className="w-5 h-5 sm:w-6 sm:h-6 text-green-600 animate-pulse-custom" />
               Recent Streams
             </h2>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {recentStreams.map((stream, index) => (
                 <Card key={stream.id} className={`border-green-200 hover:shadow-lg transition-shadow group card-hover ${isVisible ? `animate-scaleIn stagger-${index + 3}` : 'opacity-0'}`}>
                   <CardContent className="p-0">
@@ -529,23 +531,23 @@ export const LiveStreamPage: React.FC = () => {
                           loading="lazy"
                         />
                         <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Play className="w-8 h-8 text-white" />
+                          <Play className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                         </div>
                       </div>
                     ) : (
                       <div className="aspect-video bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center rounded-t-lg">
-                        <Radio className="w-12 h-12 text-green-600" />
+                        <Radio className="w-8 h-8 sm:w-12 sm:h-12 text-green-600" />
                       </div>
                     )}
                     
-                    <div className="p-4">
-                      <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{stream.title}</h3>
-                      <div className="flex items-center justify-between text-sm text-gray-600">
+                    <div className="p-3 sm:p-4">
+                      <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 text-sm sm:text-base">{stream.title}</h3>
+                      <div className="flex items-center justify-between text-xs sm:text-sm text-gray-600">
                         <div className="flex items-center gap-1">
-                          <Eye className="w-4 h-4" />
+                          <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
                           <span>{stream.max_viewers} views</span>
                         </div>
-                        <span>{stream.started_at ? formatTime(stream.started_at) : 'Recently'}</span>
+                        <span className="text-xs">{stream.started_at ? formatTime(stream.started_at) : 'Recently'}</span>
                       </div>
                     </div>
                   </CardContent>
@@ -557,20 +559,20 @@ export const LiveStreamPage: React.FC = () => {
 
         {/* YouTube Channel Link */}
         <Card className={`border-green-200 bg-gradient-to-r from-green-50 to-blue-50 card-hover ${isVisible ? 'animate-scaleIn stagger-1' : 'opacity-0'}`}>
-          <CardContent className="p-8 text-center">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">
+          <CardContent className="p-6 sm:p-8 text-center">
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
               Visit Our YouTube Channel
             </h3>
-            <p className="text-gray-700 mb-6">
+            <p className="text-gray-700 mb-4 sm:mb-6 text-sm sm:text-base px-2 sm:px-0">
               Subscribe to our channel for notifications about upcoming streams and access to recorded masses
             </p>
-            <Button asChild className="bg-red-600 hover:bg-red-700 animate-pulse-custom">
+            <Button asChild className="bg-red-600 hover:bg-red-700 animate-pulse-custom text-sm sm:text-base px-4 sm:px-6">
               <a
                 href={youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <ExternalLink className="w-4 h-4 mr-2" />
+                <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                 Visit YouTube Channel
               </a>
             </Button>
@@ -578,37 +580,37 @@ export const LiveStreamPage: React.FC = () => {
         </Card>
 
         {/* Important Notes */}
-        <Card className={`border-green-200 bg-green-50 mt-8 card-hover ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
-          <CardContent className="pt-6">
-            <h4 className="text-green-800 mb-4 font-semibold">Important Information</h4>
-            <ul className="space-y-2 text-gray-700 text-sm">
+        <Card className={`border-green-200 bg-green-50 mt-6 sm:mt-8 card-hover ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
+          <CardContent className="p-4 sm:pt-6 sm:px-6 sm:pb-6">
+            <h4 className="text-green-800 mb-3 sm:mb-4 font-semibold text-base sm:text-lg">Important Information</h4>
+            <ul className="space-y-2 sm:space-y-3 text-gray-700 text-xs sm:text-sm">
               <li className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                Live streaming is available during scheduled mass times
+                <span className="leading-relaxed">Live streaming is available during scheduled mass times</span>
               </li>
               <li className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                For full YouTube features (live chat, super chat, reactions), click "Chat on YouTube" or "Full Features"
+                <span className="leading-relaxed">For full YouTube features (live chat, super chat, reactions), click "Chat on YouTube" or "Full Features"</span>
               </li>
               <li className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                Check our YouTube channel for recorded masses if you miss the live stream
+                <span className="leading-relaxed">Check our YouTube channel for recorded masses if you miss the live stream</span>
               </li>
               <li className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                For special ceremonies and feast day celebrations, check our announcements
+                <span className="leading-relaxed">For special ceremonies and feast day celebrations, check our announcements</span>
               </li>
               <li className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                You can participate in prayers and responses from wherever you are
+                <span className="leading-relaxed">You can participate in prayers and responses from wherever you are</span>
               </li>
               <li className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                Feel free to leave your prayer intentions in the YouTube live chat
+                <span className="leading-relaxed">Feel free to leave your prayer intentions in the YouTube live chat</span>
               </li>
               <li className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                Use the share button to invite family and friends to join the live mass
+                <span className="leading-relaxed">Use the share button to invite family and friends to join the live mass</span>
               </li>
             </ul>
           </CardContent>

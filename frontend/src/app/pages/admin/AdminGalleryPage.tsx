@@ -32,6 +32,64 @@ import {
 import GalleryApi from '../../../api/galleryApi';
 import { toast } from 'sonner';
 
+// Helper function to get video thumbnail
+const getVideoThumbnail = (videoUrl: string, title: string): string => {
+  console.log('Getting thumbnail for video URL:', videoUrl);
+  
+  // Check if it's a YouTube URL
+  if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+    let videoId = '';
+    
+    if (videoUrl.includes('/embed/')) {
+      videoId = videoUrl.split('/embed/')[1]?.split('?')[0];
+    } else if (videoUrl.includes('watch?v=')) {
+      videoId = videoUrl.split('v=')[1]?.split('&')[0];
+    } else if (videoUrl.includes('youtu.be/')) {
+      videoId = videoUrl.split('youtu.be/')[1]?.split('?')[0];
+    }
+    
+    console.log('Extracted video ID:', videoId);
+    
+    if (videoId) {
+      const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+      console.log('Generated thumbnail URL:', thumbnailUrl);
+      return thumbnailUrl;
+    }
+  }
+  
+  // For local video files or other video URLs, return null to use gradient background
+  console.log('Using gradient background for non-YouTube video');
+  return '';
+};
+
+// Helper function to create video thumbnail component
+const VideoThumbnail: React.FC<{ item: GalleryItem; className?: string }> = ({ item, className = "w-full h-full" }) => {
+  const [thumbnailError, setThumbnailError] = useState(false);
+  const thumbnailUrl = getVideoThumbnail(item.image_url, item.title);
+  
+  if (!thumbnailUrl || thumbnailError) {
+    // Show gradient background with video info for non-YouTube videos
+    return (
+      <div className={`${className} bg-gradient-to-br from-purple-900 via-purple-800 to-purple-700 flex flex-col items-center justify-center text-white p-4`}>
+        <div className="text-center">
+          <Video className="w-12 h-12 mx-auto mb-3 opacity-80" />
+          <h4 className="font-medium text-sm mb-1 line-clamp-2">{item.title}</h4>
+          <p className="text-xs opacity-75 capitalize">{item.category} Video</p>
+        </div>
+      </div>
+    );
+  }
+  
+  return (
+    <img
+      src={thumbnailUrl}
+      alt={item.title}
+      className={`${className} object-cover`}
+      onError={() => setThumbnailError(true)}
+    />
+  );
+};
+
 // Helper function to get full image URL
 const getImageUrl = (imageUrl: string | null | undefined): string => {
   if (!imageUrl) return 'https://images.unsplash.com/photo-1758517936201-cb4b8fd39e71?w=400&h=300&fit=crop';
@@ -235,6 +293,10 @@ export const AdminGalleryPage: React.FC = () => {
         }
       } else {
         // Handle file upload
+        if (!formData.file) {
+          throw new Error('No file selected');
+        }
+        
         const isVideo = formData.file.type.startsWith('video/');
         
         if (isVideo) {
@@ -318,7 +380,7 @@ export const AdminGalleryPage: React.FC = () => {
         loadGalleryItems();
         loadStats();
       } else {
-        toast.error('Failed to delete item');
+        toast.error(response.message || 'Failed to delete item');
       }
     } catch (error) {
       console.error('Delete error:', error);
@@ -410,10 +472,10 @@ export const AdminGalleryPage: React.FC = () => {
           
           <div className="flex items-center gap-3">
             <Button 
-              variant="outline"
+              variant="ghost"
               size="sm"
               onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-              className="border-green-200 text-green-700 hover:bg-green-50"
+              className="bg-green-100 text-green-700 hover:bg-green-200"
             >
               {viewMode === 'grid' ? <List className="w-4 h-4" /> : <Grid3X3 className="w-4 h-4" />}
             </Button>
@@ -431,70 +493,70 @@ export const AdminGalleryPage: React.FC = () => {
         {/* Stats Cards */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <Card className="border-green-200">
+            <Card className="border-0 shadow-sm bg-green-50">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm text-gray-600">Total Items</p>
-                  <ImageIcon className="w-5 h-5 text-green-700" />
+                  <p className="text-sm text-green-700">Total Items</p>
+                  <ImageIcon className="w-5 h-5 text-green-600" />
                 </div>
-                <p className="text-2xl text-gray-800">{stats.total}</p>
-                <p className="text-xs text-gray-500 mt-1">All media files</p>
+                <p className="text-2xl text-green-800">{stats.total}</p>
+                <p className="text-xs text-green-600 mt-1">All media files</p>
               </CardContent>
             </Card>
 
-            <Card className="border-green-200">
+            <Card className="border-0 shadow-sm bg-blue-50">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm text-gray-600">Active</p>
-                  <CheckCircle2 className="w-5 h-5 text-green-700" />
+                  <p className="text-sm text-blue-700">Active</p>
+                  <CheckCircle2 className="w-5 h-5 text-blue-600" />
                 </div>
-                <p className="text-2xl text-gray-800">{stats.active}</p>
-                <p className="text-xs text-gray-500 mt-1">Visible to public</p>
+                <p className="text-2xl text-blue-800">{stats.active}</p>
+                <p className="text-xs text-blue-600 mt-1">Visible to public</p>
               </CardContent>
             </Card>
 
-            <Card className="border-green-200">
+            <Card className="border-0 shadow-sm bg-yellow-50">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm text-gray-600">Featured</p>
+                  <p className="text-sm text-yellow-700">Featured</p>
                   <Star className="w-5 h-5 text-yellow-600" />
                 </div>
-                <p className="text-2xl text-gray-800">{stats.featured}</p>
-                <p className="text-xs text-gray-500 mt-1">Highlighted items</p>
+                <p className="text-2xl text-yellow-800">{stats.featured}</p>
+                <p className="text-xs text-yellow-600 mt-1">Highlighted items</p>
               </CardContent>
             </Card>
 
-            <Card className="border-green-200">
+            <Card className="border-0 shadow-sm bg-purple-50">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm text-gray-600">Categories</p>
-                  <Filter className="w-5 h-5 text-green-700" />
+                  <p className="text-sm text-purple-700">Categories</p>
+                  <Filter className="w-5 h-5 text-purple-600" />
                 </div>
-                <p className="text-2xl text-gray-800">{Object.keys(stats.categories || {}).length}</p>
-                <p className="text-xs text-gray-500 mt-1">Different types</p>
+                <p className="text-2xl text-purple-800">{Object.keys(stats.categories || {}).length}</p>
+                <p className="text-xs text-purple-600 mt-1">Different types</p>
               </CardContent>
             </Card>
           </div>
         )}
 
         {/* Filters */}
-        <Card className="mb-6 border-green-200">
+        <Card className="mb-6 border-0 shadow-sm bg-green-50">
           <CardContent className="p-6">
             <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-500 w-4 h-4" />
                   <Input
                     placeholder="Search gallery items..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 border-green-200 focus:border-green-400"
+                    className="pl-10 border-0 bg-white focus:ring-2 focus:ring-green-400"
                   />
                 </div>
               </div>
               
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-full lg:w-48 border-green-200 focus:border-green-400">
+                <SelectTrigger className="w-full lg:w-48 border-0 bg-white focus:ring-2 focus:ring-green-400">
                   <SelectValue placeholder="Filter by category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -514,22 +576,20 @@ export const AdminGalleryPage: React.FC = () => {
         {viewMode === 'grid' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredItems.map(item => (
-              <Card key={item.id} className="group overflow-hidden border-green-200 hover:shadow-lg transition-shadow">
+              <Card key={item.id} className="group overflow-hidden border-0 shadow-sm hover:shadow-lg transition-shadow bg-white">
                 <div className="relative aspect-square bg-gray-100">
                   {item.file_type === 'video' ? (
                     <div className="relative w-full h-full">
-                      <video
-                        src={getImageUrl(item.image_url)}
-                        className="w-full h-full object-cover"
-                        muted
-                        preload="metadata"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                        <div className="p-3 bg-white bg-opacity-20 rounded-full">
+                      <VideoThumbnail item={item} />
+                      
+                      {/* Play button overlay */}
+                      <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                        <div className="p-3 bg-white bg-opacity-20 rounded-full backdrop-blur-sm">
                           <Play className="w-8 h-8 text-white" />
                         </div>
                       </div>
-                      <Badge className="absolute top-2 left-2 bg-purple-600 text-white">
+                      
+                      <Badge className="absolute top-2 left-2 bg-purple-600 text-white border-0">
                         <Video className="w-3 h-3 mr-1" />
                         Video
                       </Badge>
@@ -541,7 +601,7 @@ export const AdminGalleryPage: React.FC = () => {
                         alt={item.title}
                         className="w-full h-full object-cover"
                       />
-                      <Badge className="absolute top-2 left-2 bg-blue-600 text-white">
+                      <Badge className="absolute top-2 left-2 bg-blue-600 text-white border-0">
                         <FileImage className="w-3 h-3 mr-1" />
                         Image
                       </Badge>
@@ -551,12 +611,12 @@ export const AdminGalleryPage: React.FC = () => {
                   {/* Status Badges */}
                   <div className="absolute top-2 right-2 flex gap-1">
                     {item.is_featured && (
-                      <Badge className="bg-yellow-500 text-white">
+                      <Badge className="bg-yellow-500 text-white border-0">
                         <Star className="w-3 h-3" />
                       </Badge>
                     )}
                     {!item.is_active && (
-                      <Badge variant="secondary" className="bg-gray-500 text-white">
+                      <Badge className="bg-gray-500 text-white border-0">
                         <EyeOff className="w-3 h-3" />
                       </Badge>
                     )}
@@ -567,23 +627,23 @@ export const AdminGalleryPage: React.FC = () => {
                     <div className="flex gap-2">
                       <Button
                         size="sm"
-                        variant="outline"
-                        className="bg-white text-gray-800 hover:bg-gray-100"
+                        variant="ghost"
+                        className="bg-white text-green-700 hover:bg-green-50"
                         onClick={() => handleToggleActive(item.id)}
                       >
                         {item.is_active ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </Button>
                       <Button
                         size="sm"
-                        variant="outline"
-                        className="bg-white text-gray-800 hover:bg-gray-100"
+                        variant="ghost"
+                        className="bg-white text-yellow-700 hover:bg-yellow-50"
                         onClick={() => handleToggleFeatured(item.id)}
                       >
                         {item.is_featured ? <StarOff className="w-4 h-4" /> : <Star className="w-4 h-4" />}
                       </Button>
                       <Button
                         size="sm"
-                        variant="outline"
+                        variant="ghost"
                         className="bg-white text-red-600 hover:bg-red-50"
                         onClick={() => setDeleteConfirm(item.id)}
                       >
@@ -599,7 +659,7 @@ export const AdminGalleryPage: React.FC = () => {
                     <p className="text-sm text-gray-600 mb-3 line-clamp-2">{item.description}</p>
                   )}
                   <div className="flex items-center justify-between text-xs text-gray-500">
-                    <Badge variant="outline" className="capitalize">
+                    <Badge className="capitalize bg-green-100 text-green-700 border-0">
                       {item.category}
                     </Badge>
                     <span>{formatDate(item.created_at)}</span>
@@ -612,19 +672,14 @@ export const AdminGalleryPage: React.FC = () => {
           /* List View */
           <div className="space-y-4">
             {filteredItems.map(item => (
-              <Card key={item.id} className="border-green-200 hover:shadow-lg transition-shadow">
+              <Card key={item.id} className="border-0 shadow-sm hover:shadow-lg transition-shadow bg-white">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-4">
                     <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                       {item.file_type === 'video' ? (
                         <div className="relative w-full h-full">
-                          <video
-                            src={getImageUrl(item.image_url)}
-                            className="w-full h-full object-cover"
-                            muted
-                            preload="metadata"
-                          />
-                          <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                          <VideoThumbnail item={item} />
+                          <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
                             <Play className="w-4 h-4 text-white" />
                           </div>
                         </div>
@@ -645,7 +700,7 @@ export const AdminGalleryPage: React.FC = () => {
                             <p className="text-sm text-gray-600 mb-2">{item.description}</p>
                           )}
                           <div className="flex items-center gap-3 text-xs text-gray-500">
-                            <Badge variant="outline" className="capitalize">
+                            <Badge className="capitalize bg-green-100 text-green-700 border-0">
                               {item.category}
                             </Badge>
                             <span>{formatDate(item.created_at)}</span>
@@ -657,13 +712,13 @@ export const AdminGalleryPage: React.FC = () => {
                         
                         <div className="flex items-center gap-2">
                           {item.is_featured && (
-                            <Badge className="bg-yellow-500 text-white">
+                            <Badge className="bg-yellow-500 text-white border-0">
                               <Star className="w-3 h-3 mr-1" />
                               Featured
                             </Badge>
                           )}
                           {!item.is_active && (
-                            <Badge variant="secondary" className="bg-gray-500 text-white">
+                            <Badge className="bg-gray-500 text-white border-0">
                               <EyeOff className="w-3 h-3 mr-1" />
                               Hidden
                             </Badge>
@@ -672,25 +727,25 @@ export const AdminGalleryPage: React.FC = () => {
                           <div className="flex gap-1">
                             <Button
                               size="sm"
-                              variant="outline"
+                              variant="ghost"
                               onClick={() => handleToggleActive(item.id)}
-                              className="border-green-200 text-green-700 hover:bg-green-50"
+                              className="bg-green-100 text-green-700 hover:bg-green-200"
                             >
                               {item.is_active ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </Button>
                             <Button
                               size="sm"
-                              variant="outline"
+                              variant="ghost"
                               onClick={() => handleToggleFeatured(item.id)}
-                              className="border-yellow-200 text-yellow-700 hover:bg-yellow-50"
+                              className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
                             >
                               {item.is_featured ? <StarOff className="w-4 h-4" /> : <Star className="w-4 h-4" />}
                             </Button>
                             <Button
                               size="sm"
-                              variant="outline"
+                              variant="ghost"
                               onClick={() => setDeleteConfirm(item.id)}
-                              className="border-red-200 text-red-700 hover:bg-red-50"
+                              className="bg-red-100 text-red-700 hover:bg-red-200"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>
@@ -707,7 +762,7 @@ export const AdminGalleryPage: React.FC = () => {
 
         {/* Empty State */}
         {filteredItems.length === 0 && !loading && (
-          <Card className="border-green-200">
+          <Card className="border-0 shadow-sm bg-green-50">
             <CardContent className="p-12 text-center">
               <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <ImageIcon className="w-10 h-10 text-gray-400" />
@@ -734,12 +789,12 @@ export const AdminGalleryPage: React.FC = () => {
 
         {/* Add Media Dialog */}
         <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+            <DialogHeader className="flex-shrink-0">
               <DialogTitle className="text-green-800">Add New Media</DialogTitle>
             </DialogHeader>
             
-            <div className="space-y-6">
+            <div className="flex-1 overflow-y-auto pr-2 space-y-6">
               {/* Content Type Selector */}
               <div className="flex gap-4 p-4 bg-gray-50 rounded-lg">
                 <div className="flex items-center space-x-2">
@@ -778,7 +833,7 @@ export const AdminGalleryPage: React.FC = () => {
                       value={formData.video_url}
                       onChange={(e) => setFormData(prev => ({ ...prev, video_url: e.target.value }))}
                       placeholder="https://youtu.be/YMP5kZmEXLs or https://youtube.com/watch?v=..."
-                      className="border-green-200 focus:border-green-400"
+                      className="border-0 bg-white focus:ring-2 focus:ring-green-400"
                     />
                     <p className="text-xs text-gray-500 mt-1">
                       Supports YouTube URLs. The video will be embedded in the gallery.
@@ -795,7 +850,7 @@ export const AdminGalleryPage: React.FC = () => {
                   className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                     dragOver 
                       ? 'border-green-400 bg-green-50' 
-                      : 'border-green-200 hover:border-green-300'
+                      : 'border-green-300 hover:border-green-400 bg-green-25'
                   }`}
                 >
                   {formData.file ? (
@@ -812,10 +867,10 @@ export const AdminGalleryPage: React.FC = () => {
                         <p className="text-sm text-gray-500">{formatFileSize(formData.file.size)}</p>
                       </div>
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
                         onClick={() => setFormData(prev => ({ ...prev, file: null }))}
-                        className="border-red-200 text-red-700 hover:bg-red-50"
+                        className="bg-red-100 text-red-700 hover:bg-red-200"
                       >
                         <X className="w-4 h-4 mr-2" />
                         Remove
@@ -836,9 +891,9 @@ export const AdminGalleryPage: React.FC = () => {
                         <p className="text-xs text-gray-400">Maximum file size: 50MB</p>
                       </div>
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         onClick={() => fileInputRef.current?.click()}
-                        className="border-green-200 text-green-700 hover:bg-green-50"
+                        className="bg-green-100 text-green-700 hover:bg-green-200"
                       >
                         <Upload className="w-4 h-4 mr-2" />
                         Choose File
@@ -865,7 +920,7 @@ export const AdminGalleryPage: React.FC = () => {
                     value={formData.title}
                     onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                     placeholder="Enter media title"
-                    className="border-green-200 focus:border-green-400"
+                    className="border-0 bg-white focus:ring-2 focus:ring-green-400"
                   />
                 </div>
                 
@@ -877,14 +932,14 @@ export const AdminGalleryPage: React.FC = () => {
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                     placeholder="Enter media description"
                     rows={3}
-                    className="border-green-200 focus:border-green-400"
+                    className="border-0 bg-white focus:ring-2 focus:ring-green-400"
                   />
                 </div>
                 
                 <div>
                   <Label htmlFor="category">Category</Label>
                   <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
-                    <SelectTrigger className="border-green-200 focus:border-green-400">
+                    <SelectTrigger className="border-0 bg-white focus:ring-2 focus:ring-green-400">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -905,7 +960,7 @@ export const AdminGalleryPage: React.FC = () => {
                     value={formData.display_order}
                     onChange={(e) => setFormData(prev => ({ ...prev, display_order: parseInt(e.target.value) || 0 }))}
                     placeholder="0"
-                    className="border-green-200 focus:border-green-400"
+                    className="border-0 bg-white focus:ring-2 focus:ring-green-400"
                   />
                 </div>
                 
@@ -927,37 +982,38 @@ export const AdminGalleryPage: React.FC = () => {
                   <Label htmlFor="is_active">Active/Visible</Label>
                 </div>
               </div>
+            </div>
 
-              {/* Action Buttons */}
-              <div className="flex justify-end gap-3 pt-4 border-t">
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setShowAddDialog(false);
-                    resetForm();
-                  }}
-                  disabled={uploading}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleUpload}
-                  disabled={uploading || !formData.title.trim() || (formData.content_type === 'file' && !formData.file) || (formData.content_type === 'video_url' && !formData.video_url.trim())}
-                  className="bg-green-600 hover:bg-green-700 text-white"
-                >
-                  {uploading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      {formData.content_type === 'video_url' ? 'Adding Video...' : 'Uploading...'}
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="w-4 h-4 mr-2" />
-                      {formData.content_type === 'video_url' ? 'Add Video' : 'Upload Media'}
-                    </>
-                  )}
-                </Button>
-              </div>
+            {/* Action Buttons - Fixed at bottom */}
+            <div className="flex-shrink-0 flex justify-end gap-3 pt-4 border-t bg-white">
+              <Button
+                variant="ghost"
+                className="bg-gray-100 hover:bg-gray-200"
+                onClick={() => {
+                  setShowAddDialog(false);
+                  resetForm();
+                }}
+                disabled={uploading}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleUpload}
+                disabled={uploading || !formData.title.trim() || (formData.content_type === 'file' && !formData.file) || (formData.content_type === 'video_url' && !formData.video_url.trim())}
+                className="bg-green-600 hover:bg-green-700 text-white"
+              >
+                {uploading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {formData.content_type === 'video_url' ? 'Adding Video...' : 'Uploading...'}
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4 mr-2" />
+                    {formData.content_type === 'video_url' ? 'Add Video' : 'Upload Media'}
+                  </>
+                )}
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -979,7 +1035,8 @@ export const AdminGalleryPage: React.FC = () => {
               
               <div className="flex justify-end gap-3">
                 <Button
-                  variant="outline"
+                  variant="ghost"
+                  className="bg-gray-100 hover:bg-gray-200"
                   onClick={() => setDeleteConfirm(null)}
                 >
                   Cancel
