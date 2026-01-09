@@ -116,3 +116,17 @@ backend/uploads/*
 # Test files (optional - you might want to keep these)
 test-*.js
 *-test.js
+# Large media files
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.wmv
+*.flv
+*.webm
+*.m4v
+
+# Large image files (optional - uncomment if needed)
+# *.psd
+# *.ai
+# *.eps
