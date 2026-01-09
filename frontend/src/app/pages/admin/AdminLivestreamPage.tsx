@@ -220,19 +220,20 @@ export const AdminLivestreamPage: React.FC = () => {
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="p-4 sm:p-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <Radio className="w-8 h-8 text-green-600" />
-            Livestream Management
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2 sm:gap-3">
+            <Radio className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
+            <span className="leading-tight">Livestream Management</span>
           </h1>
-          <p className="text-gray-600 mt-2">Manage live streams and scheduled broadcasts</p>
+          <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">Manage live streams and scheduled broadcasts</p>
         </div>
         <Button 
           onClick={() => setShowForm(true)}
-          className="bg-green-600 hover:bg-green-700"
+          className="bg-green-600 hover:bg-green-700 w-full sm:w-auto"
+          size="sm"
         >
           <Plus className="w-4 h-4 mr-2" />
           New Livestream
@@ -240,57 +241,57 @@ export const AdminLivestreamPage: React.FC = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid md:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
         <Card className="border-0 shadow-sm">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Total Streams</p>
-                <p className="text-2xl font-bold text-gray-900">{livestreams.length}</p>
+                <p className="text-xs sm:text-sm text-gray-600">Total Streams</p>
+                <p className="text-lg sm:text-2xl font-bold text-gray-900">{livestreams.length}</p>
               </div>
-              <Radio className="w-8 h-8 text-green-600" />
+              <Radio className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
             </div>
           </CardContent>
         </Card>
 
         <Card className="border-0 shadow-sm">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Active Now</p>
-                <p className="text-2xl font-bold text-red-600">
+                <p className="text-xs sm:text-sm text-gray-600">Active Now</p>
+                <p className="text-lg sm:text-2xl font-bold text-red-600">
                   {livestreams.filter(s => s.is_active).length}
                 </p>
               </div>
-              <Play className="w-8 h-8 text-red-600" />
+              <Play className="w-6 h-6 sm:w-8 sm:h-8 text-red-600" />
             </div>
           </CardContent>
         </Card>
 
         <Card className="border-0 shadow-sm">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Scheduled</p>
-                <p className="text-2xl font-bold text-blue-600">
+                <p className="text-xs sm:text-sm text-gray-600">Scheduled</p>
+                <p className="text-lg sm:text-2xl font-bold text-blue-600">
                   {livestreams.filter(s => s.is_scheduled && s.scheduled_at && new Date(s.scheduled_at) > new Date()).length}
                 </p>
               </div>
-              <Calendar className="w-8 h-8 text-blue-600" />
+              <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-blue-600" />
             </div>
           </CardContent>
         </Card>
 
         <Card className="border-0 shadow-sm">
-          <CardContent className="p-6">
+          <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Total Views</p>
-                <p className="text-2xl font-bold text-green-600">
+                <p className="text-xs sm:text-sm text-gray-600">Total Views</p>
+                <p className="text-lg sm:text-2xl font-bold text-green-600">
                   {livestreams.reduce((sum, s) => sum + s.max_viewers, 0)}
                 </p>
               </div>
-              <Eye className="w-8 h-8 text-green-600" />
+              <Eye className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
             </div>
           </CardContent>
         </Card>
@@ -300,16 +301,16 @@ export const AdminLivestreamPage: React.FC = () => {
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center justify-between text-lg sm:text-xl">
                 <span>{editingStream ? 'Edit Livestream' : 'Create New Livestream'}</span>
-                <Button variant="ghost" size="sm" onClick={resetForm}>
+                <Button variant="ghost" size="sm" onClick={resetForm} className="text-xl">
                   ×
                 </Button>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
+            <CardContent className="px-4 sm:px-6">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Title *
@@ -318,7 +319,7 @@ export const AdminLivestreamPage: React.FC = () => {
                     type="text"
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     placeholder="Enter livestream title"
                     required
                   />
@@ -331,7 +332,7 @@ export const AdminLivestreamPage: React.FC = () => {
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     rows={3}
                     placeholder="Enter description"
                   />
@@ -345,7 +346,7 @@ export const AdminLivestreamPage: React.FC = () => {
                     type="url"
                     value={formData.stream_url}
                     onChange={(e) => setFormData({ ...formData, stream_url: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     placeholder="https://youtube.com/watch?v=VIDEO_ID or https://youtube.com/embed/VIDEO_ID"
                     required
                   />
@@ -362,7 +363,7 @@ export const AdminLivestreamPage: React.FC = () => {
                     type="url"
                     value={formData.thumbnail_url}
                     onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     placeholder="https://example.com/thumbnail.jpg"
                   />
                 </div>
@@ -374,7 +375,7 @@ export const AdminLivestreamPage: React.FC = () => {
                   <select
                     value={formData.stream_platform}
                     onChange={(e) => setFormData({ ...formData, stream_platform: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   >
                     <option value="youtube">YouTube</option>
                     <option value="facebook">Facebook</option>
@@ -404,16 +405,16 @@ export const AdminLivestreamPage: React.FC = () => {
                       type="datetime-local"
                       value={formData.scheduled_at}
                       onChange={(e) => setFormData({ ...formData, scheduled_at: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                      className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     />
                   </div>
                 )}
 
-                <div className="flex gap-3 pt-4">
-                  <Button type="submit" className="bg-green-600 hover:bg-green-700">
+                <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                  <Button type="submit" className="bg-green-600 hover:bg-green-700 text-sm">
                     {editingStream ? 'Update Livestream' : 'Create Livestream'}
                   </Button>
-                  <Button type="button" variant="outline" onClick={resetForm}>
+                  <Button type="button" variant="outline" onClick={resetForm} className="text-sm">
                     Cancel
                   </Button>
                 </div>
@@ -425,15 +426,15 @@ export const AdminLivestreamPage: React.FC = () => {
 
       {/* Livestreams List */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-900">All Livestreams</h2>
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-900">All Livestreams</h2>
         
         {livestreams.length === 0 ? (
           <Card>
-            <CardContent className="p-8 text-center">
-              <Radio className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No livestreams yet</h3>
-              <p className="text-gray-600 mb-4">Create your first livestream to get started</p>
-              <Button onClick={() => setShowForm(true)} className="bg-green-600 hover:bg-green-700">
+            <CardContent className="p-6 sm:p-8 text-center">
+              <Radio className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">No livestreams yet</h3>
+              <p className="text-sm sm:text-base text-gray-600 mb-4">Create your first livestream to get started</p>
+              <Button onClick={() => setShowForm(true)} className="bg-green-600 hover:bg-green-700 text-sm">
                 <Plus className="w-4 h-4 mr-2" />
                 Create Livestream
               </Button>
@@ -443,103 +444,108 @@ export const AdminLivestreamPage: React.FC = () => {
           <div className="grid gap-4">
             {livestreams.map((stream) => (
               <Card key={stream.id} className="border-0 shadow-sm border-l-4 border-l-green-500">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-semibold text-gray-900">{stream.title}</h3>
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                        <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">{stream.title}</h3>
                         {getStatusBadge(stream)}
                       </div>
                       
                       {stream.description && (
-                        <p className="text-gray-600 mb-3">{stream.description}</p>
+                        <p className="text-sm sm:text-base text-gray-600 mb-3 line-clamp-2">{stream.description}</p>
                       )}
                       
-                      <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-600">
+                      <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm text-gray-600">
                         <div className="space-y-1">
                           {stream.is_scheduled && stream.scheduled_at && (
                             <div className="flex items-center gap-1">
-                              <Calendar className="w-4 h-4" />
-                              <span>Scheduled: {formatDateTime(stream.scheduled_at)}</span>
+                              <Calendar className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                              <span className="truncate">Scheduled: {formatDateTime(stream.scheduled_at)}</span>
                             </div>
                           )}
                           
                           {stream.started_at && (
                             <div className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              <span>Started: {formatDateTime(stream.started_at)}</span>
+                              <Clock className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                              <span className="truncate">Started: {formatDateTime(stream.started_at)}</span>
                             </div>
                           )}
                           
                           {stream.ended_at && (
                             <div className="flex items-center gap-1">
-                              <Play className="w-4 h-4" />
-                              <span>Ended: {formatDateTime(stream.ended_at)}</span>
+                              <Play className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                              <span className="truncate">Ended: {formatDateTime(stream.ended_at)}</span>
                             </div>
                           )}
                         </div>
                         
                         <div className="space-y-1">
                           <div className="flex items-center gap-1">
-                            <Users className="w-4 h-4" />
+                            <Users className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                             <span>Current: {stream.viewer_count} viewers</span>
                           </div>
                           
                           <div className="flex items-center gap-1">
-                            <Eye className="w-4 h-4" />
+                            <Eye className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                             <span>Peak: {stream.max_viewers} viewers</span>
                           </div>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-2 ml-4">
+                    <div className="flex items-center gap-2 flex-shrink-0 justify-end lg:justify-start">
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="bg-gray-100 hover:bg-gray-200"
+                        className="bg-gray-100 hover:bg-gray-200 p-2"
                         onClick={() => window.open(stream.stream_url, '_blank')}
+                        title="Open stream"
                       >
-                        <ExternalLink className="w-4 h-4" />
+                        <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
                       </Button>
                       
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="bg-gray-100 hover:bg-gray-200"
+                        className="bg-gray-100 hover:bg-gray-200 p-2"
                         onClick={() => handleEdit(stream)}
+                        title="Edit"
                       >
-                        <Edit className="w-4 h-4" />
+                        <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
                       </Button>
                       
                       {stream.is_active ? (
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="bg-red-100 text-red-700 hover:bg-red-200"
+                          className="bg-red-100 text-red-700 hover:bg-red-200 p-2"
                           onClick={() => handleEnd(stream.id)}
+                          title="End stream"
                         >
-                          <Square className="w-4 h-4" />
+                          <Square className="w-3 h-3 sm:w-4 sm:h-4" />
                         </Button>
                       ) : (
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="bg-green-100 text-green-700 hover:bg-green-200"
+                          className="bg-green-100 text-green-700 hover:bg-green-200 p-2"
                           onClick={() => handleStart(stream.id)}
                           disabled={stream.ended_at !== null}
+                          title="Start stream"
                         >
-                          <Play className="w-4 h-4" />
+                          <Play className="w-3 h-3 sm:w-4 sm:h-4" />
                         </Button>
                       )}
                       
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="bg-red-100 text-red-700 hover:bg-red-200"
+                        className="bg-red-100 text-red-700 hover:bg-red-200 p-2"
                         onClick={() => handleDelete(stream.id)}
+                        title="Delete"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                       </Button>
                     </div>
                   </div>

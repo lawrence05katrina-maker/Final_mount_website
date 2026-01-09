@@ -212,7 +212,7 @@ export const MassBookingPage: React.FC = () => {
 
   return (
     <>
-      <div className="min-h-screen py-16 px-4 bg-gray-50">
+      <div className="min-h-screen py-8 px-4 bg-gray-50">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className={`text-center mb-12 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>

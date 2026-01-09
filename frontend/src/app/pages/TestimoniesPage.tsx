@@ -49,6 +49,95 @@ export const TestimoniesPage: React.FC = () => {
     setIsVisible(true);
   }, []);
 
+  // Add CSS styles for animations
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      
+      @keyframes float {
+        0%, 100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+      
+      .animate-slideInUp {
+        animation: slideInUp 0.6s ease-out forwards;
+      }
+      
+      .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease-out forwards;
+      }
+      
+      .animate-scaleIn {
+        animation: scaleIn 0.6s ease-out forwards;
+      }
+      
+      .animate-float {
+        animation: float 3s ease-in-out infinite;
+      }
+      
+      .animate-pulse-custom {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+      
+      .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      
+      .stagger-1 { animation-delay: 0.1s; }
+      .stagger-2 { animation-delay: 0.2s; }
+      .stagger-3 { animation-delay: 0.3s; }
+      .stagger-4 { animation-delay: 0.4s; }
+      .stagger-5 { animation-delay: 0.5s; }
+      .stagger-6 { animation-delay: 0.6s; }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   /* ===================== HANDLERS ===================== */
 
   const handleChange = (
@@ -145,7 +234,7 @@ export const TestimoniesPage: React.FC = () => {
                   setShowForm(false);
                   setFormData({ name: '', testimony: '' });
                 }}
-                className="w-full bg-green-700 hover:bg-green-800 animate-pulse-custom"
+                className="w-full bg-green-700 hover:bg-green-800"
               >
                 View Testimonies
               </Button>
@@ -187,12 +276,77 @@ export const TestimoniesPage: React.FC = () => {
 
           <Button
             onClick={() => setShowForm(true)}
-            className={`bg-green-700 hover:bg-green-800 animate-pulse-custom ${isVisible ? 'animate-scaleIn stagger-3' : 'opacity-0'}`}
+            className={`bg-green-700 hover:bg-green-800 ${isVisible ? 'animate-scaleIn stagger-3' : 'opacity-0'}`}
           >
             <Send className="w-5 h-5 mr-2" />
             Share Your Testimony
           </Button>
         </div>
+
+        {/* TESTIMONY SUBMISSION FORM */}
+        {showForm && (
+          <div className="mb-12">
+            <Card className="max-w-2xl mx-auto border-green-200 animate-slideInUp">
+              <CardHeader>
+                <CardTitle className="text-green-800 flex items-center gap-2">
+                  <Send className="w-5 h-5" />
+                  Share Your Testimony
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <Label htmlFor="name">Your Name</Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      type="text"
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder="Enter your full name"
+                      className="mt-1"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="testimony">Your Testimony</Label>
+                    <Textarea
+                      id="testimony"
+                      name="testimony"
+                      value={formData.testimony}
+                      onChange={handleChange}
+                      placeholder="Share your miracle, answered prayer, or spiritual experience through Saint Devasahayam..."
+                      className="mt-1 min-h-[120px]"
+                      required
+                    />
+                  </div>
+
+                  <div className="flex gap-3">
+                    <Button
+                      type="submit"
+                      className="bg-green-700 hover:bg-green-800 flex-1"
+                    >
+                      <Send className="w-4 h-4 mr-2" />
+                      Submit Testimony
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setShowForm(false);
+                        setFormData({ name: '', testimony: '' });
+                      }}
+                      className="border-green-700 text-green-700 hover:bg-green-50"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* CONTENT */}
         {loading ? (
@@ -238,7 +392,7 @@ export const TestimoniesPage: React.FC = () => {
                 </p>
                 <Button
                   onClick={() => setShowForm(true)}
-                  className="bg-green-700 hover:bg-green-800 animate-pulse-custom"
+                  className="bg-green-700 hover:bg-green-800"
                 >
                   Share Testimony
                 </Button>

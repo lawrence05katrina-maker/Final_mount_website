@@ -9,6 +9,11 @@ const galleryRoutes = require("./routes/galleryRoutes");
 const livestreamRoutes = require("./routes/livestreamRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 const announcementRoutes = require("./routes/announcementRoutes");
+const managementRoutes = require("./routes/managementRoutes");
+const massBookingRoutes = require("./routes/massBookingRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
+const fathersRoutes = require("./routes/fathersRoutes");
+const donationRoutes = require("./routes/donationRoutes");
 
 const app = express();
 
@@ -88,6 +93,62 @@ const initializeAnnouncements = async () => {
   }
 };
 
+// Initialize management team table
+const initializeManagement = async () => {
+  try {
+    const ManagementModel = require("./models/managementModel");
+    await ManagementModel.createTable();
+    console.log('Management team system initialized successfully');
+  } catch (error) {
+    console.error('Error initializing management team system:', error.message);
+  }
+};
+
+// Initialize mass bookings table
+const initializeMassBookings = async () => {
+  try {
+    const MassBookingModel = require("./models/massBookingModel");
+    await MassBookingModel.createTable();
+    console.log('Mass bookings system initialized successfully');
+  } catch (error) {
+    console.error('Error initializing mass bookings system:', error.message);
+  }
+};
+
+// Initialize payments table
+const initializePayments = async () => {
+  try {
+    const PaymentModel = require("./models/paymentModel");
+    await PaymentModel.createTable();
+    console.log('Payments system initialized successfully');
+  } catch (error) {
+    console.error('Error initializing payments system:', error.message);
+  }
+};
+
+// Initialize donations table
+const initializeDonations = async () => {
+  try {
+    const DonationModel = require("./models/donationModel");
+    await DonationModel.createTable();
+    console.log('Donations system initialized successfully');
+  } catch (error) {
+    console.error('Error initializing donations system:', error.message);
+  }
+};
+
+// Initialize fathers table
+const initializeFathers = async () => {
+  try {
+    const FathersModel = require("./models/fathersModel");
+    await FathersModel.createTable();
+    await FathersModel.initializeDefaultData();
+    console.log('Fathers system initialized successfully');
+  } catch (error) {
+    console.error('Error initializing fathers system:', error.message);
+  }
+};
+
 setTimeout(() => {
   initializeAdmin();
   initializeGallery();
@@ -95,6 +156,11 @@ setTimeout(() => {
   initializeLivestream();
   initializeContact();
   initializeAnnouncements();
+  initializeManagement();
+  initializeMassBookings();
+  initializePayments();
+  initializeDonations();
+  initializeFathers();
 }, 1000);
 
 app.use("/api/prayers", prayerRoutes);
@@ -104,9 +170,14 @@ app.use("/api/gallery", galleryRoutes);
 app.use("/api/livestream", livestreamRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/announcements", announcementRoutes);
+app.use("/api/management", managementRoutes);
+app.use("/api/mass-bookings", massBookingRoutes);
+app.use("/api/payments", paymentRoutes);
+app.use("/api/donations", donationRoutes);
+app.use("/api/fathers", fathersRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Prayer API is running with Gallery, Livestream, Contact, and Announcements support");
+  res.send("Prayer API is running with Gallery, Livestream, Contact, Announcements, Management, Mass Bookings, and Payments support");
 });
 
 module.exports = app;

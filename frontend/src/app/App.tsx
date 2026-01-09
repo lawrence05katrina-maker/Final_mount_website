@@ -35,6 +35,7 @@ import { AdminAnnouncementsPage } from './pages/admin/AdminAnnouncementsPage';
 import { AdminManagementPage } from './pages/admin/AdminManagementPage';
 import { ManagementPage } from './pages/ManagementPage';
 import FathersPage from './pages/admin/FathersPage';
+import AdminFathersPage from './pages/admin/AdminFathersPage';
 
 // Payment Page
 import { PaymentPage } from "./pages/PaymentPage";
@@ -268,7 +269,7 @@ const AppContent = () => {
       <Route path="/admin/fathers" element={
         <ProtectedRoute>
           <AdminLayout>
-            <FathersPage />
+            <AdminFathersPage />
           </AdminLayout>
         </ProtectedRoute>
       } />

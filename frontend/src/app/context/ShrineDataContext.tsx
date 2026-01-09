@@ -266,10 +266,36 @@ export const ShrineDataProvider: React.FC<{ children: ReactNode }> = ({ children
     fetchAnnouncements();
   }, []);
 
-  const [donationPurposes, setDonationPurposes] = useState<DonationPurpose[]>(() => {
-    const saved = localStorage.getItem('shrine_donation_purposes');
-    return saved ? JSON.parse(saved) : initialDonationPurposes;
-  });
+  const [donationPurposes, setDonationPurposes] = useState<DonationPurpose[]>([]);
+
+  // Fetch donation purposes from API
+  useEffect(() => {
+    const fetchDonationPurposes = async () => {
+      try {
+        const response = await fetch('/api/donations/purposes');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            const apiPurposes = data.data.map((item: any) => ({
+              id: item.id.toString(),
+              name: item.name,
+              description: item.description
+            }));
+            setDonationPurposes(apiPurposes);
+          }
+        } else {
+          // Fallback to initial purposes if API fails
+          setDonationPurposes(initialDonationPurposes);
+        }
+      } catch (error) {
+        console.error('Error fetching donation purposes:', error);
+        // Fallback to initial purposes if API fails
+        setDonationPurposes(initialDonationPurposes);
+      }
+    };
+
+    fetchDonationPurposes();
+  }, []);
 
   const [siteContent, setSiteContent] = useState<SiteContent>(() => {
     const saved = localStorage.getItem('shrine_site_content');
@@ -301,9 +327,7 @@ export const ShrineDataProvider: React.FC<{ children: ReactNode }> = ({ children
     localStorage.setItem('shrine_announcements', JSON.stringify(announcements));
   }, [announcements]);
 
-  useEffect(() => {
-    localStorage.setItem('shrine_donation_purposes', JSON.stringify(donationPurposes));
-  }, [donationPurposes]);
+  // Note: donationPurposes are fetched from API, not saved to localStorage
 
   useEffect(() => {
     localStorage.setItem('shrine_site_content', JSON.stringify(siteContent));

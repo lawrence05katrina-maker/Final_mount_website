@@ -115,8 +115,10 @@ export const PaymentPage: React.FC = () => {
         formData.append('massDetails', JSON.stringify(data.massDetails));
       }
 
-      // Submit to backend API
-      const response = await fetch('/api/mass-bookings/payment', {
+      // Submit to backend API - use different endpoints for donations vs mass bookings
+      const endpoint = data.massDetails ? '/api/mass-bookings/payment' : '/api/donations/submit';
+      
+      const response = await fetch(endpoint, {
         method: 'POST',
         body: formData,
       });

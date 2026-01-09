@@ -133,61 +133,61 @@ export const AdminTestimoniesPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4 bg-gray-50">
+    <div className="min-h-screen py-4 sm:py-8 px-4 bg-gray-50">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col gap-4 mb-6 sm:mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-green-800 mb-2">Testimonies Management</h1>
-            <p className="text-gray-600">Review and manage user testimonies</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-green-800 mb-2">Testimonies Management</h1>
+            <p className="text-sm sm:text-base text-gray-600">Review and manage user testimonies</p>
           </div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
           <Card className="border-green-200">
-            <CardContent className="pt-6">
+            <CardContent className="pt-4 sm:pt-6">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-gray-600">Total</p>
-                <MessageCircle className="w-5 h-5 text-green-700" />
+                <p className="text-xs sm:text-sm text-gray-600">Total</p>
+                <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-700" />
               </div>
-              <p className="text-2xl font-bold text-gray-800">{statusCounts.all}</p>
+              <p className="text-lg sm:text-2xl font-bold text-gray-800">{statusCounts.all}</p>
             </CardContent>
           </Card>
 
           <Card className="border-yellow-200">
-            <CardContent className="pt-6">
+            <CardContent className="pt-4 sm:pt-6">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-gray-600">Pending</p>
-                <Clock className="w-5 h-5 text-yellow-600" />
+                <p className="text-xs sm:text-sm text-gray-600">Pending</p>
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600" />
               </div>
-              <p className="text-2xl font-bold text-gray-800">{statusCounts.pending}</p>
+              <p className="text-lg sm:text-2xl font-bold text-gray-800">{statusCounts.pending}</p>
             </CardContent>
           </Card>
 
           <Card className="border-green-200">
-            <CardContent className="pt-6">
+            <CardContent className="pt-4 sm:pt-6">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-gray-600">Approved</p>
-                <CheckCircle className="w-5 h-5 text-green-600" />
+                <p className="text-xs sm:text-sm text-gray-600">Approved</p>
+                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
               </div>
-              <p className="text-2xl font-bold text-gray-800">{statusCounts.approved}</p>
+              <p className="text-lg sm:text-2xl font-bold text-gray-800">{statusCounts.approved}</p>
             </CardContent>
           </Card>
 
           <Card className="border-red-200">
-            <CardContent className="pt-6">
+            <CardContent className="pt-4 sm:pt-6">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-gray-600">Rejected</p>
-                <XCircle className="w-5 h-5 text-red-600" />
+                <p className="text-xs sm:text-sm text-gray-600">Rejected</p>
+                <XCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
               </div>
-              <p className="text-2xl font-bold text-gray-800">{statusCounts.rejected}</p>
+              <p className="text-lg sm:text-2xl font-bold text-gray-800">{statusCounts.rejected}</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Filter Buttons */}
-        <div className="flex flex-wrap gap-3 mb-8">
+        <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8">
           {[
             { key: 'all', label: 'All', count: statusCounts.all },
             { key: 'pending', label: 'Pending', count: statusCounts.pending },
@@ -198,73 +198,75 @@ export const AdminTestimoniesPage: React.FC = () => {
               key={key}
               variant={filter === key ? 'default' : 'outline'}
               onClick={() => setFilter(key)}
-              className={filter === key ? 'bg-green-700 hover:bg-green-800' : 'border-green-200 hover:border-green-700'}
+              size="sm"
+              className={`text-xs sm:text-sm ${filter === key ? 'bg-green-700 hover:bg-green-800' : 'border-green-200 hover:border-green-700'}`}
             >
-              {label} ({count})
+              <span className="hidden sm:inline">{label} ({count})</span>
+              <span className="sm:hidden">{label.charAt(0)} ({count})</span>
             </Button>
           ))}
         </div>
 
         {/* Testimonies List */}
         {filteredTestimonies.length > 0 ? (
-          <div className="grid gap-6">
+          <div className="grid gap-4 sm:gap-6">
             {filteredTestimonies.map(testimony => (
               <Card key={testimony.id} className="border-green-200 hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 sm:gap-4 mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                        <Star className="w-5 h-5 text-green-700" />
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <Star className="w-4 h-4 sm:w-5 sm:h-5 text-green-700" />
                       </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-800">{testimony.name}</h4>
-                        <p className="text-sm text-gray-500">
+                      <div className="min-w-0 flex-1">
+                        <h4 className="font-semibold text-gray-800 text-sm sm:text-base truncate">{testimony.name}</h4>
+                        <p className="text-xs sm:text-sm text-gray-500">
                           Submitted on {new Date(testimony.created_at).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-shrink-0">
                       {getStatusBadge(testimony.status)}
                     </div>
                   </div>
 
                   <div className="mb-4">
-                    <p className="text-gray-700 leading-relaxed">
-                      {testimony.testimony.length > 200 
-                        ? `${testimony.testimony.substring(0, 200)}...` 
+                    <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
+                      {testimony.testimony.length > 150 
+                        ? `${testimony.testimony.substring(0, 150)}...` 
                         : testimony.testimony}
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => setSelectedTestimony(testimony)}
-                      className="border-green-200 text-green-700 hover:bg-green-50"
+                      className="border-green-200 text-green-700 hover:bg-green-50 text-xs sm:text-sm"
                     >
-                      <Eye className="w-4 h-4 mr-2" />
+                      <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                       View Full
                     </Button>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       {testimony.status === 'pending' && (
                         <>
                           <Button
                             size="sm"
                             onClick={() => handleStatusUpdate(testimony.id, 'approved')}
-                            className="bg-green-600 hover:bg-green-700 text-white"
+                            className="bg-green-600 hover:bg-green-700 text-white text-xs sm:text-sm flex-1 sm:flex-none"
                           >
-                            <CheckCircle className="w-4 h-4 mr-2" />
+                            <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                             Approve
                           </Button>
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() => handleStatusUpdate(testimony.id, 'rejected')}
-                            className="border-red-200 text-red-700 hover:bg-red-50"
+                            className="border-red-200 text-red-700 hover:bg-red-50 text-xs sm:text-sm flex-1 sm:flex-none"
                           >
-                            <XCircle className="w-4 h-4 mr-2" />
+                            <XCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                             Reject
                           </Button>
                         </>
@@ -276,7 +278,7 @@ export const AdminTestimoniesPage: React.FC = () => {
                         onClick={() => setDeleteConfirm(testimony.id)}
                         className="border-red-200 text-red-700 hover:bg-red-50"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                       </Button>
                     </div>
                   </div>
@@ -301,36 +303,36 @@ export const AdminTestimoniesPage: React.FC = () => {
 
         {/* View Testimony Dialog */}
         <Dialog open={!!selectedTestimony} onOpenChange={() => setSelectedTestimony(null)}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="text-green-800">Testimony Details</DialogTitle>
+              <DialogTitle className="text-green-800 text-lg sm:text-xl">Testimony Details</DialogTitle>
             </DialogHeader>
             {selectedTestimony && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <h4 className="font-semibold text-gray-800">{selectedTestimony.name}</h4>
-                    <p className="text-sm text-gray-500">
+                    <h4 className="font-semibold text-gray-800 text-sm sm:text-base">{selectedTestimony.name}</h4>
+                    <p className="text-xs sm:text-sm text-gray-500">
                       Submitted on {new Date(selectedTestimony.created_at).toLocaleDateString()}
                     </p>
                   </div>
                   {getStatusBadge(selectedTestimony.status)}
                 </div>
                 
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-wrap text-sm sm:text-base">
                     "{selectedTestimony.testimony}"
                   </p>
                 </div>
 
                 {selectedTestimony.status === 'pending' && (
-                  <div className="flex gap-3 pt-4 border-t">
+                  <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
                     <Button
                       onClick={() => {
                         handleStatusUpdate(selectedTestimony.id, 'approved');
                         setSelectedTestimony(null);
                       }}
-                      className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white text-sm"
                     >
                       <CheckCircle className="w-4 h-4 mr-2" />
                       Approve
@@ -341,7 +343,7 @@ export const AdminTestimoniesPage: React.FC = () => {
                         handleStatusUpdate(selectedTestimony.id, 'rejected');
                         setSelectedTestimony(null);
                       }}
-                      className="flex-1 border-red-200 text-red-700 hover:bg-red-50"
+                      className="flex-1 border-red-200 text-red-700 hover:bg-red-50 text-sm"
                     >
                       <XCircle className="w-4 h-4 mr-2" />
                       Reject
@@ -355,30 +357,31 @@ export const AdminTestimoniesPage: React.FC = () => {
 
         {/* Delete Confirmation Dialog */}
         <Dialog open={deleteConfirm !== null} onOpenChange={() => setDeleteConfirm(null)}>
-          <DialogContent>
+          <DialogContent className="mx-4">
             <DialogHeader>
-              <DialogTitle className="text-red-800">Confirm Deletion</DialogTitle>
+              <DialogTitle className="text-red-800 text-lg sm:text-xl">Confirm Deletion</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              <div className="flex items-center gap-3 p-4 bg-red-50 rounded-lg">
-                <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0" />
+              <div className="flex items-start gap-3 p-3 sm:p-4 bg-red-50 rounded-lg">
+                <AlertCircle className="w-5 h-5 sm:w-6 sm:h-6 text-red-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-medium text-red-800">This action cannot be undone</p>
-                  <p className="text-sm text-red-600">The testimony will be permanently deleted from the database.</p>
+                  <p className="font-medium text-red-800 text-sm sm:text-base">This action cannot be undone</p>
+                  <p className="text-xs sm:text-sm text-red-600">The testimony will be permanently deleted from the database.</p>
                 </div>
               </div>
               
-              <div className="flex justify-end gap-3">
+              <div className="flex flex-col sm:flex-row justify-end gap-3">
                 <Button
                   variant="outline"
                   onClick={() => setDeleteConfirm(null)}
+                  className="text-sm"
                 >
                   Cancel
                 </Button>
                 <Button
                   variant="destructive"
                   onClick={() => deleteConfirm && handleDelete(deleteConfirm)}
-                  className="bg-red-600 hover:bg-red-700"
+                  className="bg-red-600 hover:bg-red-700 text-sm"
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
                   Delete Permanently

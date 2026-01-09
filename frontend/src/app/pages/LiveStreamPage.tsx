@@ -249,10 +249,7 @@ export const LiveStreamPage: React.FC = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
-          <div className={`flex flex-col sm:flex-row items-center justify-center gap-3 mb-4 sm:mb-6 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
-            <div className="p-3 bg-gradient-to-r from-green-600 to-blue-600 rounded-full animate-float">
-              <Radio className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-            </div>
+          <div className={`flex flex-col items-center justify-center gap-3 mb-4 sm:mb-6 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
             <h1 className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-green-800 to-blue-800 bg-clip-text text-transparent text-center">
               Live Mass Stream
             </h1>
@@ -269,8 +266,8 @@ export const LiveStreamPage: React.FC = () => {
         {activeStream ? (
           <div className={`mb-8 sm:mb-12 ${isVisible ? 'animate-scaleIn stagger-1' : 'opacity-0'}`}>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
-              <Badge className="bg-red-600 text-white px-3 py-1 text-sm font-medium animate-pulse-custom w-fit">
-                <div className="w-2 h-2 bg-white rounded-full animate-pulse mr-2"></div>
+              <Badge className="bg-red-600 text-white px-2 py-0.5 text-xs font-medium animate-pulse-custom w-fit">
+                <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse mr-1.5"></div>
                 LIVE NOW
               </Badge>
               <div className="flex items-center gap-1 text-gray-600 text-sm sm:text-base">
@@ -294,9 +291,9 @@ export const LiveStreamPage: React.FC = () => {
                   />
                   
                   {/* Enhanced Video Controls Overlay - Mobile optimized */}
-                  <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 right-2 sm:right-4 flex items-center justify-between bg-black bg-opacity-70 rounded-lg p-2 sm:p-3">
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <div className="flex items-center gap-1 sm:gap-2 text-white text-xs sm:text-sm">
+                  <div className="absolute bottom-1 sm:bottom-4 left-1 sm:left-4 right-1 sm:right-4 flex items-center justify-between bg-black bg-opacity-70 rounded-md sm:rounded-lg p-1.5 sm:p-3">
+                    <div className="flex items-center gap-1 sm:gap-3">
+                      <div className="flex items-center gap-1 text-white text-xs sm:text-sm">
                         <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full animate-pulse"></div>
                         <span className="hidden xs:inline">LIVE</span>
                         <span className="xs:hidden">●</span>
@@ -308,11 +305,11 @@ export const LiveStreamPage: React.FC = () => {
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-1 sm:gap-2">
+                    <div className="flex items-center gap-0.5 sm:gap-2">
                       <Button 
                         size="sm" 
                         variant="ghost" 
-                        className="text-white hover:bg-white hover:bg-opacity-20 p-1 sm:p-2 h-6 w-6 sm:h-8 sm:w-8"
+                        className="text-white hover:bg-white hover:bg-opacity-20 p-1 h-6 w-6 sm:p-2 sm:h-8 sm:w-8"
                         onClick={() => handleShare(activeStream)}
                         title="Share stream"
                       >
@@ -321,7 +318,7 @@ export const LiveStreamPage: React.FC = () => {
                       <Button 
                         size="sm" 
                         variant="ghost" 
-                        className="text-white hover:bg-white hover:bg-opacity-20 p-1 sm:p-2 h-6 w-6 sm:h-8 sm:w-8"
+                        className="text-white hover:bg-white hover:bg-opacity-20 p-1 h-6 w-6 sm:p-2 sm:h-8 sm:w-8"
                         onClick={() => openInYouTube(activeStream)}
                         title="Open in YouTube (for chat and full features)"
                       >
@@ -330,7 +327,7 @@ export const LiveStreamPage: React.FC = () => {
                       <Button 
                         size="sm" 
                         variant="ghost" 
-                        className="text-white hover:bg-white hover:bg-opacity-20 p-1 sm:p-2 h-6 w-6 sm:h-8 sm:w-8 hidden sm:flex"
+                        className="text-white hover:bg-white hover:bg-opacity-20 p-1 h-6 w-6 sm:p-2 sm:h-8 sm:w-8 hidden sm:flex"
                         onClick={() => setIsFullscreen(!isFullscreen)}
                         title="Toggle fullscreen"
                       >
@@ -341,61 +338,87 @@ export const LiveStreamPage: React.FC = () => {
                 </div>
 
                 {/* Stream Info */}
-                <div className="p-4 sm:p-6 bg-gradient-to-r from-red-50 to-pink-50">
-                  <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 mb-4">
+                <div className="p-3 sm:p-6 bg-gradient-to-r from-red-50 to-pink-50">
+                  <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-3 sm:gap-4 mb-3 sm:mb-4">
                     <div className="flex-1">
-                      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">{activeStream.title}</h2>
+                      <h2 className="text-lg sm:text-2xl font-bold text-gray-900 mb-2 leading-tight">{activeStream.title}</h2>
                       {activeStream.description && (
-                        <p className="text-gray-700 mb-3 text-sm sm:text-base">{activeStream.description}</p>
+                        <p className="text-gray-700 mb-2 sm:mb-3 text-sm sm:text-base line-clamp-2">{activeStream.description}</p>
                       )}
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 mb-3">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3">
                         <div className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
+                          <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
                           <span>Started {activeStream.started_at ? formatTime(activeStream.started_at) : 'recently'}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Eye className="w-4 h-4" />
+                          <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
                           <span>Peak: {activeStream.max_viewers} viewers</span>
                         </div>
-                      </div>
-                      
-                      {/* YouTube Features Notice */}
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-                        <p className="text-xs sm:text-sm text-blue-800">
-                          <strong>💡 Tip:</strong> Click "Chat on YouTube" or "Full Features" to access live chat, 
-                          super chat, and all YouTube interactive features!
-                        </p>
                       </div>
                     </div>
                     
                     <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="border-red-200 text-red-700 hover:bg-red-50 text-xs sm:text-sm"
-                        onClick={() => handleShare(activeStream)}
-                      >
-                        <Share2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Share
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="border-red-200 text-red-700 hover:bg-red-50 text-xs sm:text-sm"
-                        onClick={() => openInYouTube(activeStream)}
-                      >
-                        <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Chat on YouTube
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="border-red-200 text-red-700 hover:bg-red-50 text-xs sm:text-sm"
-                        onClick={() => openInYouTube(activeStream)}
-                      >
-                        <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Full Features
-                      </Button>
+                      {/* Mobile: Compact icons in single line */}
+                      <div className="flex sm:hidden gap-1 justify-center">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="border-red-200 text-red-700 hover:bg-red-50 p-1.5 h-7 w-7 text-xs"
+                          onClick={() => handleShare(activeStream)}
+                          title="Share"
+                        >
+                          <Share2 className="w-3 h-3" />
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="border-red-200 text-red-700 hover:bg-red-50 p-1.5 h-7 w-7 text-xs"
+                          onClick={() => openInYouTube(activeStream)}
+                          title="Chat on YouTube"
+                        >
+                          <MessageCircle className="w-3 h-3" />
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="border-red-200 text-red-700 hover:bg-red-50 p-1.5 h-7 w-7 text-xs"
+                          onClick={() => openInYouTube(activeStream)}
+                          title="Full Features"
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                        </Button>
+                      </div>
+                      
+                      {/* Desktop: Text with icons */}
+                      <div className="hidden sm:flex flex-col sm:flex-row gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="border-red-200 text-red-700 hover:bg-red-50 text-xs sm:text-sm"
+                          onClick={() => handleShare(activeStream)}
+                        >
+                          <Share2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                          Share
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="border-red-200 text-red-700 hover:bg-red-50 text-xs sm:text-sm"
+                          onClick={() => openInYouTube(activeStream)}
+                        >
+                          <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                          Chat on YouTube
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="border-red-200 text-red-700 hover:bg-red-50 text-xs sm:text-sm"
+                          onClick={() => openInYouTube(activeStream)}
+                        >
+                          <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                          Full Features
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>

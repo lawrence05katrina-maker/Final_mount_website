@@ -207,22 +207,26 @@ export const HomePage: React.FC = () => {
             height: 100vh;
           }
           
-          .hero-video {
-            display: none;
-          }
-          
-          .hero-fallback {
-            display: block;
-          }
-          
           .hero-buttons {
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
           }
           
           .hero-buttons > * {
-            width: 100%;
-            max-width: 280px;
+            flex: 1;
+            min-width: 90px;
+            max-width: 120px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+          }
+          
+          .hero-buttons > * .mr-2 {
+            margin-right: 0.25rem;
+            width: 0.875rem;
+            height: 0.875rem;
           }
         }
 
@@ -518,7 +522,7 @@ export const HomePage: React.FC = () => {
               className="border-green-700 text-green-700 hover:bg-green-700 hover:text-white"
               asChild
             >
-              <Link to="/admin/fathers">View More...</Link>
+              <Link to="/fathers">View More...</Link>
             </Button>
           </div>
         </div>

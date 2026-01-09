@@ -155,9 +155,13 @@ class GalleryController {
   static async deleteGalleryItem(req, res) {
     try {
       const { id } = req.params;
+      console.log('Attempting to delete gallery item with ID:', id);
+      
       const deletedItem = await GalleryModel.delete(id);
+      console.log('Delete result:', deletedItem);
 
       if (!deletedItem) {
+        console.log('Gallery item not found for ID:', id);
         return res.status(404).json({
           success: false,
           message: 'Gallery item not found'
@@ -167,6 +171,7 @@ class GalleryController {
       // Optionally delete the image file from server
       // This would depend on your file storage setup
       
+      console.log('Gallery item deleted successfully:', deletedItem.id);
       res.json({
         success: true,
         message: 'Gallery item deleted successfully',

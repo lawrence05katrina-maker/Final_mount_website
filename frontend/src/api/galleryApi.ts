@@ -1,15 +1,47 @@
 import axios from './axios';
 
+// Types
+interface CacheItem {
+  data: any;
+  timestamp: number;
+}
+
+interface GalleryItem {
+  id: number;
+  title: string;
+  description?: string;
+  image_url: string;
+  image_name: string;
+  category: string;
+  is_featured: boolean;
+  file_type: string;
+  created_at: string;
+  is_active?: boolean;
+}
+
+interface ApiResponse<T = any> {
+  success: boolean;
+  message?: string;
+  data?: T;
+}
+
+interface GalleryStats {
+  total_items: number;
+  active_items: number;
+  featured_items: number;
+  categories: string[];
+}
+
 // Simple in-memory cache
-const cache = new Map();
+const cache = new Map<string, CacheItem>();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 // Cache helper functions
-const getCacheKey = (url, params) => {
+const getCacheKey = (url: string, params: Record<string, string>): string => {
   return `${url}?${new URLSearchParams(params).toString()}`;
 };
 
-const getCachedData = (key) => {
+const getCachedData = (key: string): any => {
   const cached = cache.get(key);
   if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
     return cached.data;
@@ -18,7 +50,7 @@ const getCachedData = (key) => {
   return null;
 };
 
-const setCachedData = (key, data) => {
+const setCachedData = (key: string, data: any): void => {
   cache.set(key, {
     data,
     timestamp: Date.now()
@@ -31,17 +63,17 @@ const GALLERY_ENDPOINTS = {
   ADMIN: '/gallery/admin',
   UPLOAD: '/gallery/admin/upload',
   STATS: '/gallery/admin/stats',
-  TOGGLE_ACTIVE: (id) => `/gallery/admin/${id}/toggle-active`,
-  TOGGLE_FEATURED: (id) => `/gallery/admin/${id}/toggle-featured`,
-  UPDATE: (id) => `/gallery/admin/${id}`,
-  DELETE: (id) => `/gallery/admin/${id}`
+  TOGGLE_ACTIVE: (id: number) => `/gallery/admin/${id}/toggle-active`,
+  TOGGLE_FEATURED: (id: number) => `/gallery/admin/${id}/toggle-featured`,
+  UPDATE: (id: number) => `/gallery/admin/${id}`,
+  DELETE: (id: number) => `/gallery/admin/${id}`
 };
 
 class GalleryApi {
   // Get public gallery items with caching and better error handling
-  static async getPublicGallery(category = null, limit = null) {
+  static async getPublicGallery(category: string | null = null, limit: number | null = null): Promise<ApiResponse<GalleryItem[]>> {
     try {
-      const params = {};
+      const params: Record<string, string> = {};
       if (category) params.category = category;
       if (limit) params.limit = limit.toString();
       
@@ -61,7 +93,7 @@ class GalleryApi {
       }
       
       return result;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching public gallery:', error);
       
       // Return a more user-friendly error response
@@ -76,14 +108,14 @@ class GalleryApi {
   }
 
   // Get all gallery items (admin) - no caching for admin data
-  static async getAdminGallery(category = null) {
+  static async getAdminGallery(category: string | null = null): Promise<ApiResponse<GalleryItem[]>> {
     try {
       const params = new URLSearchParams();
       if (category) params.append('category', category);
       
       const response = await axios.get(`${GALLERY_ENDPOINTS.ADMIN}?${params}`);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching admin gallery:', error);
       return {
         success: false,
@@ -94,7 +126,7 @@ class GalleryApi {
   }
 
   // Create new gallery item
-  static async createGalleryItem(galleryData) {
+  static async createGalleryItem(galleryData: Partial<GalleryItem>): Promise<ApiResponse<GalleryItem>> {
     try {
       const response = await axios.post(GALLERY_ENDPOINTS.ADMIN, galleryData);
       
@@ -102,7 +134,7 @@ class GalleryApi {
       this.clearPublicCache();
       
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating gallery item:', error);
       
       // Return error object instead of throwing to prevent multiple error messages
@@ -114,7 +146,7 @@ class GalleryApi {
   }
 
   // Update gallery item
-  static async updateGalleryItem(id, galleryData) {
+  static async updateGalleryItem(id: number, galleryData: Partial<GalleryItem>): Promise<ApiResponse<GalleryItem>> {
     try {
       const response = await axios.put(GALLERY_ENDPOINTS.UPDATE(id), galleryData);
       
@@ -122,14 +154,14 @@ class GalleryApi {
       this.clearPublicCache();
       
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating gallery item:', error);
       throw this.handleError(error);
     }
   }
 
   // Delete gallery item
-  static async deleteGalleryItem(id) {
+  static async deleteGalleryItem(id: number): Promise<ApiResponse> {
     try {
       const response = await axios.delete(GALLERY_ENDPOINTS.DELETE(id));
       
@@ -137,7 +169,7 @@ class GalleryApi {
       this.clearPublicCache();
       
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting gallery item:', error);
       
       // Return error object instead of throwing to prevent multiple error messages
@@ -149,15 +181,15 @@ class GalleryApi {
   }
 
   // Upload image (optimized for large files)
-  static async uploadImage(imageFile, fileName = null) {
+  static async uploadImage(imageFile: File, fileName: string | null = null): Promise<ApiResponse> {
     try {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         const reader = new FileReader();
         
         reader.onload = async (e) => {
           try {
             const imageData = {
-              image_data: e.target.result,
+              image_data: e.target?.result,
               image_name: fileName || imageFile.name,
               image_type: imageFile.type,
               image_size: imageFile.size
@@ -166,13 +198,15 @@ class GalleryApi {
             const response = await axios.post(GALLERY_ENDPOINTS.UPLOAD, imageData, {
               timeout: 30000, // 30 second timeout for uploads
               onUploadProgress: (progressEvent) => {
-                const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                console.log(`Upload progress: ${percentCompleted}%`);
+                if (progressEvent.total) {
+                  const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                  console.log(`Upload progress: ${percentCompleted}%`);
+                }
               }
             });
             
             resolve(response.data);
-          } catch (error) {
+          } catch (error: any) {
             // Return error object instead of throwing
             resolve({
               success: false,
@@ -190,7 +224,7 @@ class GalleryApi {
 
         reader.readAsDataURL(imageFile);
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error uploading image:', error);
       return {
         success: false,
@@ -200,7 +234,7 @@ class GalleryApi {
   }
 
   // Upload image from clipboard (copy-paste)
-  static async uploadImageFromClipboard(clipboardData) {
+  static async uploadImageFromClipboard(clipboardData: DataTransfer): Promise<ApiResponse> {
     try {
       const items = clipboardData.items;
       
@@ -209,21 +243,22 @@ class GalleryApi {
         
         if (item.type.indexOf('image') !== -1) {
           const file = item.getAsFile();
-          const fileName = `pasted_image_${Date.now()}.png`;
-          
-          return await this.uploadImage(file, fileName);
+          if (file) {
+            const fileName = `pasted_image_${Date.now()}.png`;
+            return await this.uploadImage(file, fileName);
+          }
         }
       }
       
       throw new Error('No image found in clipboard');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error uploading image from clipboard:', error);
       throw this.handleError(error);
     }
   }
 
   // Get gallery statistics with caching
-  static async getGalleryStats() {
+  static async getGalleryStats(): Promise<ApiResponse<GalleryStats>> {
     try {
       const cacheKey = 'gallery_stats';
       const cachedData = getCachedData(cacheKey);
@@ -244,14 +279,14 @@ class GalleryApi {
       }
       
       return result;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching gallery stats:', error);
       throw this.handleError(error);
     }
   }
 
   // Toggle active status
-  static async toggleActive(id) {
+  static async toggleActive(id: number): Promise<ApiResponse<GalleryItem>> {
     try {
       const response = await axios.patch(GALLERY_ENDPOINTS.TOGGLE_ACTIVE(id));
       
@@ -259,14 +294,14 @@ class GalleryApi {
       this.clearPublicCache();
       
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error toggling gallery item active status:', error);
       throw this.handleError(error);
     }
   }
 
   // Toggle featured status
-  static async toggleFeatured(id) {
+  static async toggleFeatured(id: number): Promise<ApiResponse<GalleryItem>> {
     try {
       const response = await axios.patch(GALLERY_ENDPOINTS.TOGGLE_FEATURED(id));
       
@@ -274,14 +309,14 @@ class GalleryApi {
       this.clearPublicCache();
       
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error toggling gallery item featured status:', error);
       throw this.handleError(error);
     }
   }
 
   // Clear public gallery cache
-  static clearPublicCache() {
+  static clearPublicCache(): void {
     for (const key of cache.keys()) {
       if (key.includes(GALLERY_ENDPOINTS.PUBLIC)) {
         cache.delete(key);
@@ -290,19 +325,18 @@ class GalleryApi {
   }
 
   // Clear all cache
-  static clearAllCache() {
+  static clearAllCache(): void {
     cache.clear();
   }
 
   // Handle API errors
-  static handleError(error) {
+  static handleError(error: any): ApiResponse {
     if (error.response) {
       // Server responded with error status
       const { status, data } = error.response;
       
       return {
         message: data.message || 'An error occurred',
-        status,
         success: false
       };
     } else if (error.request) {
@@ -321,17 +355,17 @@ class GalleryApi {
   }
 
   // Helper method to convert file to base64
-  static fileToBase64(file) {
+  static fileToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
+      reader.onload = () => resolve(reader.result as string);
       reader.onerror = error => reject(error);
     });
   }
 
   // Helper method to validate image file
-  static validateImageFile(file) {
+  static validateImageFile(file: File): boolean {
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
     const maxSize = 10 * 1024 * 1024; // 10MB
 
@@ -347,7 +381,7 @@ class GalleryApi {
   }
 
   // Preload critical gallery data
-  static async preloadCriticalData() {
+  static async preloadCriticalData(): Promise<void> {
     try {
       // Preload featured items and first page of gallery
       await Promise.all([

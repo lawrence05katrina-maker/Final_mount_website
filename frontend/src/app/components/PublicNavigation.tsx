@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Church } from 'lucide-react';
-import { Button } from './ui/button';
+import { Church } from 'lucide-react';
 
 export const PublicNavigation: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

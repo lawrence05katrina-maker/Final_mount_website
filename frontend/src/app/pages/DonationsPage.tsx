@@ -124,7 +124,7 @@ export const DonationsPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen py-16 px-4 bg-gradient-to-br from-gray-50 via-green-50/30 to-emerald-50/30">
+    <div className="min-h-screen py-16 px-4 pb-4 bg-gradient-to-br from-gray-50 via-green-50/30 to-emerald-50/30">
       
       <div className="max-w-4xl mx-auto">
         {/* Animated Header */}
@@ -153,17 +153,17 @@ export const DonationsPage: React.FC = () => {
           {/* Animated Form */}
           <div className="md:col-span-2">
             <Card className={`border-green-200 card-hover bg-white/80 backdrop-blur-sm ${isVisible ? 'animate-slideInLeft stagger-2' : 'opacity-0'}`}>
-              <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50">
-                <CardTitle className="text-green-800 flex items-center gap-2">
-                  <IndianRupee className="w-6 h-6" />
+              <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 sm:bg-gradient-to-r sm:from-green-50 sm:to-emerald-50 bg-none py-2 sm:py-6 pb-1 sm:pb-6">
+                <CardTitle className="text-green-800 flex items-center gap-2 text-base sm:text-lg">
+                  <IndianRupee className="w-5 h-5 sm:w-6 sm:h-6" />
                   Donation Details
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-6">
+              <CardContent className="p-4 sm:p-6 pt-3 sm:pt-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Animated Form Fields */}
                   <div className={`form-field ${isVisible ? 'animate-fadeInUp stagger-3' : 'opacity-0'}`}>
-                    <Label htmlFor="donorName" className="text-green-800 font-medium">
+                    <Label htmlFor="donorName" className="text-green-800 font-medium text-sm sm:text-base">
                       Your Name <span className='text-red-500'>*</span>
                     </Label>
                     <Input
@@ -173,12 +173,12 @@ export const DonationsPage: React.FC = () => {
                       onChange={handleChange}
                       placeholder="Enter your name"
                       required
-                      className="border-green-200 focus:border-green-500 transition-colors"
+                      className="border-green-200 focus:border-green-500 transition-colors h-10 sm:h-12 text-sm sm:text-base"
                     />
                   </div>
 
                   <div className={`form-field ${isVisible ? 'animate-fadeInUp stagger-4' : 'opacity-0'}`}>
-                    <Label htmlFor="email" className="text-green-800 font-medium">Email Address (Optional)</Label>
+                    <Label htmlFor="email" className="text-green-800 font-medium text-sm sm:text-base">Email Address (Optional)</Label>
                     <Input
                       id="email"
                       name="email"
@@ -186,12 +186,12 @@ export const DonationsPage: React.FC = () => {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="your.email@example.com"
-                      className="border-green-200 focus:border-green-500 transition-colors"
+                      className="border-green-200 focus:border-green-500 transition-colors h-10 sm:h-12 text-sm sm:text-base"
                     />
                   </div>
 
                   <div className={`form-field ${isVisible ? 'animate-fadeInUp stagger-5' : 'opacity-0'}`}>
-                    <Label htmlFor="phone" className="text-green-800 font-medium">Phone Number (Optional)</Label>
+                    <Label htmlFor="phone" className="text-green-800 font-medium text-sm sm:text-base">Phone Number (Optional)</Label>
                     <Input
                       id="phone"
                       name="phone"
@@ -199,12 +199,12 @@ export const DonationsPage: React.FC = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder="+91 12345 67890"
-                      className="border-green-200 focus:border-green-500 transition-colors"
+                      className="border-green-200 focus:border-green-500 transition-colors h-10 sm:h-12 text-sm sm:text-base"
                     />
                   </div>
 
                   <div className={`form-field ${isVisible ? 'animate-fadeInUp stagger-6' : 'opacity-0'}`}>
-                    <Label htmlFor="purpose" className="text-green-800 font-medium">
+                    <Label htmlFor="purpose" className="text-green-800 font-medium text-sm sm:text-base">
                       Donation Purpose <span className='text-red-500'>*</span>
                     </Label>
                     <select
@@ -212,7 +212,7 @@ export const DonationsPage: React.FC = () => {
                       name="purpose"
                       value={formData.purpose}
                       onChange={handleChange}
-                      className="flex h-12 w-full rounded-md border border-green-200 bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus:border-green-500 transition-colors"
+                      className="flex h-10 sm:h-12 w-full rounded-md border border-green-200 bg-background px-3 py-2 text-sm sm:text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus:border-green-500 transition-colors"
                       required
                     >
                       <option value="">Select a purpose</option>
@@ -229,22 +229,22 @@ export const DonationsPage: React.FC = () => {
                     <Label className="text-green-800 font-medium text-lg mb-4 block">
                       Select Amount <span className='text-red-500'>*</span>
                     </Label>
-                    <div className="grid grid-cols-3 gap-4 mt-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mt-4">
                       {predefinedAmounts.map((amount, index) => (
                         <Button
                           key={amount}
                           type="button"
                           variant={formData.amount === amount.toString() ? 'default' : 'outline'}
                           onClick={() => handleAmountSelect(amount)}
-                          className={`amount-button h-12 text-sm font-semibold ${
+                          className={`amount-button h-11 sm:h-12 text-xs sm:text-sm font-semibold ${
                             formData.amount === amount.toString() 
                               ? 'selected bg-gradient-to-r from-green-700 to-emerald-700 text-white border-green-700' 
                               : 'border-green-200 hover:border-green-500 hover:bg-green-50'
                           }`}
                           style={{animationDelay: `${0.7 + index * 0.1}s`}}
                         >
-                          <IndianRupee className="w-4 h-4 mr-1" />
-                          {amount.toLocaleString()}
+                          <IndianRupee className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                          <span className="truncate">{amount.toLocaleString()}</span>
                           {formData.amount === amount.toString() && (
                             <div className="shimmer-bg absolute inset-0 rounded-md"></div>
                           )}
@@ -255,13 +255,13 @@ export const DonationsPage: React.FC = () => {
                       type="button"
                       variant={formData.amount === 'custom' ? 'default' : 'outline'}
                       onClick={() => handleAmountSelect('custom')}
-                      className={`amount-button w-full mt-4 h-12 text-sm font-semibold ${
+                      className={`amount-button w-full mt-3 sm:mt-4 h-11 sm:h-12 text-xs sm:text-sm font-semibold ${
                         formData.amount === 'custom' 
                           ? 'selected bg-gradient-to-r from-green-700 to-emerald-700 text-white border-green-700' 
                           : 'border-green-200 hover:border-green-500 hover:bg-green-50'
                       }`}
                     >
-                      <Sparkles className="w-4 h-4 mr-2" />
+                      <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                       Custom Amount
                       {formData.amount === 'custom' && (
                         <div className="shimmer-bg absolute inset-0 rounded-md"></div>
@@ -272,7 +272,7 @@ export const DonationsPage: React.FC = () => {
                   {/* Custom Amount Input with Animation */}
                   {formData.amount === 'custom' && (
                     <div className="animate-fadeInUp form-field">
-                      <Label htmlFor="customAmount" className="text-green-800 font-medium">
+                      <Label htmlFor="customAmount" className="text-green-800 font-medium text-sm sm:text-base">
                         Enter Custom Amount (₹) <span className='text-red-500'>*</span>
                       </Label>
                       <Input
@@ -284,7 +284,7 @@ export const DonationsPage: React.FC = () => {
                         onChange={handleChange}
                         placeholder="Enter amount"
                         required
-                        className="border-green-200 focus:border-green-500 transition-colors h-10 text-sm"
+                        className="border-green-200 focus:border-green-500 transition-colors h-10 sm:h-12 text-sm sm:text-base"
                       />
                     </div>
                   )}

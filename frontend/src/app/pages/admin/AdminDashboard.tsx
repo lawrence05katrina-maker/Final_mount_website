@@ -1,27 +1,51 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { useShrineData } from '../../context/ShrineDataContext';
 import { IndianRupee, Calendar, MessageCircle, Star, TrendingUp, Users } from 'lucide-react';
 
-export const AdminDashboard: React.FC = () => {
-  const { donations, massBookings, prayerRequests, testimonies } = useShrineData();
+interface DonationStats {
+  total_donations: number;
+  total_amount: number;
+  pending_count: number;
+  verified_count: number;
+  rejected_count: number;
+}
 
-  // Calculate statistics
-  const totalDonations = donations.reduce((sum, d) => sum + d.amount, 0);
+export const AdminDashboard: React.FC = () => {
+  const { massBookings, prayerRequests, testimonies } = useShrineData();
+  const [donationStats, setDonationStats] = useState<DonationStats>({
+    total_donations: 0,
+    total_amount: 0,
+    pending_count: 0,
+    verified_count: 0,
+    rejected_count: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  // Fetch donation statistics from API
+  useEffect(() => {
+    const fetchDonationStats = async () => {
+      try {
+        const response = await fetch('/api/donations/stats');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success) {
+            setDonationStats(data.data);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching donation statistics:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDonationStats();
+  }, []);
+
+  // Calculate other statistics
   const pendingBookings = massBookings.filter(b => b.status === 'pending').length;
   const pendingTestimonies = testimonies.filter(t => t.status === 'pending').length;
-  
-  // Recent activity
-  const recentDonations = donations.slice(0, 5);
-  const recentBookings = massBookings.slice(0, 5);
-
-  // Monthly donations
-  const currentMonth = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
-  const monthlyDonations = donations.filter(d => {
-    const date = new Date(d.date);
-    return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
-  }).reduce((sum, d) => sum + d.amount, 0);
 
   return (
     <div className="min-h-screen py-8 px-4 bg-gray-50">
@@ -39,8 +63,12 @@ export const AdminDashboard: React.FC = () => {
                 <p className="text-sm text-gray-600">Total Donations</p>
                 <IndianRupee className="w-5 h-5 text-green-700" />
               </div>
-              <p className="text-2xl text-gray-800">₹{totalDonations.toLocaleString()}</p>
-              <p className="text-xs text-gray-500 mt-1">{donations.length} total</p>
+              <p className="text-2xl text-gray-800">
+                {loading ? '...' : `₹${donationStats.total_amount.toLocaleString()}`}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                {loading ? '...' : `${donationStats.total_donations} total`}
+              </p>
             </CardContent>
           </Card>
 
@@ -78,6 +106,48 @@ export const AdminDashboard: React.FC = () => {
           </Card>
         </div>
 
+        {/* Donation Status Breakdown */}
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          <Card className="border-orange-200">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-gray-600">Pending Donations</p>
+                <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+              </div>
+              <p className="text-2xl text-gray-800">
+                {loading ? '...' : donationStats.pending_count}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">Awaiting verification</p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-green-200">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-gray-600">Verified Donations</p>
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              </div>
+              <p className="text-2xl text-gray-800">
+                {loading ? '...' : donationStats.verified_count}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">Successfully verified</p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-red-200">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-gray-600">Rejected Donations</p>
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+              </div>
+              <p className="text-2xl text-gray-800">
+                {loading ? '...' : donationStats.rejected_count}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">Verification failed</p>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Monthly Summary */}
         <Card className="border-green-200 mb-8 bg-green-50">
           <CardHeader>
@@ -87,16 +157,14 @@ export const AdminDashboard: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid md:grid-cols-3 gap-6">
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Monthly Donations</p>
-                <p className="text-xl text-gray-800">₹{monthlyDonations.toLocaleString()}</p>
-              </div>
+            <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Mass Bookings</p>
                 <p className="text-xl text-gray-800">
                   {massBookings.filter(b => {
                     const date = new Date(b.submittedAt);
+                    const currentMonth = new Date().getMonth();
+                    const currentYear = new Date().getFullYear();
                     return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
                   }).length}
                 </p>
@@ -106,6 +174,8 @@ export const AdminDashboard: React.FC = () => {
                 <p className="text-xl text-gray-800">
                   {prayerRequests.filter(p => {
                     const date = new Date(p.date);
+                    const currentMonth = new Date().getMonth();
+                    const currentYear = new Date().getFullYear();
                     return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
                   }).length}
                 </p>
@@ -114,39 +184,7 @@ export const AdminDashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Recent Donations */}
-          <Card className="border-green-200">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-green-800">
-                <IndianRupee className="w-5 h-5" />
-                Recent Donations
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {recentDonations.length > 0 ? (
-                <div className="space-y-3">
-                  {recentDonations.map(donation => (
-                    <div key={donation.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
-                      <div>
-                        <p className="text-sm text-gray-800">{donation.donorName}</p>
-                        <p className="text-xs text-gray-600">{donation.purpose}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-green-700">₹{donation.amount}</p>
-                        <p className="text-xs text-gray-500">
-                          {new Date(donation.date).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-500 text-sm text-center py-4">No donations yet</p>
-              )}
-            </CardContent>
-          </Card>
-
+        <div className="grid lg:grid-cols-1 gap-8">
           {/* Recent Mass Bookings */}
           <Card className="border-green-200">
             <CardHeader>
@@ -156,9 +194,9 @@ export const AdminDashboard: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {recentBookings.length > 0 ? (
+              {massBookings.slice(0, 5).length > 0 ? (
                 <div className="space-y-3">
-                  {recentBookings.map(booking => (
+                  {massBookings.slice(0, 5).map(booking => (
                     <div key={booking.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
                       <div>
                         <p className="text-sm text-gray-800">{booking.name}</p>
