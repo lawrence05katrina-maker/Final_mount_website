@@ -6,13 +6,16 @@ import { Label } from '../components/ui/label';
 import { Textarea } from '../components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { useShrineData } from '../context/ShrineDataContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Calendar, IndianRupee, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const MassBookingPage: React.FC = () => {
   const navigate = useNavigate();
   const { siteContent, addMassBooking } = useShrineData();
+  const { t, language } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
+  const isTamil = language === 'தமிழ்';
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -49,13 +52,13 @@ export const MassBookingPage: React.FC = () => {
   const getPlaceholderText = () => {
     switch (formData.intentionType) {
       case 'Thanksgiving':
-        return 'Enter thanksgiving intention details';
+        return t('mass.booking.placeholder.thanksgiving');
       case 'Petition':
-        return 'Enter petition request details';
+        return t('mass.booking.placeholder.petition');
       case 'Memorial':
-        return 'Enter memorial details (name of the person, etc.)';
+        return t('mass.booking.placeholder.memorial');
       default:
-        return 'Enter mass intention details';
+        return t('mass.booking.placeholder.default');
     }
   };
 
@@ -213,13 +216,33 @@ export const MassBookingPage: React.FC = () => {
   return (
     <>
       <div className="min-h-screen py-8 px-4 bg-gray-50">
+        <style>{`
+          /* Tamil-specific font sizing */
+          .tamil-text {
+            font-size: 0.8em;
+          }
+
+          .tamil-heading {
+            font-size: 0.75em;
+          }
+
+          .tamil-label {
+            font-size: 0.8em;
+          }
+
+          .tamil-button {
+            font-size: 0.8em;
+          }
+        `}</style>
+        
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className={`text-center mb-12 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
-            <h1 className="text-green-800 mb-4">Book a Holy Mass</h1>
-            <p className="text-gray-700 max-w-2xl mx-auto">
-              Offer a Holy Mass for your intentions, loved ones, or in memory of departed souls. 
-              Please fill out the form below to submit your mass booking request.
+            <h1 className={`text-4xl font-bold text-green-800 mb-4 ${isTamil ? 'tamil-heading' : ''}`}>
+              {t('mass.booking.title')}
+            </h1>
+            <p className={`text-gray-700 max-w-2xl mx-auto ${isTamil ? 'tamil-text' : ''}`}>
+              {t('mass.booking.subtitle')}
             </p>
           </div>
 
@@ -228,19 +251,23 @@ export const MassBookingPage: React.FC = () => {
             <div className={`md:col-span-2 ${isVisible ? 'animate-slideInLeft stagger-2' : 'opacity-0'}`}>
               <Card className="border-green-200 card-hover">
                 <CardHeader>
-                  <CardTitle className="text-green-800">Booking Details</CardTitle>
+                  <CardTitle className={`text-green-800 ${isTamil ? 'tamil-heading' : ''}`}>
+                    {t('mass.booking.details')}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Name */}
                     <div className="form-field">
-                      <Label htmlFor="name">Full Name <span className='text-red-500'>*</span></Label>
+                      <Label htmlFor="name" className={isTamil ? 'tamil-label' : ''}>
+                        {t('mass.booking.fullName')} <span className='text-red-500'>*</span>
+                      </Label>
                       <Input
                         id="name"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        placeholder="Enter your full name"
+                        placeholder={isTamil ? "முழு பெயரை உள்ளிடவும்" : "Enter your full name"}
                         className={errors.name ? 'border-red-500' : ''}
                         required
                       />
@@ -249,7 +276,9 @@ export const MassBookingPage: React.FC = () => {
 
                     {/* Email */}
                     <div className="form-field">
-                      <Label htmlFor="email">Email Address <span className='text-red-500'>*</span></Label>
+                      <Label htmlFor="email" className={isTamil ? 'tamil-label' : ''}>
+                        {t('mass.booking.email')} <span className='text-red-500'>*</span>
+                      </Label>
                       <Input
                         id="email"
                         name="email"
@@ -265,7 +294,9 @@ export const MassBookingPage: React.FC = () => {
 
                     {/* Phone */}
                     <div className="form-field">
-                      <Label htmlFor="phone">Phone Number <span className='text-red-500'>*</span></Label>
+                      <Label htmlFor="phone" className={isTamil ? 'tamil-label' : ''}>
+                        {t('mass.booking.phone')} <span className='text-red-500'>*</span>
+                      </Label>
                       <Input
                         id="phone"
                         name="phone"
@@ -282,7 +313,9 @@ export const MassBookingPage: React.FC = () => {
                     {/* Date and Time */}
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="form-field">
-                        <Label htmlFor="date">Preferred Date <span className='text-red-500'>*</span></Label>
+                        <Label htmlFor="date" className={isTamil ? 'tamil-label' : ''}>
+                          {t('mass.booking.date')} <span className='text-red-500'>*</span>
+                        </Label>
                         <Input
                           id="date"
                           name="date"
@@ -296,7 +329,9 @@ export const MassBookingPage: React.FC = () => {
                         {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date}</p>}
                       </div>
                       <div className="form-field">
-                        <Label htmlFor="time">Preferred Time <span className='text-red-500'>*</span></Label>
+                        <Label htmlFor="time" className={isTamil ? 'tamil-label' : ''}>
+                          {t('mass.booking.time')} <span className='text-red-500'>*</span>
+                        </Label>
                         <select
                         id="time"
                         name="time"
@@ -305,10 +340,10 @@ export const MassBookingPage: React.FC = () => {
                         className={`flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${errors.time ? 'border-red-500' : 'border-input'}`}
                         required
                       >
-                        <option value="06:00">6:00 AM</option>
-                        <option value="07:00">7:00 AM</option>
-                        <option value="09:00">9:00 AM</option>
-                        <option value="18:00">6:00 PM</option>
+                        <option value="06:00">{isTamil ? "காலை 6:00 மணி" : "6:00 AM"}</option>
+                        <option value="07:00">{isTamil ? "காலை 7:00 மணி" : "7:00 AM"}</option>
+                        <option value="09:00">{isTamil ? "காலை 9:00 மணி" : "9:00 AM"}</option>
+                        <option value="18:00">{isTamil ? "மாலை 6:00 மணி" : "6:00 PM"}</option>
                       </select>
                       {errors.time && <p className="text-red-500 text-sm mt-1">{errors.time}</p>}
                       </div>
@@ -316,7 +351,9 @@ export const MassBookingPage: React.FC = () => {
 
                     {/* Mass Intention Type */}
                     <div className="form-field">
-                      <Label htmlFor="intentionType">Mass Intention Type <span className='text-red-500'>*</span></Label>
+                      <Label htmlFor="intentionType" className={isTamil ? 'tamil-label' : ''}>
+                        {t('mass.booking.intentionType')} <span className='text-red-500'>*</span>
+                      </Label>
                       <select
                         id="intentionType"
                         name="intentionType"
@@ -325,15 +362,17 @@ export const MassBookingPage: React.FC = () => {
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                         required
                       >
-                        <option value="Thanksgiving">Thanksgiving</option>
-                        <option value="Petition">Petition</option>
-                        <option value="Memorial">Memorial</option>
+                        <option value="Thanksgiving">{t('mass.booking.thanksgiving')}</option>
+                        <option value="Petition">{t('mass.booking.petition')}</option>
+                        <option value="Memorial">{t('mass.booking.memorial')}</option>
                       </select>
                     </div>
 
                     {/* Mass Intention Description */}
                     <div className="form-field">
-                      <Label htmlFor="intentionDescription">Mass Intention Details <span className='text-red-500'>*</span></Label>
+                      <Label htmlFor="intentionDescription" className={isTamil ? 'tamil-label' : ''}>
+                        {t('mass.booking.intentionDetails')} <span className='text-red-500'>*</span>
+                      </Label>
                       <Textarea
                         id="intentionDescription"
                         name="intentionDescription"
@@ -349,7 +388,9 @@ export const MassBookingPage: React.FC = () => {
 
                     {/* Number of Days */}
                     <div className="form-field">
-                      <Label htmlFor="numberOfDays">Number of Days <span className='text-red-500'>*</span></Label>
+                      <Label htmlFor="numberOfDays" className={isTamil ? 'tamil-label' : ''}>
+                        {t('mass.booking.numberOfDays')} <span className='text-red-500'>*</span>
+                      </Label>
                       <Input
                         id="numberOfDays"
                         name="numberOfDays"
@@ -361,13 +402,13 @@ export const MassBookingPage: React.FC = () => {
                         required
                       />
                       {errors.numberOfDays && <p className="text-red-500 text-sm mt-1">{errors.numberOfDays}</p>}
-                      <p className="text-sm text-gray-600 mt-1">
-                        Book the same mass intention for multiple consecutive days starting from your selected date.
+                      <p className={`text-sm text-gray-600 mt-1 ${isTamil ? 'tamil-text' : ''}`}>
+                        {t('mass.booking.numberOfDaysDesc')}
                       </p>
                     </div>
 
-                    <Button type="submit" className="w-full bg-green-700 hover:bg-green-800">
-                      Submit Booking Request
+                    <Button type="submit" className={`w-full bg-green-700 hover:bg-green-800 ${isTamil ? 'tamil-button' : ''}`}>
+                      {t('mass.booking.submit')}
                     </Button>
                   </form>
                 </CardContent>
@@ -381,14 +422,16 @@ export const MassBookingPage: React.FC = () => {
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-2 mb-3">
                     <IndianRupee className="w-5 h-5 text-green-700" />
-                    <h4 className="text-green-800">Mass Booking Amount</h4>
+                    <h4 className={`text-green-800 ${isTamil ? 'tamil-heading' : ''}`}>
+                      {t('mass.booking.amount')}
+                    </h4>
                   </div>
                   <div className="space-y-2">
-                    <p className="text-sm text-gray-600">
-                      Price per mass: ₹150
+                    <p className={`text-sm text-gray-600 ${isTamil ? 'tamil-text' : ''}`}>
+                      {t('mass.booking.pricePerMass')}
                     </p>
-                    <p className="text-sm text-gray-600">
-                      Number of days: {formData.numberOfDays}
+                    <p className={`text-sm text-gray-600 ${isTamil ? 'tamil-text' : ''}`}>
+                      {isTamil ? `நாட்களின் எண்ணிக்கை: ${formData.numberOfDays}` : `Number of days: ${formData.numberOfDays}`}
                     </p>
                     <div className="border-t pt-2">
                       <p className="text-2xl text-green-700 font-bold">
@@ -396,8 +439,8 @@ export const MassBookingPage: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600 mt-3">
-                    Payment instructions will be sent after approval
+                  <p className={`text-sm text-gray-600 mt-3 ${isTamil ? 'tamil-text' : ''}`}>
+                    {t('mass.booking.paymentInstructions')}
                   </p>
                 </CardContent>
               </Card>
@@ -407,13 +450,15 @@ export const MassBookingPage: React.FC = () => {
                 <CardContent className="pt-6">
                   <div className="flex items-center gap-2 mb-3">
                     <Calendar className="w-5 h-5 text-green-700" />
-                    <h4 className="text-green-800">Important Notes</h4>
+                    <h4 className={`text-green-800 ${isTamil ? 'tamil-heading' : ''}`}>
+                      {t('mass.booking.importantNotes')}
+                    </h4>
                   </div>
-                  <ul className="text-sm text-gray-700 space-y-2">
-                    <li>• Bookings are subject to availability</li>
-                    <li>• You will receive confirmation via email</li>
-                    <li>• Please arrive 15 minutes before mass time</li>
-                    <li>• Contact us for special arrangements</li>
+                  <ul className={`text-sm text-gray-700 space-y-2 ${isTamil ? 'tamil-text' : ''}`}>
+                    <li>{t('mass.booking.note1')}</li>
+                    <li>{t('mass.booking.note2')}</li>
+                    <li>{t('mass.booking.note3')}</li>
+                    <li>{t('mass.booking.note4')}</li>
                   </ul>
                 </CardContent>
               </Card>
@@ -422,143 +467,147 @@ export const MassBookingPage: React.FC = () => {
 
           {/* Mass Timings Section - After the form */}
           <div className={`mt-16 ${isVisible ? 'animate-fadeInUp stagger-6' : 'opacity-0'}`}>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-8 border-l-4 border-green-600 pl-4">Mass Timings</h2>
+            <h2 className={`text-2xl font-semibold text-gray-800 mb-8 border-l-4 border-green-600 pl-4 ${isTamil ? 'tamil-heading' : ''}`}>
+              {t('mass.timings.title')}
+            </h2>
             
             <div className="mass-timings-grid">
               {/* Daily Mass */}
               <div className="mass-timing-card">
-                <h3>Daily Mass</h3>
+                <h3 className={isTamil ? 'tamil-heading' : ''}>{t('mass.timings.daily')}</h3>
                 <ul>
                   <li>
-                    <span>Monday - Thursday</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.monday.thursday')}</span>
                   </li>
                   <li>
-                    <span>Morning: 6:00 AM</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.morning')}</span>
                   </li>
                   <li>
-                    <span>Evening: 6:30 PM</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.evening')}</span>
                   </li>
                 </ul>
               </div>
 
               {/* Friday Mass */}
               <div className="mass-timing-card">
-                <h3>Friday Mass</h3>
+                <h3 className={isTamil ? 'tamil-heading' : ''}>{t('mass.timings.friday')}</h3>
                 <ul>
                   <li>
-                    <span>Morning: 6:00 AM Mass</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.friday.morning1')}</span>
                   </li>
                   <li>
-                    <span>Morning: 10:30 AM Novena Mass</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.friday.morning2')}</span>
                   </li>
                   <li>
-                    <span>Morning: 11:00 AM Novena Mass</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.friday.morning3')}</span>
                   </li>
                   <li>
-                    <span>Evening: 6:30 PM Mass</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.friday.evening')}</span>
                   </li>
                   <li>
-                    <span>Night: 8:00 PM Mass 9:00 PM</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.friday.night')}</span>
                   </li>
                   <li className="novena-section">
-                    <span>• Novena Devasahayam Anukunj</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena1')}</span>
                   </li>
                   <li className="novena-section">
-                    <span>• Thiruvassal Vanakkam</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena2')}</span>
                   </li>
                   <li className="novena-section">
-                    <span>• Thirugnanasambandar Vanakkam</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena3')}</span>
                   </li>
                 </ul>
               </div>
 
               {/* Saturday Mass */}
               <div className="mass-timing-card">
-                <h3>Saturday Mass</h3>
+                <h3 className={isTamil ? 'tamil-heading' : ''}>{t('mass.timings.saturday')}</h3>
                 <ul>
                   <li>
-                    <span>Morning: 6:00 AM Mass</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.saturday.morning1')}</span>
                   </li>
                   <li>
-                    <span>Morning: 11:30 AM Novena Mass</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.saturday.morning2')}</span>
                   </li>
                   <li>
-                    <span>Evening: 6:30 PM Mass</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.saturday.evening')}</span>
                   </li>
                   <li>
-                    <span>Night: 8:00 PM Mass 9:00 PM</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.saturday.night')}</span>
                   </li>
                   <li className="novena-section">
-                    <span>• Novena Devasahayam Anukunj</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena1')}</span>
                   </li>
                   <li className="novena-section">
-                    <span>• Thiruvassal Vanakkam</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena2')}</span>
                   </li>
                   <li className="novena-section">
-                    <span>• Thirugnanasambandar Vanakkam</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena3')}</span>
                   </li>
                 </ul>
               </div>
 
               {/* Sunday Mass */}
               <div className="mass-timing-card">
-                <h3>Sunday Mass</h3>
+                <h3 className={isTamil ? 'tamil-heading' : ''}>{t('mass.timings.sunday')}</h3>
                 <ul>
                   <li>
-                    <span>Morning: 7:00 AM Mass</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.sunday.morning1')}</span>
                   </li>
                   <li>
-                    <span>Morning: 7:00 AM Mass</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.sunday.morning2')}</span>
                   </li>
                   <li>
-                    <span>Afternoon: 12:00 PM (for Sacred Pilgrim)</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.sunday.afternoon')}</span>
                   </li>
                   <li>
-                    <span>Evening: 6:30 PM Mass</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.sunday.evening')}</span>
                   </li>
                   <li>
-                    <span>Night: 8:00 PM Mass 9:00 PM</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.sunday.night')}</span>
                   </li>
                   <li className="novena-section">
-                    <span>• Novena Devasahayam Anukunj</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena1')}</span>
                   </li>
                   <li className="novena-section">
-                    <span>• Thiruvassal Vanakkam</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena2')}</span>
                   </li>
                   <li className="novena-section">
-                    <span>• Thirugnanasambandar Vanakkam</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena3')}</span>
                   </li>
                 </ul>
               </div>
 
               {/* Special Days */}
               <div className="mass-timing-card special-days-card">
-                <h3>Special Days</h3>
-                <p className="special-days-description">Special Days are held at the Shrine on various dates each month, ensuring all visitors have the opportunity to participate.</p>
+                <h3 className={isTamil ? 'tamil-heading' : ''}>{t('mass.timings.special')}</h3>
+                <p className={`special-days-description ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('mass.timings.special.desc')}
+                </p>
                 <div className="special-days-grid">
                   <ul>
                     <li>
-                      <span>• On the 15th of every month - Patron Mass at 7:00 PM</span>
+                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.15th')}</span>
                     </li>
                     <li>
-                      <span>• On the 14th of every month - Matha Mahima - Evening Mass at 6:00</span>
+                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.14th')}</span>
                     </li>
                     <li>
-                      <span>• First Tuesday - St Anthony's Service</span>
+                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.tuesday')}</span>
                     </li>
                     <li>
-                      <span>• First Wednesday - Our Church</span>
+                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.wednesday')}</span>
                     </li>
                   </ul>
                   <ul>
                     <li>
-                      <span>• First Friday - Jesus Square</span>
+                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.friday')}</span>
                     </li>
                     <li>
-                      <span>• First Saturday - Devasahayam Patron</span>
+                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.saturday1')}</span>
                     </li>
                     <li>
-                      <span>• First Saturday - Mass at 7:00pm for Our Lady of Sorrows Blessed by Pope on Procession</span>
+                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.saturday2')}</span>
                     </li>
                   </ul>
                 </div>

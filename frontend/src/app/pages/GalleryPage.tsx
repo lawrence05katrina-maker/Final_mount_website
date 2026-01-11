@@ -6,6 +6,7 @@ import { Skeleton } from '../components/ui/skeleton';
 import { Alert, AlertDescription } from '../components/ui/alert';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { useLanguage } from '../context/LanguageContext';
 import GalleryApi from '../../api/galleryApi';
 import { 
   Calendar,
@@ -104,6 +105,7 @@ interface VideoItem {
 
 export const GalleryPage: React.FC = () => {
   // State management
+  const { language, t } = useLanguage();
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [videoItems, setVideoItems] = useState<VideoItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -111,6 +113,19 @@ export const GalleryPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'photos' | 'videos'>('all');
   const [selectedItem, setSelectedItem] = useState<GalleryItem | VideoItem | null>(null);
   const [retryCount, setRetryCount] = useState(0);
+
+  // Tamil font size classes
+  const getTamilClass = (baseClass: string = '') => {
+    return language === 'தமிழ்' ? `${baseClass} tamil-text` : baseClass;
+  };
+
+  const getTamilHeadingClass = (baseClass: string = '') => {
+    return language === 'தமிழ்' ? `${baseClass} tamil-heading` : baseClass;
+  };
+
+  const getTamilButtonClass = (baseClass: string = '') => {
+    return language === 'தமிழ்' ? `${baseClass} tamil-button` : baseClass;
+  };
 
   // Load gallery data
   const loadGalleryData = useCallback(async (showLoading = true) => {
@@ -287,11 +302,11 @@ export const GalleryPage: React.FC = () => {
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-green-700 mb-4">
-            Sacred Gallery
+          <h1 className={getTamilHeadingClass("text-4xl font-bold text-green-700 mb-4")}>
+            {t('gallery.title')}
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Witness the divine moments and sacred memories of our beloved shrine through these blessed captures
+          <p className={getTamilClass("text-lg text-gray-600 max-w-2xl mx-auto")}>
+            {t('gallery.subtitle')}
           </p>
         </div>
 
@@ -304,9 +319,9 @@ export const GalleryPage: React.FC = () => {
                 activeTab === 'all'
                   ? 'bg-green-600 text-white shadow-sm'
                   : 'text-green-700 hover:text-green-800 hover:bg-green-50'
-              }`}
+              } ${getTamilButtonClass()}`}
             >
-              All
+              {t('gallery.all')}
             </button>
             
             <button
@@ -315,10 +330,10 @@ export const GalleryPage: React.FC = () => {
                 activeTab === 'photos'
                   ? 'bg-green-600 text-white shadow-sm'
                   : 'text-green-700 hover:text-green-800 hover:bg-green-50'
-              }`}
+              } ${getTamilButtonClass()}`}
             >
               <ImageIcon className="w-4 h-4" />
-              Photos
+              {t('gallery.photos')}
             </button>
             
             <button
@@ -327,10 +342,10 @@ export const GalleryPage: React.FC = () => {
                 activeTab === 'videos'
                   ? 'bg-green-600 text-white shadow-sm'
                   : 'text-green-700 hover:text-green-800 hover:bg-green-50'
-              }`}
+              } ${getTamilButtonClass()}`}
             >
               <VideoIcon className="w-4 h-4" />
-              Videos
+              {t('gallery.videos')}
             </button>
           </div>
         </div>

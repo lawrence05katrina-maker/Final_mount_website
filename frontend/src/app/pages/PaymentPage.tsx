@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+import { useLanguage } from '../context/LanguageContext';
 import {
   IndianRupee,
   CheckCircle,
@@ -32,6 +33,7 @@ interface PaymentState {
 export const PaymentPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t, language } = useLanguage();
   const data = location.state as PaymentState;
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -43,6 +45,8 @@ export const PaymentPage: React.FC = () => {
     utrNumber: "",
     screenshot: "",
   });
+  
+  const isTamil = language === 'தமிழ்';
 
   useEffect(() => {
     if (!data?.amount) navigate("/");
@@ -143,28 +147,35 @@ export const PaymentPage: React.FC = () => {
   if (success) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-green-50 px-4">
+        <style>{`
+          .tamil-text { font-size: 0.8em; }
+          .tamil-heading { font-size: 0.75em; }
+          .tamil-button { font-size: 0.8em; }
+        `}</style>
         <Card className="max-w-md w-full border-green-200">
           <CardContent className="pt-6 text-center">
             <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
               <CheckCircle className="w-10 h-10 text-green-700" />
             </div>
-            <h2 className="text-green-800 mb-3">Payment Details Submitted</h2>
-            <p className="text-gray-700 mb-4">
-              Thank you! Your payment details have been submitted for verification.
+            <h2 className={`text-2xl font-semibold text-green-800 mb-3 ${isTamil ? 'tamil-heading' : ''}`}>
+              {t('payment.success.title')}
+            </h2>
+            <p className={`text-gray-700 mb-4 ${isTamil ? 'tamil-text' : ''}`}>
+              {t('payment.success.message')}
             </p>
             <div className="bg-green-50 p-4 rounded-lg mb-4 text-sm">
-              <p><strong>Amount:</strong> ₹{data.amount}</p>
-              <p><strong>Purpose:</strong> {data.purpose}</p>
-              <p><strong>UTR Number:</strong> {utrNumber}</p>
+              <p className={isTamil ? 'tamil-text' : ''}><strong>{isTamil ? 'தொகை:' : 'Amount:'}</strong> ₹{data.amount}</p>
+              <p className={isTamil ? 'tamil-text' : ''}><strong>{isTamil ? 'நோக்கம்:' : 'Purpose:'}</strong> {data.purpose}</p>
+              <p className={isTamil ? 'tamil-text' : ''}><strong>UTR {isTamil ? 'எண்:' : 'Number:'}</strong> {utrNumber}</p>
             </div>
-            <p className="text-sm text-gray-600 mb-4">
-              You will receive a confirmation email once your payment is verified by our team.
+            <p className={`text-sm text-gray-600 mb-4 ${isTamil ? 'tamil-text' : ''}`}>
+              {t('payment.success.confirmation')}
             </p>
             <Button
-              className="bg-green-700 hover:bg-green-800"
+              className={`bg-green-700 hover:bg-green-800 ${isTamil ? 'tamil-button' : ''}`}
               onClick={() => navigate("/")}
             >
-              Go to Home
+              {t('payment.success.home')}
             </Button>
           </CardContent>
         </Card>
@@ -174,38 +185,47 @@ export const PaymentPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-14 px-4">
+      <style>{`
+        .tamil-text { font-size: 0.8em; }
+        .tamil-heading { font-size: 0.75em; }
+        .tamil-button { font-size: 0.8em; }
+        .tamil-label { font-size: 0.8em; }
+      `}</style>
+      
       <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-6">
         {/* LEFT – Summary */}
         <Card className="border-green-200">
           <CardHeader>
-            <CardTitle className="text-green-800 flex items-center gap-2">
+            <CardTitle className={`text-green-800 flex items-center gap-2 ${isTamil ? 'tamil-heading' : ''}`}>
               <IndianRupee className="w-6 h-6" />
-              Payment Summary
+              {t('payment.summary')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="bg-green-50 p-4 rounded-lg space-y-2">
-              <p><strong>Name:</strong> {data.name}</p>
-              <p><strong>Purpose:</strong> {data.purpose}</p>
-              <p className="text-xl font-semibold text-green-700">
-                ₹ {data.amount}
+              <p className={isTamil ? 'tamil-text' : ''}><strong>{isTamil ? 'பெயர்:' : 'Name:'}</strong> {data.name}</p>
+              <p className={isTamil ? 'tamil-text' : ''}><strong>{isTamil ? 'நோக்கம்:' : 'Purpose:'}</strong> {data.purpose}</p>
+              <p className={`text-xl font-semibold text-green-700 ${isTamil ? 'tamil-text' : ''}`}>
+                {isTamil ? 'தொகை:' : ''} ₹ {data.amount}
               </p>
             </div>
 
             {data.massDetails && (
               <div className="bg-blue-50 p-4 rounded-lg space-y-2 text-sm">
-                <h4 className="font-semibold text-blue-800">Mass Booking Details</h4>
-                <p><strong>Start Date:</strong> {data.massDetails.startDate}</p>
-                <p><strong>Time:</strong> {data.massDetails.preferredTime}</p>
-                <p><strong>Intention:</strong> {data.massDetails.intentionType}</p>
-                <p><strong>Number of Days:</strong> {data.massDetails.numberOfDays}</p>
+                <h4 className={`font-semibold text-blue-800 ${isTamil ? 'tamil-heading' : ''}`}>
+                  {t('payment.mass.details')}
+                </h4>
+                <p className={isTamil ? 'tamil-text' : ''}><strong>{t('payment.start.date')}:</strong> {data.massDetails.startDate}</p>
+                <p className={isTamil ? 'tamil-text' : ''}><strong>{t('payment.time')}:</strong> {data.massDetails.preferredTime}</p>
+                <p className={isTamil ? 'tamil-text' : ''}><strong>{t('payment.intention')}:</strong> {data.massDetails.intentionType}</p>
+                <p className={isTamil ? 'tamil-text' : ''}><strong>{t('payment.days')}:</strong> {data.massDetails.numberOfDays}</p>
               </div>
             )}
 
-            <div className="text-sm text-gray-600 space-y-1">
-              <p>• 100% secure payments</p>
-              <p>• UPI payment supported</p>
-              <p>• Manual verification process</p>
+            <div className={`text-sm text-gray-600 space-y-1 ${isTamil ? 'tamil-text' : ''}`}>
+              <p>{t('payment.security.secure')}</p>
+              <p>{t('payment.security.upi')}</p>
+              <p>{t('payment.security.verification')}</p>
             </div>
           </CardContent>
         </Card>
@@ -213,7 +233,7 @@ export const PaymentPage: React.FC = () => {
         {/* RIGHT – Payment Methods */}
         <Card>
           <CardHeader>
-            <CardTitle>Complete Your Payment</CardTitle>
+            <CardTitle className={isTamil ? 'tamil-heading' : ''}>{t('payment.complete')}</CardTitle>
           </CardHeader>
 
           <CardContent className="space-y-6">
@@ -221,7 +241,9 @@ export const PaymentPage: React.FC = () => {
             <div className="border rounded-lg p-6 bg-green-50">
               <div className="flex items-center gap-3 mb-4">
                 <QrCode className="w-6 h-6 text-green-700" />
-                <span className="font-medium text-green-800">Scan QR Code to Pay</span>
+                <span className={`font-medium text-green-800 ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('payment.qr.scan')}
+                </span>
               </div>
 
               <div className="flex justify-center mb-4">
@@ -236,11 +258,11 @@ export const PaymentPage: React.FC = () => {
               </div>
 
               <div className="text-center">
-                <p className="text-sm text-gray-600 mb-2">
-                  Scan with any UPI app (Google Pay, PhonePe, Paytm, etc.)
+                <p className={`text-sm text-gray-600 mb-2 ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('payment.qr.description')}
                 </p>
-                <p className="text-lg font-semibold text-green-700">
-                  Amount: ₹{data.amount}
+                <p className={`text-lg font-semibold text-green-700 ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('payment.amount')}: ₹{data.amount}
                 </p>
               </div>
             </div>
@@ -248,21 +270,23 @@ export const PaymentPage: React.FC = () => {
             {!paymentConfirmed ? (
               <Button
                 onClick={() => setPaymentConfirmed(true)}
-                className="w-full bg-green-700 hover:bg-green-800"
+                className={`w-full bg-green-700 hover:bg-green-800 ${isTamil ? 'tamil-button' : ''}`}
               >
-                I've Made the Payment
+                {t('payment.made')}
               </Button>
             ) : (
               <div className="space-y-4 border rounded-lg p-4 bg-blue-50">
                 <div className="flex items-center gap-2 text-blue-800">
                   <AlertCircle className="w-5 h-5" />
-                  <span className="font-medium">Payment Confirmation Required</span>
+                  <span className={`font-medium ${isTamil ? 'tamil-text' : ''}`}>
+                    {t('payment.confirmation.required')}
+                  </span>
                 </div>
                 
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="utrNumber" className="text-sm font-medium">
-                      UTR Number / Transaction ID <span className="text-red-500">*</span>
+                    <Label htmlFor="utrNumber" className={`text-sm font-medium ${isTamil ? 'tamil-label' : ''}`}>
+                      {t('payment.utr.label')} <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="utrNumber"
@@ -273,20 +297,20 @@ export const PaymentPage: React.FC = () => {
                           setErrors(prev => ({ ...prev, utrNumber: '' }));
                         }
                       }}
-                      placeholder="Enter 12-digit UTR number"
+                      placeholder={t('payment.utr.placeholder')}
                       className={errors.utrNumber ? 'border-red-500' : ''}
                     />
                     {errors.utrNumber && (
                       <p className="text-red-500 text-sm mt-1">{errors.utrNumber}</p>
                     )}
-                    <p className="text-xs text-gray-600 mt-1">
-                      Find this in your payment app's transaction history
+                    <p className={`text-xs text-gray-600 mt-1 ${isTamil ? 'tamil-text' : ''}`}>
+                      {t('payment.utr.help')}
                     </p>
                   </div>
 
                   <div>
-                    <Label htmlFor="screenshot" className="text-sm font-medium">
-                      Payment Screenshot <span className="text-red-500">*</span>
+                    <Label htmlFor="screenshot" className={`text-sm font-medium ${isTamil ? 'tamil-label' : ''}`}>
+                      {t('payment.screenshot.label')} <span className="text-red-500">*</span>
                     </Label>
                     <div className="mt-2">
                       <input
@@ -311,8 +335,12 @@ export const PaymentPage: React.FC = () => {
                         ) : (
                           <div className="flex flex-col items-center">
                             <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                            <p className="text-sm text-gray-600">Click to upload screenshot</p>
-                            <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
+                            <p className={`text-sm text-gray-600 ${isTamil ? 'tamil-text' : ''}`}>
+                              {t('payment.screenshot.click')}
+                            </p>
+                            <p className={`text-xs text-gray-500 ${isTamil ? 'tamil-text' : ''}`}>
+                              {t('payment.screenshot.formats')}
+                            </p>
                           </div>
                         )}
                       </label>
@@ -325,9 +353,9 @@ export const PaymentPage: React.FC = () => {
                   <Button
                     onClick={handlePaymentSubmission}
                     disabled={loading}
-                    className="w-full bg-blue-700 hover:bg-blue-800"
+                    className={`w-full bg-blue-700 hover:bg-blue-800 ${isTamil ? 'tamil-button' : ''}`}
                   >
-                    {loading ? "Submitting..." : "Submit Payment Details"}
+                    {loading ? t('payment.submitting') : t('payment.submit.details')}
                   </Button>
                 </div>
               </div>

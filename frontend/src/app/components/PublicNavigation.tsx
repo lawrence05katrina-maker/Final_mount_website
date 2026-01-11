@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Church } from 'lucide-react';
+import { Church, Globe } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export const PublicNavigation: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false);
   const location = useLocation();
+  const { language, setLanguage, t } = useLanguage();
 
   // Handle scroll effect
   useEffect(() => {
@@ -17,15 +20,15 @@ export const PublicNavigation: React.FC = () => {
   }, []);
 
   const navItems = [
-    { path: '/', label: 'Home' },
-    { path: '/about', label: 'About' },
-    { path: '/mass-booking', label: 'Mass Booking' },
-    { path: '/donations', label: 'Donations' },
-    { path: '/gallery', label: 'Gallery' },
-    { path: '/livestream', label: 'Live Stream' },
-    { path: '/testimonies', label: 'Testimonies' },
-    { path: '/prayer-request', label: 'Prayer Request' },
-    { path: '/contact', label: 'Contact' },
+    { path: '/', label: t('nav.home') },
+    { path: '/about', label: t('nav.about') },
+    { path: '/mass-booking', label: t('nav.massBooking') },
+    { path: '/donations', label: t('nav.donations') },
+    { path: '/gallery', label: t('nav.gallery') },
+    { path: '/livestream', label: t('nav.livestream') },
+    { path: '/testimonies', label: t('nav.testimonies') },
+    { path: '/prayer-request', label: t('nav.prayerRequest') },
+    { path: '/contact', label: t('nav.contact') },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -34,7 +37,7 @@ export const PublicNavigation: React.FC = () => {
     <nav className={`bg-white sticky top-0 z-50 transition-all duration-300 ${
       scrolled ? 'shadow-lg bg-white/95 backdrop-blur-md' : 'shadow-md'
     }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo with gentle glow effect */}
           <Link 
@@ -51,7 +54,7 @@ export const PublicNavigation: React.FC = () => {
             </span>
           </Link>
 
-          {/* Desktop Navigation with underline animation */}
+          {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-1">
             {navItems.map((item, index) => (
               <Link
@@ -76,9 +79,50 @@ export const PublicNavigation: React.FC = () => {
                 <div className="absolute inset-0 bg-green-50 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </Link>
             ))}
+            
+            {/* Language Dropdown */}
+            <div className="relative ml-4">
+              <button
+                onClick={() => setLanguageDropdownOpen(!languageDropdownOpen)}
+                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 hover:text-green-700 transition-all duration-300 group"
+              >
+                <Globe className="w-4 h-4 text-green-500" />
+                <span>{language}</span>
+                <svg className={`w-3 h-3 transition-transform duration-200 ${languageDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              
+              {languageDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-20 bg-white rounded-md shadow-lg border border-gray-200 z-50">
+                  <button
+                    onClick={() => {
+                      setLanguage('ENG');
+                      setLanguageDropdownOpen(false);
+                    }}
+                    className={`block w-full px-3 py-2 text-sm text-left hover:bg-green-50 hover:text-green-700 transition-colors ${
+                      language === 'ENG' ? 'text-green-700 bg-green-50' : 'text-gray-700'
+                    }`}
+                  >
+                    ENG
+                  </button>
+                  <button
+                    onClick={() => {
+                      setLanguage('தமிழ்');
+                      setLanguageDropdownOpen(false);
+                    }}
+                    className={`block w-full px-3 py-2 text-sm text-left hover:bg-green-50 hover:text-green-700 transition-colors ${
+                      language === 'தமிழ்' ? 'text-green-700 bg-green-50' : 'text-gray-700'
+                    }`}
+                  >
+                    தமிழ்
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Mobile menu button with clean animation */}
+          {/* Mobile and Tablet menu button with clean animation */}
           <button
             className="lg:hidden p-2 rounded-md text-gray-700 hover:text-green-700 hover:bg-green-50 transition-all duration-300"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -99,9 +143,9 @@ export const PublicNavigation: React.FC = () => {
           </button>
         </div>
 
-        {/* Mobile Navigation with smooth slide */}
+        {/* Mobile and Tablet Navigation with smooth slide */}
         <div className={`lg:hidden overflow-hidden transition-all duration-300 ${
-          mobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          mobileMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
         }`}>
           <div className="py-4 border-t border-gray-200 space-y-1">
             {navItems.map((item, index) => (
@@ -121,6 +165,36 @@ export const PublicNavigation: React.FC = () => {
                 {item.label}
               </Link>
             ))}
+            
+            {/* Mobile Language Options */}
+            <div className="px-4 py-2">
+              <div className="flex items-center gap-2 mb-2">
+                <Globe className="w-4 h-4 text-green-500" />
+                <span className="text-sm font-medium text-gray-700">{t('common.language')}</span>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setLanguage('ENG')}
+                  className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                    language === 'ENG' 
+                      ? 'text-green-700 bg-green-50 border border-green-200' 
+                      : 'text-gray-700 bg-gray-50 hover:bg-green-50 hover:text-green-700'
+                  }`}
+                >
+                  ENG
+                </button>
+                <button
+                  onClick={() => setLanguage('தமிழ்')}
+                  className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                    language === 'தமிழ்' 
+                      ? 'text-green-700 bg-green-50 border border-green-200' 
+                      : 'text-gray-700 bg-gray-50 hover:bg-green-50 hover:text-green-700'
+                  }`}
+                >
+                  தமிழ்
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

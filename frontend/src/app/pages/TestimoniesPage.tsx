@@ -6,6 +6,7 @@ import { Textarea } from '../components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { MessageCircle, Send, CheckCircle, Star } from 'lucide-react';
 import { toast } from 'sonner';
+import { useLanguage } from '../context/LanguageContext';
 import {
   createTestimony,
   getApprovedTestimonies,
@@ -32,6 +33,7 @@ interface ApiResponse<T> {
 /* ===================== COMPONENT ===================== */
 
 export const TestimoniesPage: React.FC = () => {
+  const { language, t } = useLanguage();
   const [testimonies, setTestimonies] = useState<Testimony[]>([]);
   const [loading, setLoading] = useState(true);
   const [pendingCount, setPendingCount] = useState(0);
@@ -43,6 +45,19 @@ export const TestimoniesPage: React.FC = () => {
     name: '',
     testimony: '',
   });
+
+  // Tamil font size classes
+  const getTamilClass = (baseClass: string = '') => {
+    return language === 'தமிழ்' ? `${baseClass} tamil-text` : baseClass;
+  };
+
+  const getTamilHeadingClass = (baseClass: string = '') => {
+    return language === 'தமிழ்' ? `${baseClass} tamil-heading` : baseClass;
+  };
+
+  const getTamilButtonClass = (baseClass: string = '') => {
+    return language === 'தமிழ்' ? `${baseClass} tamil-button` : baseClass;
+  };
 
   useEffect(() => {
     // Trigger animations on mount
@@ -266,17 +281,16 @@ export const TestimoniesPage: React.FC = () => {
         <div className="text-center mb-12">
           <div className={`flex justify-center items-center gap-2 mb-4 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
             <MessageCircle className="w-8 h-8 text-green-700 animate-float" />
-            <h1 className="text-green-800">Miracles & Testimonies</h1>
+            <h1 className={getTamilHeadingClass("text-green-800")}>{t('testimonies.title')}</h1>
           </div>
 
-          <p className={`text-gray-700 mb-6 max-w-2xl mx-auto ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
-            Read inspiring stories of faith and answered prayers through
-            Saint Devasahayam.
+          <p className={getTamilClass(`text-gray-700 mb-6 max-w-2xl mx-auto ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`)}>
+            {t('testimonies.subtitle')}
           </p>
 
           <Button
             onClick={() => setShowForm(true)}
-            className={`bg-green-700 hover:bg-green-800 ${isVisible ? 'animate-scaleIn stagger-3' : 'opacity-0'}`}
+            className={getTamilButtonClass(`bg-green-700 hover:bg-green-800 ${isVisible ? 'animate-scaleIn stagger-3' : 'opacity-0'}`)}
           >
             <Send className="w-5 h-5 mr-2" />
             Share Your Testimony
@@ -352,7 +366,7 @@ export const TestimoniesPage: React.FC = () => {
         {loading ? (
           <div className={`text-center py-12 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-700 mx-auto mb-4" />
-            <p className="text-gray-600">Loading testimonies...</p>
+            <p className={getTamilClass("text-gray-600")}>{t('testimonies.loading')}</p>
           </div>
         ) : testimonies.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from '../components/ui/card';
-import { useShrineData } from '../context/ShrineDataContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Eye, Target, Heart } from 'lucide-react';
 
 export const AboutPage: React.FC = () => {
-  const { siteContent } = useShrineData();
+  const { t, language } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
+  const isTamil = language === 'தமிழ்';
 
   useEffect(() => {
     // Trigger animations on mount
@@ -14,12 +15,136 @@ export const AboutPage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
+      <style>{`
+        /* Tamil-specific font sizing */
+        .tamil-text {
+          font-size: 0.9em;
+        }
+
+        .tamil-heading {
+          font-size: 0.85em;
+        }
+
+        .tamil-title {
+          font-size: 0.9em;
+        }
+
+        .tamil-subtitle {
+          font-size: 0.85em;
+        }
+
+        /* Animation classes */
+        .animate-fadeInUp {
+          animation: fadeInUp 1.2s ease-out forwards;
+        }
+
+        .animate-slideInLeft {
+          animation: slideInLeft 1s ease-out forwards;
+        }
+
+        .animate-slideInRight {
+          animation: slideInRight 1s ease-out forwards;
+        }
+
+        .animate-scaleIn {
+          animation: scaleIn 0.8s ease-out forwards;
+        }
+
+        .card-hover {
+          transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-pulse-custom {
+          animation: pulse 2s ease-in-out infinite;
+        }
+
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.3s; }
+        .stagger-3 { animation-delay: 0.5s; }
+        .stagger-4 { animation-delay: 0.7s; }
+        .stagger-5 { animation-delay: 0.9s; }
+        .stagger-6 { animation-delay: 1.1s; }
+
+        @keyframes fadeInUp {
+          0% {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slideInLeft {
+          0% {
+            opacity: 0;
+            transform: translateX(-50px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes slideInRight {
+          0% {
+            opacity: 0;
+            transform: translateX(50px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes scaleIn {
+          0% {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.5;
+          }
+        }
+      `}</style>
+
       {/* Header */}
       <div className="bg-green-700 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className={`text-center mb-4 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>Saint Devasahayam Pillai</h1>
-          <p className={`text-center text-green-100 max-w-3xl mx-auto ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
-            India's First Lay Saint | Martyr of Faith | 1712 - 1752
+          <h1 className={`text-4xl font-bold text-center mb-4 ${isTamil ? 'tamil-title' : ''} ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
+            {t('about.page.title')}
+          </h1>
+          <p className={`text-center text-green-100 max-w-3xl mx-auto ${isTamil ? 'tamil-subtitle' : ''} ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
+            {t('about.page.subtitle')}
           </p>
         </div>
       </div>
@@ -30,16 +155,17 @@ export const AboutPage: React.FC = () => {
           <div className={`md:col-span-1 rounded-lg overflow-hidden shadow-lg card-hover ${isVisible ? 'animate-slideInLeft stagger-1' : 'opacity-0'}`}>
             <img
               src="/about1.png"
-              alt="Statue of Saint Devasahayam Pillai"
+              alt={t('about.statue.title')}
               className="w-full h-96 object-contain bg-gray-50"
             />
           </div>
           <div className={`md:col-span-2 ${isVisible ? 'animate-slideInRight stagger-2' : 'opacity-0'}`}>
-            <h2 className="text-green-800 mb-6">A Life of Faith & Courage</h2>
-            <div className="space-y-4 text-gray-700 leading-relaxed">
-              <p>
-                Born as Neelakanta Pillai into an affluent Hindu Nair family in 1712, Devasahayam Pillai became the first Indian layman to be canonized as a saint by Pope Francis on May 15, 2022. His journey from a palace official to a Christian martyr stands as a testament to unwavering faith and dignity in the face of persecution.
-              </p>
+            <h2 className={`text-3xl font-semibold text-green-800 mb-6 ${isTamil ? 'tamil-heading' : ''}`}>
+              {t('about.life.title')}
+            </h2>
+            <div className={`space-y-4 text-gray-700 leading-relaxed ${isTamil ? 'tamil-text' : ''}`}>
+              <p>{t('about.life.description')}</p>
+              <p>{t('about.journey.description')}</p>
             </div>
           </div>
         </div>
@@ -48,19 +174,25 @@ export const AboutPage: React.FC = () => {
       {/* Early Life & Conversion */}
       <div className="bg-green-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className={`text-green-800 text-center mb-12 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>Early Life & Conversion</h2>
+          <h2 className={`text-3xl font-semibold text-green-800 text-center mb-12 ${isTamil ? 'tamil-heading' : ''} ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
+            {t('about.early.title')}
+          </h2>
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className={`${isVisible ? 'animate-slideInLeft stagger-2' : 'opacity-0'}`}>
-              <div className="space-y-4 text-gray-700 leading-relaxed">
-                <p>
-                  Neelakandan Pillai was born on April 23, 1712, in Nattalam, Travancore. His father, Vasudevan Namboodiri, was a priest at the Adikesava Perumal Temple in Thiruvattar. Growing up in an influential family with connections to the royal palace of Maharaja Marthanda Varma, young Neelakandan entered palace service and quickly rose to become an official under Ramayyan Dalawa, the Dewan of Travancore.
-                </p>
+              <div className={`space-y-4 text-gray-700 leading-relaxed ${isTamil ? 'tamil-text' : ''}`}>
+                <p>{t('about.early.birth')}</p>
+                <p>{t('about.early.father')}</p>
+                <p>{t('about.early.palace')}</p>
                 <Card className="border-green-200 bg-green-100">
                   <CardContent className="pt-6">
-                    <h4 className="text-green-800 mb-3 font-semibold">The Turning Point:</h4>
-                    <p className="text-gray-700 text-sm leading-relaxed">
-                      In 1741, after the Battle of Colachel, Dutch commander Captain Eustachius De Lannoy was captured and later became commander of the Travancore army. Through his friendship with De Lannoy, Neelakandan became deeply interested in Christianity. In 1745, he embraced the Christian faith and was baptized as "Lazarus," taking the Malayalam name "Devasahayam" meaning "help of God."
-                    </p>
+                    <h4 className={`text-green-800 mb-3 font-semibold ${isTamil ? 'tamil-heading' : ''}`}>
+                      {t('about.turning.title')}
+                    </h4>
+                    <div className={`text-gray-700 text-sm leading-relaxed space-y-2 ${isTamil ? 'tamil-text' : ''}`}>
+                      <p>{t('about.turning.battle')}</p>
+                      <p>{t('about.turning.friendship')}</p>
+                      <p>{t('about.turning.baptism')}</p>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -68,7 +200,7 @@ export const AboutPage: React.FC = () => {
             <div className={`rounded-lg overflow-hidden shadow-lg card-hover ${isVisible ? 'animate-slideInRight stagger-3' : 'opacity-0'}`}>
               <img
                 src="/about2.jpeg"
-                alt="Memorial of Devasahayam Pillai"
+                alt={t('about.image.memorial')}
                 className="w-full h-96 object-cover"
               />
             </div>
@@ -78,43 +210,45 @@ export const AboutPage: React.FC = () => {
 
       {/* Timeline of His Life */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className={`text-green-800 text-center mb-12 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>Timeline of His Life</h2>
+        <h2 className={`text-3xl font-semibold text-green-800 text-center mb-12 ${isTamil ? 'tamil-heading' : ''} ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
+          {t('about.timeline.title')}
+        </h2>
         <div className="grid md:grid-cols-2 gap-12 items-start">
           <div className={`rounded-lg overflow-hidden shadow-lg card-hover ${isVisible ? 'animate-slideInLeft stagger-2' : 'opacity-0'}`}>
             <img
               src="/about3.jpeg"
-              alt="Devasahayam Pillai Memorial"
+              alt={t('about.image.memorial2')}
               className="w-full h-full object-cover"
             />
           </div>
           <div className={`space-y-6 ${isVisible ? 'animate-slideInRight stagger-3' : 'opacity-0'}`}>
             <div className="border-l-4 border-green-500 pl-6 py-3">
-              <div className="text-green-800 font-bold text-lg mb-2">April 23, 1712</div>
-              <p className="text-gray-700">Born as Neelakanta Pillai in Nattalam, Travancore, to an affluent Hindu Nair family</p>
+              <div className={`text-green-800 font-bold text-lg mb-2 ${isTamil ? 'tamil-text' : ''}`}>{t('about.timeline.date.birth')}</div>
+              <p className={`text-gray-700 ${isTamil ? 'tamil-text' : ''}`}>{t('about.timeline.birth')}</p>
             </div>
             <div className="border-l-4 border-green-500 pl-6 py-3">
-              <div className="text-green-800 font-bold text-lg mb-2">1741</div>
-              <p className="text-gray-700">Battle of Colachel - Dutch forces defeated; De Lannoy becomes friend and spiritual guide</p>
+              <div className={`text-green-800 font-bold text-lg mb-2 ${isTamil ? 'tamil-text' : ''}`}>{t('about.timeline.date.battle')}</div>
+              <p className={`text-gray-700 ${isTamil ? 'tamil-text' : ''}`}>{t('about.timeline.battle')}</p>
             </div>
             <div className="border-l-4 border-green-500 pl-6 py-3">
-              <div className="text-green-800 font-bold text-lg mb-2">1745</div>
-              <p className="text-gray-700">Converts to Christianity, baptized as Lazarus (Devasahayam) in Vadakkankulam</p>
+              <div className={`text-green-800 font-bold text-lg mb-2 ${isTamil ? 'tamil-text' : ''}`}>{t('about.timeline.date.conversion')}</div>
+              <p className={`text-gray-700 ${isTamil ? 'tamil-text' : ''}`}>{t('about.timeline.conversion')}</p>
             </div>
             <div className="border-l-4 border-green-500 pl-6 py-3">
-              <div className="text-green-800 font-bold text-lg mb-2">1749-1752</div>
-              <p className="text-gray-700">Imprisoned for three years, subjected to torture and public humiliation</p>
+              <div className={`text-green-800 font-bold text-lg mb-2 ${isTamil ? 'tamil-text' : ''}`}>{t('about.timeline.date.imprisonment')}</div>
+              <p className={`text-gray-700 ${isTamil ? 'tamil-text' : ''}`}>{t('about.timeline.imprisonment')}</p>
             </div>
             <div className="border-l-4 border-red-500 pl-6 py-3">
-              <div className="text-red-800 font-bold text-lg mb-2">January 14, 1752</div>
-              <p className="text-gray-700">Martyred at Aralvaimozhy, shot by soldiers while in deep meditation</p>
+              <div className={`text-red-800 font-bold text-lg mb-2 ${isTamil ? 'tamil-text' : ''}`}>{t('about.timeline.date.martyrdom')}</div>
+              <p className={`text-gray-700 ${isTamil ? 'tamil-text' : ''}`}>{t('about.timeline.martyrdom')}</p>
             </div>
             <div className="border-l-4 border-blue-500 pl-6 py-3">
-              <div className="text-blue-800 font-bold text-lg mb-2">December 2, 2012</div>
-              <p className="text-gray-700">Beatified by Pope Benedict XVI - first Indian layman to be beatified</p>
+              <div className={`text-blue-800 font-bold text-lg mb-2 ${isTamil ? 'tamil-text' : ''}`}>{t('about.timeline.date.beatified')}</div>
+              <p className={`text-gray-700 ${isTamil ? 'tamil-text' : ''}`}>{t('about.timeline.beatified')}</p>
             </div>
-            <div className="border-l-4 border-gold-500 pl-6 py-3 border-yellow-500">
-              <div className="text-yellow-800 font-bold text-lg mb-2">May 15, 2022</div>
-              <p className="text-gray-700">Canonized as Saint by Pope Francis at St. Peter's Square, Vatican City</p>
+            <div className="border-l-4 border-yellow-500 pl-6 py-3">
+              <div className={`text-yellow-800 font-bold text-lg mb-2 ${isTamil ? 'tamil-text' : ''}`}>{t('about.timeline.date.canonized')}</div>
+              <p className={`text-gray-700 ${isTamil ? 'tamil-text' : ''}`}>{t('about.timeline.canonized')}</p>
             </div>
           </div>
         </div>
@@ -123,39 +257,38 @@ export const AboutPage: React.FC = () => {
       {/* Persecution & Martyrdom */}
       <div className="bg-gray-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className={`text-green-800 text-center mb-12 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>Persecution & Martyrdom</h2>
+          <h2 className={`text-3xl font-semibold text-green-800 text-center mb-12 ${isTamil ? 'tamil-heading' : ''} ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
+            {t('about.persecution.title')}
+          </h2>
           <div className="grid md:grid-cols-3 gap-12 items-center">
-            <div className={`md:col-span-2 space-y-4 text-gray-700 leading-relaxed ${isVisible ? 'animate-slideInLeft stagger-2' : 'opacity-0'}`}>
-              <p>
-                Devasahayam's conversion to Christianity sparked outrage among the Brahmin priests, feudal lords, and members of the royal household. Leaving Hinduism was considered a grave offense, especially for someone of high Nair caste. False charges were brought against him, resulting in his imprisonment for three years.
-              </p>
-              <p>
-                During his captivity, European powers lobbied for his release. Orders were eventually given for him to be exiled. However, the original order was altered, and instead of deportation to Dutch territory, he was taken to Aralvaimozhy border and subjected to brutal torture. His body was painted with red and black spots, and he was forced to sit backward on a water buffalo - a symbol of death in Hindu tradition. Daily, he received eighty stripes, had pepper rubbed into his wounds, and was given only stagnant water to drink.
-              </p>
+            <div className={`md:col-span-2 space-y-4 text-gray-700 leading-relaxed ${isTamil ? 'tamil-text' : ''} ${isVisible ? 'animate-slideInLeft stagger-2' : 'opacity-0'}`}>
+              <p>{t('about.persecution.conversion')}</p>
+              <p>{t('about.persecution.captivity')}</p>
+              <p>{t('about.persecution.torture')}</p>
+              
+              {/* Miracle Quote */}
+              <div className="bg-green-100 border-l-4 border-green-500 p-4 my-6 rounded-r-lg">
+                <p className={`text-green-800 italic font-medium ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('about.miracle.quote')}
+                </p>
+              </div>
             </div>
             <div className={`md:col-span-1 rounded-lg overflow-hidden shadow-lg card-hover ${isVisible ? 'animate-slideInRight stagger-3' : 'opacity-0'}`}>
               <img
                 src="/about4.JPG"
-                alt="Church at the site of martyrdom"
+                alt={t('about.image.church')}
                 className="w-full h-80 object-contain bg-gray-50"
               />
             </div>
-          </div>
-          <div className={`mt-12 text-center ${isVisible ? 'animate-fadeInUp stagger-4' : 'opacity-0'}`}>
-            <Card className="border-green-200 bg-green-50 max-w-4xl mx-auto">
-              <CardContent className="pt-6">
-                <blockquote className="text-green-800 text-lg italic leading-relaxed">
-                  "Water gushed from a rock where he knelt to pray, quenching his thirst in the midst of suffering - a miracle witnessed by many and remembered to this day at Puliyoorkurichi."
-                </blockquote>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </div>
 
       {/* Sacred Places & Final Resting Place */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className={`text-green-800 text-center mb-12 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>Sacred Places & Final Resting Place</h2>
+        <h2 className={`text-3xl font-semibold text-green-800 text-center mb-12 ${isTamil ? 'tamil-heading' : ''} ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
+          {t('about.sacred.title')}
+        </h2>
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className={`rounded-lg overflow-hidden shadow-lg card-hover ${isVisible ? 'animate-slideInLeft stagger-2' : 'opacity-0'}`}>
             <img
@@ -164,16 +297,10 @@ export const AboutPage: React.FC = () => {
               className="w-full h-96 object-cover"
             />
           </div>
-          <div className={`space-y-4 text-gray-700 leading-relaxed ${isVisible ? 'animate-slideInRight stagger-3' : 'opacity-0'}`}>
-            <p>
-              Saint Devasahayam Pillai's tomb in St. Francis Xavier's Cathedral at Kottar, Nagercoil, has become a major pilgrimage site. His body was recovered by local people after his martyrdom and carried to this church, where his mortal remains were interred near the altar.
-            </p>
-            <p>
-              The tomb was restored and beautified after his beatification in 2012. Thousands of devotees visit annually to offer prayers and seek his intercession. His belongings are preserved in a church in Vadakkankulam, exposed every August 15th, the feast of the Assumption of Mary.
-            </p>
-            <p>
-              Key pilgrimage sites include Puliyoorkurichi, where water miraculously gushed from a rock, and Aralvaimozhy, the site of his martyrdom where a church now stands commemorating his sacrifice.
-            </p>
+          <div className={`space-y-4 text-gray-700 leading-relaxed ${isTamil ? 'tamil-text' : ''} ${isVisible ? 'animate-slideInRight stagger-3' : 'opacity-0'}`}>
+            <p>{t('about.tomb.cathedral')}</p>
+            <p>{t('about.tomb.restoration')}</p>
+            <p>{t('about.pilgrimage.sites')}</p>
           </div>
         </div>
       </div>
@@ -181,46 +308,44 @@ export const AboutPage: React.FC = () => {
       {/* Journey to Sainthood */}
       <div className="bg-green-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className={`text-green-800 text-center mb-12 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>Journey to Sainthood</h2>
-          <div className={`max-w-4xl mx-auto space-y-6 text-gray-700 leading-relaxed ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
-            <p>
-              The path to canonization spanned over 270 years. His martyrdom was reported to the Vatican as early as 1756. In 1780, a petition for canonization was submitted. However, it wasn't until 1984 that serious efforts resumed through the initiative of lay persons from the Diocese of Kottar.
-            </p>
-            <p>
-              In 2012, Pope Benedict XVI recognized him as "Venerable" and on December 2, 2012, he was beatified in Nagercoil. Over 100,000 Catholics attended the ceremony. Finally, on February 21, 2020, Pope Francis recognized a miracle attributed to Devasahayam's intercession, clearing the way for his canonization on May 15, 2022.
-            </p>
-            <Card className="border-green-200 bg-green-100">
-              <CardContent className="pt-6">
-                <h4 className="text-green-800 mb-3 font-semibold">Historic Achievement:</h4>
-                <p className="text-gray-700 text-sm leading-relaxed">
-                  Saint Devasahayam Pillai is the first Catholic in India who is neither an ordained minister nor a religious to be officially recognized as a saint. His feast day is celebrated on January 14th.
-                </p>
-              </CardContent>
-            </Card>
+          <h2 className={`text-3xl font-semibold text-green-800 text-center mb-12 ${isTamil ? 'tamil-heading' : ''} ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
+            {t('about.journey.sainthood')}
+          </h2>
+          <div className={`max-w-4xl mx-auto space-y-6 text-gray-700 leading-relaxed ${isTamil ? 'tamil-text' : ''} ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
+            <p>{t('about.journey.path')}</p>
+            <p>{t('about.journey.beatification')}</p>
+            
+            {/* Historic Achievement Box */}
+            <div className="bg-yellow-100 border-l-4 border-yellow-500 p-6 my-8 rounded-r-lg">
+              <h4 className={`text-yellow-800 mb-3 font-semibold ${isTamil ? 'tamil-heading' : ''}`}>
+                {t('about.historic.achievement')}
+              </h4>
+              <p className={`text-yellow-800 ${isTamil ? 'tamil-text' : ''}`}>
+                {t('about.historic.description')}
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Legacy & Veneration */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className={`text-green-800 text-center mb-12 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>Legacy & Veneration</h2>
-        <div className={`max-w-4xl mx-auto space-y-6 text-gray-700 leading-relaxed ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
-          <p>
-            He is venerated as the patron saint of India and persecuted Christians worldwide. His life symbolizes the courage to follow one's conscience and faith despite social pressures and persecution. His story inspires believers to stand firm in their convictions while maintaining dignity and compassion.
-          </p>
-          <p>
-            Since the days of the interment of his mortal remains, many Christian pilgrims have visited his tomb and offered prayers. His witness to Christ continues to inspire millions, demonstrating that attentiveness to faith and courage in the face of adversity can leave a lasting legacy for generations.
-          </p>
-        </div>
-        <div className={`mt-12 text-center ${isVisible ? 'animate-fadeInUp stagger-3' : 'opacity-0'}`}>
-          <Card className="border-green-200 bg-green-50 max-w-4xl mx-auto">
-            <CardContent className="pt-6">
-              <blockquote className="text-green-800 text-lg italic leading-relaxed mb-4">
-                "His witness to Christ is an example of that attentiveness to the coming of Christ. May this holy season help us to centre our lives once more on Christ, our hope."
-              </blockquote>
-              <cite className="text-green-600 font-medium">- Pope Benedict XVI, December 2, 2012</cite>
-            </CardContent>
-          </Card>
+        <h2 className={`text-3xl font-semibold text-green-800 text-center mb-12 ${isTamil ? 'tamil-heading' : ''} ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
+          {t('about.legacy.title')}
+        </h2>
+        <div className={`max-w-4xl mx-auto space-y-6 text-gray-700 leading-relaxed ${isTamil ? 'tamil-text' : ''} ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
+          <p>{t('about.patron.saint')}</p>
+          <p>{t('about.witness.legacy')}</p>
+          
+          {/* Pope Benedict XVI Quote */}
+          <div className="bg-blue-100 border-l-4 border-blue-500 p-6 my-8 rounded-r-lg">
+            <p className={`text-blue-800 italic font-medium text-lg ${isTamil ? 'tamil-text' : ''}`}>
+              {t('about.miracle.quote')}
+            </p>
+            <p className={`text-blue-700 text-sm mt-3 ${isTamil ? 'tamil-text' : ''}`}>
+              {t('about.quote.attribution')}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -235,10 +360,12 @@ export const AboutPage: React.FC = () => {
                   <div className="w-12 h-12 bg-green-700 rounded-full flex items-center justify-center animate-float">
                     <Eye className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-green-800">Our Vision</h3>
+                  <h3 className={`text-2xl font-semibold text-green-800 ${isTamil ? 'tamil-heading' : ''}`}>
+                    {t('about.vision.title')}
+                  </h3>
                 </div>
-                <p className="text-gray-700 leading-relaxed">
-                  {siteContent.vision}
+                <p className={`text-gray-700 leading-relaxed ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('about.vision.description')}
                 </p>
               </CardContent>
             </Card>
@@ -250,10 +377,12 @@ export const AboutPage: React.FC = () => {
                   <div className="w-12 h-12 bg-green-700 rounded-full flex items-center justify-center animate-float" style={{animationDelay: '0.5s'}}>
                     <Target className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-green-800">Our Mission</h3>
+                  <h3 className={`text-2xl font-semibold text-green-800 ${isTamil ? 'tamil-heading' : ''}`}>
+                    {t('about.mission.title')}
+                  </h3>
                 </div>
-                <p className="text-gray-700 leading-relaxed">
-                  {siteContent.mission}
+                <p className={`text-gray-700 leading-relaxed ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('about.mission.description')}
                 </p>
               </CardContent>
             </Card>
@@ -266,20 +395,13 @@ export const AboutPage: React.FC = () => {
         <div className="max-w-4xl mx-auto">
           <div className={`flex items-center gap-3 mb-6 ${isVisible ? 'animate-slideInLeft stagger-1' : 'opacity-0'}`}>
             <Heart className="w-8 h-8 text-green-700 animate-pulse-custom" />
-            <h2 className="text-green-800">About Our Shrine</h2>
+            <h2 className={`text-3xl font-semibold text-green-800 ${isTamil ? 'tamil-heading' : ''}`}>
+              {t('about.shrine.title')}
+            </h2>
           </div>
-          <div className={`space-y-4 text-gray-700 leading-relaxed ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
-            <p>{siteContent.aboutHistory}</p>
-            <p>
-              The shrine has become a beacon of hope for thousands of pilgrims who visit annually, 
-              seeking spiritual renewal, healing, and blessings. Through the intercession of 
-              Saint Devasahayam, many have experienced miracles and divine grace.
-            </p>
-            <p>
-              Our shrine continues to grow as a center for evangelization, community service, 
-              and spiritual formation, carrying forward the legacy of faith and sacrifice that 
-              Saint Devasahayam exemplified.
-            </p>
+          <div className={`space-y-4 text-gray-700 leading-relaxed ${isTamil ? 'tamil-text' : ''} ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
+            <p>{t('about.shrine.description')}</p>
+            <p>{t('about.shrine.pilgrimage')}</p>
           </div>
         </div>
       </div>
@@ -287,53 +409,67 @@ export const AboutPage: React.FC = () => {
       {/* Services Section */}
       <div className="bg-gray-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className={`text-green-800 text-center mb-12 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>Our Services & Activities</h2>
+          <h2 className={`text-3xl font-semibold text-green-800 text-center mb-12 ${isTamil ? 'tamil-heading' : ''} ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
+            {t('about.services.title')}
+          </h2>
           <div className="grid md:grid-cols-3 gap-6">
             <Card className={`text-center card-hover ${isVisible ? 'animate-scaleIn stagger-2' : 'opacity-0'}`}>
               <CardContent className="pt-6">
-                <h4 className="mb-3 text-green-700">Daily Masses</h4>
-                <p className="text-gray-700 text-sm">
-                  Holy Mass celebrated daily at 6:00 AM, 9:00 AM, and 6:00 PM
+                <h4 className={`mb-3 text-green-700 font-semibold ${isTamil ? 'tamil-heading' : ''}`}>
+                  {t('about.services.masses')}
+                </h4>
+                <p className={`text-gray-700 text-sm ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('about.services.masses.time')}
                 </p>
               </CardContent>
             </Card>
             <Card className={`text-center card-hover ${isVisible ? 'animate-scaleIn stagger-3' : 'opacity-0'}`}>
               <CardContent className="pt-6">
-                <h4 className="mb-3 text-green-700">Pilgrimage Programs</h4>
-                <p className="text-gray-700 text-sm">
-                  Organized pilgrimage activities and retreat programs throughout the year
+                <h4 className={`mb-3 text-green-700 font-semibold ${isTamil ? 'tamil-heading' : ''}`}>
+                  {t('about.services.pilgrimage')}
+                </h4>
+                <p className={`text-gray-700 text-sm ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('about.services.pilgrimage.desc')}
                 </p>
               </CardContent>
             </Card>
             <Card className={`text-center card-hover ${isVisible ? 'animate-scaleIn stagger-4' : 'opacity-0'}`}>
               <CardContent className="pt-6">
-                <h4 className="mb-3 text-green-700">Charitable Works</h4>
-                <p className="text-gray-700 text-sm">
-                  Educational support, medical aid, and assistance for the underprivileged
+                <h4 className={`mb-3 text-green-700 font-semibold ${isTamil ? 'tamil-heading' : ''}`}>
+                  {t('about.services.charity')}
+                </h4>
+                <p className={`text-gray-700 text-sm ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('about.services.charity.desc')}
                 </p>
               </CardContent>
             </Card>
             <Card className={`text-center card-hover ${isVisible ? 'animate-scaleIn stagger-5' : 'opacity-0'}`}>
               <CardContent className="pt-6">
-                <h4 className="mb-3 text-green-700">Confession & Counseling</h4>
-                <p className="text-gray-700 text-sm">
-                  Sacrament of reconciliation and spiritual counseling available
+                <h4 className={`mb-3 text-green-700 font-semibold ${isTamil ? 'tamil-heading' : ''}`}>
+                  {t('about.services.confession')}
+                </h4>
+                <p className={`text-gray-700 text-sm ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('about.services.confession.desc')}
                 </p>
               </CardContent>
             </Card>
             <Card className={`text-center card-hover ${isVisible ? 'animate-scaleIn stagger-6' : 'opacity-0'}`}>
               <CardContent className="pt-6">
-                <h4 className="mb-3 text-green-700">Feast Day Celebrations</h4>
-                <p className="text-gray-700 text-sm">
-                  Grand annual celebration on January 14th with special masses and events
+                <h4 className={`mb-3 text-green-700 font-semibold ${isTamil ? 'tamil-heading' : ''}`}>
+                  {t('about.services.feast')}
+                </h4>
+                <p className={`text-gray-700 text-sm ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('about.services.feast.desc')}
                 </p>
               </CardContent>
             </Card>
             <Card className={`text-center card-hover ${isVisible ? 'animate-scaleIn stagger-1' : 'opacity-0'}`} style={{animationDelay: '0.7s'}}>
               <CardContent className="pt-6">
-                <h4 className="mb-3 text-green-700">Youth Ministry</h4>
-                <p className="text-gray-700 text-sm">
-                  Engaging programs for youth faith formation and community service
+                <h4 className={`mb-3 text-green-700 font-semibold ${isTamil ? 'tamil-heading' : ''}`}>
+                  {t('about.services.youth')}
+                </h4>
+                <p className={`text-gray-700 text-sm ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('about.services.youth.desc')}
                 </p>
               </CardContent>
             </Card>

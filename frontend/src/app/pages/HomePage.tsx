@@ -4,12 +4,14 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { LivestreamNotification } from '../components/LivestreamNotification';
 import { useShrineData } from '../context/ShrineDataContext';
+import { useLanguage } from '../context/LanguageContext';
 import { getActiveAnnouncements } from '../../api/announcementApi';
 import ManagementApi from '../../api/managementApi';
 import { Calendar, Heart, Send, Users } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
   const { siteContent } = useShrineData();
+  const { t, language } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [currentTitleIndex, setCurrentTitleIndex] = useState(0);
   const [titleAnimating, setTitleAnimating] = useState(false);
@@ -19,9 +21,11 @@ export const HomePage: React.FC = () => {
   const [managementLoading, setManagementLoading] = useState(true);
 
   const heroTitles = [
-    "Martyr St.Devasahayam Shrine",
-    "Our Lady Of Sorrows"
+    t('hero.title2'),
+    t('hero.title1')
   ];
+
+  const isTamil = language === 'தமிழ்';
 
   useEffect(() => {
     setIsVisible(true);
@@ -162,6 +166,11 @@ export const HomePage: React.FC = () => {
           transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
+        .hero-title.tamil {
+          font-size: clamp(1.3rem, 4vw, 2.2rem);
+          line-height: 1.2;
+        }
+
         .hero-title.fade-out {
           opacity: 0;
           transform: translateY(-20px) scale(0.95);
@@ -179,6 +188,10 @@ export const HomePage: React.FC = () => {
           text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
           animation: heroFadeInUp 1.5s ease-out 0.3s forwards;
           opacity: 0;
+        }
+
+        .hero-subtitle.tamil {
+          font-size: clamp(0.8rem, 2vw, 1rem);
         }
 
         .hero-buttons {
@@ -237,9 +250,26 @@ export const HomePage: React.FC = () => {
           border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
+        .hero-buttons button.tamil {
+          font-size: 0.75rem;
+        }
+
         .hero-buttons button:hover {
           transform: translateY(-2px) scale(1.05);
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Tamil-specific text sizing */
+        .tamil-text {
+          font-size: 0.8em;
+        }
+
+        .tamil-heading {
+          font-size: 0.75em;
+        }
+
+        .tamil-card-title {
+          font-size: 0.8em;
         }
 
         /* Card hover effects for other sections */
@@ -369,51 +399,51 @@ export const HomePage: React.FC = () => {
           </video>
         )}
         
-        {/* Fallback Background Image for Mobile/Error */}
+
         <div className="hero-fallback" style={{ display: videoError ? 'block' : 'none' }}></div>
         
-        {/* Dark Overlay for Text Readability */}
+       
         <div className="hero-overlay"></div>
         
-        {/* Animated Text Content */}
+       
         <div className="hero-content">
-          <h1 className={`hero-title ${titleAnimating ? 'fade-out' : 'fade-in'}`}>
+          <h1 className={`hero-title ${titleAnimating ? 'fade-out' : 'fade-in'} ${isTamil ? 'tamil' : ''}`}>
             {heroTitles[currentTitleIndex]}
           </h1>
-          <p className="hero-subtitle">
-            {siteContent.heroSubtitle}
+          <p className={`hero-subtitle ${isTamil ? 'tamil' : ''}`}>
+            {t('hero.subtitle')}
           </p>
           <div className="hero-buttons">
             <Button
               size="lg"
               asChild
-              className="bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-lg"
+              className={`bg-green-700 hover:bg-green-800 text-white px-6 py-3 rounded-lg ${isTamil ? 'tamil' : ''}`}
             >
               <Link to="/mass-booking">
                 <Calendar className="mr-2 w-5 h-5" />
-                Book Mass
+                {t('button.bookMass')}
               </Link>
             </Button>
             <Button
               size="lg"
               variant="outline"
               asChild
-              className="bg-white/90 text-green-700 border-white hover:bg-white px-6 py-3 rounded-lg"
+              className={`bg-white/90 text-green-700 border-white hover:bg-white px-6 py-3 rounded-lg ${isTamil ? 'tamil' : ''}`}
             >
               <Link to="/donations">
                 <Heart className="mr-2 w-5 h-5" />
-                Donate
+                {t('button.donate')}
               </Link>
             </Button>
             <Button
               size="lg"
               variant="outline"
               asChild
-              className="bg-white/90 text-green-700 border-white hover:bg-white px-6 py-3 rounded-lg"
+              className={`bg-white/90 text-green-700 border-white hover:bg-white px-6 py-3 rounded-lg ${isTamil ? 'tamil' : ''}`}
             >
               <Link to="/prayer-request">
                 <Send className="mr-2 w-5 h-5" />
-                Prayer Request
+                {t('button.prayerRequest')}
               </Link>
             </Button>
           </div>
@@ -425,16 +455,16 @@ export const HomePage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className={`${isVisible ? 'premium-slideInLeft premium-stagger-1' : 'opacity-0'}`}>
-              <h2 className="text-3xl font-semibold text-green-800 mb-4">About Saint Devasahayam</h2>
-              <p className="text-gray-700 leading-relaxed mb-6">
-                {siteContent.aboutShort}
+              <h2 className={`text-3xl font-semibold text-green-800 mb-4 ${isTamil ? 'tamil-heading' : ''}`}>{t('about.title')}</h2>
+              <p className={`text-gray-700 leading-relaxed mb-6 ${isTamil ? 'tamil-text' : ''}`}>
+                {t('about.description')}
               </p>
               <Button
                 variant="outline"
                 asChild
                 className="border-green-700 text-green-700 hover:bg-green-700 hover:text-white"
               >
-                <Link to="/about">Learn More</Link>
+                <Link to="/about">{t('button.learnMore')}</Link>
               </Button>
             </div>
             <div className={`grid grid-cols-2 gap-4 ${isVisible ? 'premium-slideInRight premium-stagger-2' : 'opacity-0'}`}>
@@ -460,7 +490,7 @@ export const HomePage: React.FC = () => {
       {/* Management Section */}
       <div className="bg-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className={`text-3xl font-semibold text-green-800 mb-10 ${isVisible ? 'premium-fadeInUp premium-stagger-1' : 'opacity-0'}`}>Management</h2>
+          <h2 className={`text-3xl font-semibold text-green-800 mb-10 ${isTamil ? 'tamil-heading' : ''} ${isVisible ? 'premium-fadeInUp premium-stagger-1' : 'opacity-0'}`}>{t('management.title')}</h2>
           
           {managementLoading ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -522,7 +552,7 @@ export const HomePage: React.FC = () => {
               className="border-green-700 text-green-700 hover:bg-green-700 hover:text-white"
               asChild
             >
-              <Link to="/fathers">View More...</Link>
+              <Link to="/fathers">{t('button.viewMore')}</Link>
             </Button>
           </div>
         </div>
@@ -533,7 +563,7 @@ export const HomePage: React.FC = () => {
         <div className="bg-green-50 py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className={`flex items-center gap-2 mb-8 ${isVisible ? 'premium-slideInLeft premium-stagger-1' : 'opacity-0'}`}>
-              <h2 className="text-3xl font-semibold text-green-800">Important Announcements</h2>
+              <h2 className={`text-3xl font-semibold text-green-800 ${isTamil ? 'tamil-heading' : ''}`}>{t('announcements.title')}</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
               {announcements.slice(0, 4).map((announcement, index) => (
@@ -570,11 +600,11 @@ export const HomePage: React.FC = () => {
                 <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4 premium-float">
                   <Calendar className="w-8 h-8 text-green-600" />
                 </div>
-                <CardTitle>Book a Mass</CardTitle>
+                <CardTitle className={`${isTamil ? 'tamil-card-title' : ''}`}>{t('cta.bookMass.title')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700">
-                  Book a Holy Mass for your intentions and loved ones
+                <p className={`text-gray-700 ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('cta.bookMass.description')}
                 </p>
               </CardContent>
             </Card>
@@ -586,11 +616,11 @@ export const HomePage: React.FC = () => {
                 <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4 premium-float" style={{animationDelay: '0.5s'}}>
                   <Heart className="w-8 h-8 text-green-600" />
                 </div>
-                <CardTitle>Make a Donation</CardTitle>
+                <CardTitle className={`${isTamil ? 'tamil-card-title' : ''}`}>{t('cta.donation.title')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700">
-                  Support the shrine and its charitable activities
+                <p className={`text-gray-700 ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('cta.donation.description')}
                 </p>
               </CardContent>
             </Card>
@@ -602,11 +632,11 @@ export const HomePage: React.FC = () => {
                 <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 premium-float" style={{animationDelay: '1s'}}>
                   <Send className="w-8 h-8 text-green-600" />
                 </div>
-                <CardTitle>Prayer Request</CardTitle>
+                <CardTitle className={`${isTamil ? 'tamil-card-title' : ''}`}>{t('cta.prayer.title')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-700">
-                  Submit your prayer requests to be remembered in our prayers
+                <p className={`text-gray-700 ${isTamil ? 'tamil-text' : ''}`}>
+                  {t('cta.prayer.description')}
                 </p>
               </CardContent>
             </Card>

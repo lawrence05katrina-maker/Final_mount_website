@@ -5,12 +5,14 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { useShrineData } from '../context/ShrineDataContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Heart, CheckCircle, IndianRupee, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const DonationsPage: React.FC = () => {
   const navigate = useNavigate();
   const { donationPurposes, addDonation } = useShrineData();
+  const { language, t } = useLanguage();
   const [submitted, setSubmitted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState<string>('');
@@ -24,6 +26,23 @@ export const DonationsPage: React.FC = () => {
   });
 
   const predefinedAmounts = [100, 500, 1000, 2000, 5000, 10000];
+
+  // Tamil font size classes
+  const getTamilClass = (baseClass: string = '') => {
+    return language === 'தமிழ்' ? `${baseClass} tamil-text` : baseClass;
+  };
+
+  const getTamilHeadingClass = (baseClass: string = '') => {
+    return language === 'தமிழ்' ? `${baseClass} tamil-heading` : baseClass;
+  };
+
+  const getTamilButtonClass = (baseClass: string = '') => {
+    return language === 'தமிழ்' ? `${baseClass} tamil-button` : baseClass;
+  };
+
+  const getTamilLabelClass = (baseClass: string = '') => {
+    return language === 'தமிழ்' ? `${baseClass} tamil-label` : baseClass;
+  };
 
   useEffect(() => {
     // Trigger animations on mount with staggered delays
@@ -79,8 +98,8 @@ export const DonationsPage: React.FC = () => {
               <Sparkles className="w-6 h-6 text-green-500 absolute animate-ping" />
             </div>
             <div className="success-text">
-              <h2 className="text-2xl font-bold text-green-800 mb-4">Thank You for Your Generous Heart!</h2>
-              <p className="text-gray-700 mb-6">
+              <h2 className={getTamilHeadingClass("text-2xl font-bold text-green-800 mb-4")}>Thank You for Your Generous Heart!</h2>
+              <p className={getTamilClass("text-gray-700 mb-6")}>
                 Your donation has been received with gratitude. May Saint Devasahayam's blessings 
                 be upon you and your family for your kindness and support.
               </p>
@@ -138,14 +157,13 @@ export const DonationsPage: React.FC = () => {
                 <Heart className="w-4 h-4 text-green-600 floating-heart" style={{animationDelay: '2s'}} />
               </div>
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-green-800 to-emerald-700 bg-clip-text text-transparent">
-              Make a Donation
+            <h1 className={getTamilHeadingClass("text-4xl font-bold bg-gradient-to-r from-green-800 to-emerald-700 bg-clip-text text-transparent")}>
+              {t('donations.title')}
             </h1>
             <Sparkles className="w-8 h-8 text-green-600 animate-pulse" />
           </div>
-          <p className="text-gray-700 max-w-2xl mx-auto text-lg leading-relaxed">
-            Your generous donations help us maintain the shrine, support charitable activities, 
-            and serve the community. Every contribution makes a difference in someone's life.
+          <p className={getTamilClass("text-gray-700 max-w-2xl mx-auto text-lg leading-relaxed")}>
+            {t('donations.subtitle')}
           </p>
         </div>
 
@@ -154,16 +172,16 @@ export const DonationsPage: React.FC = () => {
           <div className="md:col-span-2">
             <Card className={`border-green-200 card-hover bg-white/80 backdrop-blur-sm ${isVisible ? 'animate-slideInLeft stagger-2' : 'opacity-0'}`}>
               <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 sm:bg-gradient-to-r sm:from-green-50 sm:to-emerald-50 bg-none py-2 sm:py-6 pb-1 sm:pb-6">
-                <CardTitle className="text-green-800 flex items-center gap-2 text-base sm:text-lg">
+                <CardTitle className={getTamilHeadingClass("text-green-800 flex items-center gap-2 text-base sm:text-lg")}>
                   <IndianRupee className="w-5 h-5 sm:w-6 sm:h-6" />
-                  Donation Details
+                  {t('donations.details')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 sm:p-6 pt-3 sm:pt-6">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Animated Form Fields */}
                   <div className={`form-field ${isVisible ? 'animate-fadeInUp stagger-3' : 'opacity-0'}`}>
-                    <Label htmlFor="donorName" className="text-green-800 font-medium text-sm sm:text-base">
+                    <Label htmlFor="donorName" className={getTamilLabelClass("text-green-800 font-medium text-sm sm:text-base")}>
                       Your Name <span className='text-red-500'>*</span>
                     </Label>
                     <Input
@@ -178,7 +196,7 @@ export const DonationsPage: React.FC = () => {
                   </div>
 
                   <div className={`form-field ${isVisible ? 'animate-fadeInUp stagger-4' : 'opacity-0'}`}>
-                    <Label htmlFor="email" className="text-green-800 font-medium text-sm sm:text-base">Email Address (Optional)</Label>
+                    <Label htmlFor="email" className={getTamilLabelClass("text-green-800 font-medium text-sm sm:text-base")}>Email Address (Optional)</Label>
                     <Input
                       id="email"
                       name="email"
@@ -191,20 +209,20 @@ export const DonationsPage: React.FC = () => {
                   </div>
 
                   <div className={`form-field ${isVisible ? 'animate-fadeInUp stagger-5' : 'opacity-0'}`}>
-                    <Label htmlFor="phone" className="text-green-800 font-medium text-sm sm:text-base">Phone Number (Optional)</Label>
+                    <Label htmlFor="phone" className={getTamilLabelClass("text-green-800 font-medium text-sm sm:text-base")}>Phone Number (Optional)</Label>
                     <Input
                       id="phone"
                       name="phone"
                       type="tel"
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="+91 12345 67890"
+                      placeholder="+91 89037 60869"
                       className="border-green-200 focus:border-green-500 transition-colors h-10 sm:h-12 text-sm sm:text-base"
                     />
                   </div>
 
                   <div className={`form-field ${isVisible ? 'animate-fadeInUp stagger-6' : 'opacity-0'}`}>
-                    <Label htmlFor="purpose" className="text-green-800 font-medium text-sm sm:text-base">
+                    <Label htmlFor="purpose" className={getTamilLabelClass("text-green-800 font-medium text-sm sm:text-base")}>
                       Donation Purpose <span className='text-red-500'>*</span>
                     </Label>
                     <select
@@ -212,10 +230,10 @@ export const DonationsPage: React.FC = () => {
                       name="purpose"
                       value={formData.purpose}
                       onChange={handleChange}
-                      className="flex h-10 sm:h-12 w-full rounded-md border border-green-200 bg-background px-3 py-2 text-sm sm:text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus:border-green-500 transition-colors"
+                      className={getTamilClass("flex h-10 sm:h-12 w-full rounded-md border border-green-200 bg-background px-3 py-2 text-sm sm:text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus:border-green-500 transition-colors")}
                       required
                     >
-                      <option value="">Select a purpose</option>
+                      <option value="">{t('donations.purpose')}</option>
                       {donationPurposes.map(purpose => (
                         <option key={purpose.id} value={purpose.name}>
                           {purpose.name}
@@ -226,8 +244,8 @@ export const DonationsPage: React.FC = () => {
 
                   {/* Animated Amount Selection */}
                   <div className={`${isVisible ? 'animate-scaleIn stagger-6' : 'opacity-0'}`}>
-                    <Label className="text-green-800 font-medium text-lg mb-4 block">
-                      Select Amount <span className='text-red-500'>*</span>
+                    <Label className={getTamilLabelClass("text-green-800 font-medium text-lg mb-4 block")}>
+                      {t('donations.amount')} <span className='text-red-500'>*</span>
                     </Label>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mt-4">
                       {predefinedAmounts.map((amount, index) => (
@@ -255,14 +273,14 @@ export const DonationsPage: React.FC = () => {
                       type="button"
                       variant={formData.amount === 'custom' ? 'default' : 'outline'}
                       onClick={() => handleAmountSelect('custom')}
-                      className={`amount-button w-full mt-3 sm:mt-4 h-11 sm:h-12 text-xs sm:text-sm font-semibold ${
+                      className={getTamilButtonClass(`amount-button w-full mt-3 sm:mt-4 h-11 sm:h-12 text-xs sm:text-sm font-semibold ${
                         formData.amount === 'custom' 
                           ? 'selected bg-gradient-to-r from-green-700 to-emerald-700 text-white border-green-700' 
                           : 'border-green-200 hover:border-green-500 hover:bg-green-50'
-                      }`}
+                      }`)}
                     >
                       <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
-                      Custom Amount
+                      {t('donations.custom')}
                       {formData.amount === 'custom' && (
                         <div className="shimmer-bg absolute inset-0 rounded-md"></div>
                       )}
@@ -272,7 +290,7 @@ export const DonationsPage: React.FC = () => {
                   {/* Custom Amount Input with Animation */}
                   {formData.amount === 'custom' && (
                     <div className="animate-fadeInUp form-field">
-                      <Label htmlFor="customAmount" className="text-green-800 font-medium text-sm sm:text-base">
+                      <Label htmlFor="customAmount" className={getTamilLabelClass("text-green-800 font-medium text-sm sm:text-base")}>
                         Enter Custom Amount (₹) <span className='text-red-500'>*</span>
                       </Label>
                       <Input
@@ -291,10 +309,10 @@ export const DonationsPage: React.FC = () => {
 
                   <Button 
                     type="submit" 
-                    className="w-full h-12 text-sm font-semibold bg-gradient-to-r from-green-700 to-emerald-700 hover:from-green-800 hover:to-emerald-800 transform hover:scale-105 transition-all duration-200 animate-fadeInUp"
+                    className={getTamilButtonClass("w-full h-12 text-sm font-semibold bg-gradient-to-r from-green-700 to-emerald-700 hover:from-green-800 hover:to-emerald-800 transform hover:scale-105 transition-all duration-200 animate-fadeInUp")}
                   >
                     <Heart className="mr-2 w-5 h-5 animate-heartBeat" />
-                    Proceed to Donation
+                    {t('donations.proceed')}
                   </Button>
 
                   {/* <p className="text-xs text-gray-500 text-center animate-fadeInUp">
@@ -312,7 +330,7 @@ export const DonationsPage: React.FC = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center gap-2 mb-4">
                   <IndianRupee className="w-6 h-6 text-green-700" />
-                  <h4 className="text-green-800 font-semibold text-lg">How Your Donation Helps</h4>
+                  <h4 className={getTamilHeadingClass("text-green-800 font-semibold text-lg")}>{t('donations.help.title')}</h4>
                 </div>
                 <div className="space-y-4">
                   {donationPurposes.slice(0, 4).map((purpose, index) => (
@@ -321,10 +339,10 @@ export const DonationsPage: React.FC = () => {
                       className={`border-l-4 border-green-300 pl-4 py-2 rounded-r-lg bg-green-50/50 hover:bg-green-50 transition-colors ${isVisible ? 'animate-fadeInUp' : 'opacity-0'}`}
                       style={{animationDelay: `${0.8 + index * 0.1}s`}}
                     >
-                      <p className="text-sm text-gray-800 font-medium">
+                      <p className={getTamilClass("text-sm text-gray-800 font-medium")}>
                         {purpose.name}
                       </p>
-                      <p className="text-xs text-gray-600 mt-1">{purpose.description}</p>
+                      <p className={getTamilClass("text-xs text-gray-600 mt-1")}>{purpose.description}</p>
                     </div>
                   ))}
                 </div>
@@ -334,13 +352,12 @@ export const DonationsPage: React.FC = () => {
             {/* Tax Benefits */}
             <Card className={`border-green-200 bg-gradient-to-br from-green-50 to-emerald-50 card-hover ${isVisible ? 'animate-slideInRight stagger-4' : 'opacity-0'}`}>
               <CardContent className="pt-6">
-                <h4 className="text-green-800 mb-3 font-semibold flex items-center gap-2">
+                <h4 className={getTamilHeadingClass("text-green-800 mb-3 font-semibold flex items-center gap-2")}>
                   <Sparkles className="w-5 h-5" />
-                  Tax Benefits
+                  {t('donations.tax.title')}
                 </h4>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  Donations to religious institutions may be eligible for tax deductions under 
-                  applicable tax laws. Please consult with your tax advisor for details.
+                <p className={getTamilClass("text-sm text-gray-700 leading-relaxed")}>
+                  {t('donations.tax.description')}
                 </p>
               </CardContent>
             </Card>
@@ -348,11 +365,11 @@ export const DonationsPage: React.FC = () => {
             {/* Contact */}
             <Card className={`border-green-200 card-hover bg-white/80 backdrop-blur-sm ${isVisible ? 'animate-slideInRight stagger-5' : 'opacity-0'}`}>
               <CardContent className="pt-6">
-                <h4 className="text-green-800 mb-3 font-semibold">Need Help?</h4>
-                <p className="text-sm text-gray-700 mb-3 leading-relaxed">
-                  For questions about donations or payment methods, please contact us.
+                <h4 className={getTamilHeadingClass("text-green-800 mb-3 font-semibold")}>{t('donations.need.help')}</h4>
+                <p className={getTamilClass("text-sm text-gray-700 mb-3 leading-relaxed")}>
+                  {t('donations.contact')}
                 </p>
-                <p className="text-lg font-semibold text-green-700 flex items-center gap-2">
+                <p className={getTamilClass("text-lg font-semibold text-green-700 flex items-center gap-2")}>
                   <Heart className="w-4 h-4" />
                   +91 89037 60869
                 </p>

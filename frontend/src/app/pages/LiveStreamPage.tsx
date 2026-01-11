@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { useShrineData } from '../context/ShrineDataContext';
+import { useLanguage } from '../context/LanguageContext';
 import { livestreamApi } from '../../api/livestreamApi';
 import { 
   Radio, 
@@ -12,12 +13,12 @@ import {
   Play, 
   Volume2, 
   Maximize, 
-  Share2,
   Bell,
   Heart,
   MessageCircle,
   Eye,
-  ExternalLink
+  ExternalLink,
+  X
 } from 'lucide-react';
 import { QuickNotifyButton } from '../components/StreamEmailNotification';
 
@@ -37,15 +38,15 @@ interface LivestreamData {
 
 // Default mass timings to show immediately
 const DEFAULT_MASS_TIMINGS = [
-  { name: 'Morning Mass', time: '6:00 AM', type: 'daily' },
-  { name: 'Evening Mass', time: '6:30 PM', type: 'daily' },
-  { name: 'Sunday Mass', time: '9:00 AM', type: 'sunday' }
+  { name: 'livestream.morning.mass', time: 'livestream.morning.time', type: 'daily' },
+  { name: 'livestream.evening.mass', time: 'livestream.evening.time', type: 'daily' },
+  { name: 'livestream.sunday.mass', time: 'livestream.sunday.time', type: 'sunday' }
 ];
 
 const DEFAULT_SPECIAL_EVENTS = [
-  { name: 'Feast Day Celebration', date: 'January 14th - Full Day Coverage' },
-  { name: 'Friday Adoration', date: 'Every Friday at 7:00 PM' },
-  { name: 'Holy Week Services', date: 'Special extended coverage' }
+  { name: 'livestream.feast.day', date: 'livestream.feast.coverage' },
+  { name: 'livestream.friday.adoration', date: 'livestream.friday.time' },
+  { name: 'livestream.holy.week', date: 'livestream.extended.coverage' }
 ];
 
 // Helper function to convert YouTube URL to proper embed URL
@@ -74,8 +75,10 @@ const getYouTubeEmbedUrl = (url: string): string => {
   }
   
   if (videoId) {
-    // Return proper embed URL with necessary parameters for live streaming
-    return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&showinfo=1&rel=0&modestbranding=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=0`;
+    // Return proper embed URL with mobile-optimized parameters
+    // Removed playsinline=1 to allow proper mobile controls
+    // Added origin parameter for better mobile compatibility
+    return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&showinfo=1&rel=0&modestbranding=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=0&enablejsapi=1&origin=${window.location.origin}`;
   }
   
   return url;
@@ -101,6 +104,7 @@ const getYouTubeVideoId = (url: string): string => {
 };
 export const LiveStreamPage: React.FC = () => {
   const { siteContent } = useShrineData();
+  const { language, t } = useLanguage();
   const [activeStream, setActiveStream] = useState<LivestreamData | null>(null);
   const [upcomingStreams, setUpcomingStreams] = useState<LivestreamData[]>([]);
   const [recentStreams, setRecentStreams] = useState<LivestreamData[]>([]);
@@ -108,11 +112,90 @@ export const LiveStreamPage: React.FC = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [videoContainerRef, setVideoContainerRef] = useState<HTMLDivElement | null>(null);
+
+  // Tamil font size classes
+  const getTamilClass = (baseClass: string = '') => {
+    return language === 'தமிழ்' ? `${baseClass} tamil-text` : baseClass;
+  };
+
+  const getTamilHeadingClass = (baseClass: string = '') => {
+    return language === 'தமிழ்' ? `${baseClass} tamil-heading` : baseClass;
+  };
+
+  const getTamilButtonClass = (baseClass: string = '') => {
+    return language === 'தமிழ்' ? `${baseClass} tamil-button` : baseClass;
+  };
 
   useEffect(() => {
     // Trigger animations on mount
     setIsVisible(true);
   }, []);
+
+  // Enhanced fullscreen functionality
+  const toggleFullscreen = useCallback(async () => {
+    if (!videoContainerRef) return;
+
+    try {
+      if (!document.fullscreenElement) {
+        // Enter fullscreen
+        await videoContainerRef.requestFullscreen();
+        setIsFullscreen(true);
+        
+        // DO NOT lock orientation - let user control it
+        // This prevents auto-rotation to landscape
+      } else {
+        // Exit fullscreen
+        await document.exitFullscreen();
+        setIsFullscreen(false);
+      }
+    } catch (error) {
+      console.error('Fullscreen error:', error);
+      // Fallback for browsers that don't support fullscreen API
+      setIsFullscreen(!isFullscreen);
+    }
+  }, [videoContainerRef, isFullscreen]);
+
+  // Listen for fullscreen changes
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isCurrentlyFullscreen = !!document.fullscreenElement;
+      setIsFullscreen(isCurrentlyFullscreen);
+      
+      // Manage body class for scroll prevention
+      if (isCurrentlyFullscreen) {
+        document.body.classList.add('fullscreen-active');
+      } else {
+        document.body.classList.remove('fullscreen-active');
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+      // Clean up body class on unmount
+      document.body.classList.remove('fullscreen-active');
+    };
+  }, []);
+
+  // Handle escape key for fullscreen exit
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isFullscreen) {
+        toggleFullscreen();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, [isFullscreen, toggleFullscreen]);
 
   // Share functionality
   const handleShare = useCallback((stream: LivestreamData) => {
@@ -250,12 +333,12 @@ export const LiveStreamPage: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
           <div className={`flex flex-col items-center justify-center gap-3 mb-4 sm:mb-6 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
-            <h1 className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-green-800 to-blue-800 bg-clip-text text-transparent text-center">
-              Live Mass Stream
+            <h1 className={getTamilHeadingClass("text-2xl sm:text-4xl font-bold bg-gradient-to-r from-green-800 to-blue-800 bg-clip-text text-transparent text-center")}>
+              {t('livestream.title')}
             </h1>
           </div>
-          <p className={`text-gray-700 max-w-2xl mx-auto text-base sm:text-lg px-4 ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
-            Join us for live streaming of Holy Mass and special ceremonies from Devasahayam Mount Shrine
+          <p className={getTamilClass(`text-gray-700 max-w-2xl mx-auto text-base sm:text-lg px-4 ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`)}>
+            {t('livestream.subtitle')}
           </p>
           {loading && !dataLoaded && (
             <div className={`mt-2 text-sm text-green-600 ${isVisible ? 'animate-fadeInUp stagger-3' : 'opacity-0'}`}>Loading stream information...</div>
@@ -268,34 +351,43 @@ export const LiveStreamPage: React.FC = () => {
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
               <Badge className="bg-red-600 text-white px-2 py-0.5 text-xs font-medium animate-pulse-custom w-fit">
                 <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse mr-1.5"></div>
-                LIVE NOW
+                {t('livestream.live.now')}
               </Badge>
-              <div className="flex items-center gap-1 text-gray-600 text-sm sm:text-base">
+              <div className={getTamilClass("flex items-center gap-1 text-gray-600 text-sm sm:text-base")}>
                 <Users className="w-4 h-4" />
-                <span>{activeStream.viewer_count} watching</span>
+                <span>{activeStream.viewer_count} {t('livestream.watching')}</span>
               </div>
             </div>
 
             <Card className="border-2 border-red-200 shadow-2xl overflow-hidden card-hover">
               <CardContent className="p-0">
                 {/* Video Player */}
-                <div className={`relative ${isFullscreen ? 'fixed inset-0 z-50 bg-black' : 'aspect-video'} touch-manipulation`}>
+                <div 
+                  ref={setVideoContainerRef}
+                  className={`relative ${isFullscreen ? 'fixed inset-0 z-50 bg-black' : 'aspect-video'} touch-manipulation`}
+                >
                   <iframe
                     src={getYouTubeEmbedUrl(activeStream.stream_url)}
                     title={activeStream.title}
                     className="w-full h-full"
                     allowFullScreen
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
                     loading="lazy"
                     referrerPolicy="strict-origin-when-cross-origin"
+                    style={{
+                      border: 'none',
+                      outline: 'none'
+                    }}
+                    // Add these attributes for better mobile control
+                    sandbox="allow-same-origin allow-scripts allow-presentation allow-forms"
                   />
                   
                   {/* Enhanced Video Controls Overlay - Mobile optimized */}
-                  <div className="absolute bottom-1 sm:bottom-4 left-1 sm:left-4 right-1 sm:right-4 flex items-center justify-between bg-black bg-opacity-70 rounded-md sm:rounded-lg p-1.5 sm:p-3">
+                  <div className={`absolute bottom-1 sm:bottom-4 left-1 sm:left-4 right-1 sm:right-4 flex items-center justify-between bg-black bg-opacity-70 rounded-md sm:rounded-lg p-1.5 sm:p-3 transition-opacity duration-300 ${isFullscreen ? 'opacity-0 hover:opacity-100' : 'opacity-100'}`}>
                     <div className="flex items-center gap-1 sm:gap-3">
                       <div className="flex items-center gap-1 text-white text-xs sm:text-sm">
                         <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full animate-pulse"></div>
-                        <span className="hidden xs:inline">LIVE</span>
+                        <span className="hidden xs:inline">{t('livestream.live.now')}</span>
                         <span className="xs:hidden">●</span>
                       </div>
                       <div className="flex items-center gap-1 text-white text-xs sm:text-sm">
@@ -310,15 +402,6 @@ export const LiveStreamPage: React.FC = () => {
                         size="sm" 
                         variant="ghost" 
                         className="text-white hover:bg-white hover:bg-opacity-20 p-1 h-6 w-6 sm:p-2 sm:h-8 sm:w-8"
-                        onClick={() => handleShare(activeStream)}
-                        title="Share stream"
-                      >
-                        <Share2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="ghost" 
-                        className="text-white hover:bg-white hover:bg-opacity-20 p-1 h-6 w-6 sm:p-2 sm:h-8 sm:w-8"
                         onClick={() => openInYouTube(activeStream)}
                         title="Open in YouTube (for chat and full features)"
                       >
@@ -327,14 +410,25 @@ export const LiveStreamPage: React.FC = () => {
                       <Button 
                         size="sm" 
                         variant="ghost" 
-                        className="text-white hover:bg-white hover:bg-opacity-20 p-1 h-6 w-6 sm:p-2 sm:h-8 sm:w-8 hidden sm:flex"
-                        onClick={() => setIsFullscreen(!isFullscreen)}
-                        title="Toggle fullscreen"
+                        className="text-white hover:bg-white hover:bg-opacity-20 p-1 h-6 w-6 sm:p-2 sm:h-8 sm:w-8"
+                        onClick={toggleFullscreen}
+                        title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
                       >
                         <Maximize className="w-3 h-3 sm:w-4 sm:h-4" />
                       </Button>
                     </div>
                   </div>
+
+                  {/* Fullscreen Exit Button - Mobile */}
+                  {isFullscreen && (
+                    <button
+                      onClick={toggleFullscreen}
+                      className="absolute top-4 right-4 z-60 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all duration-200 sm:hidden"
+                      title="Exit fullscreen"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  )}
                 </div>
 
                 {/* Stream Info */}
@@ -348,11 +442,11 @@ export const LiveStreamPage: React.FC = () => {
                       <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3">
                         <div className="flex items-center gap-1">
                           <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <span>Started {activeStream.started_at ? formatTime(activeStream.started_at) : 'recently'}</span>
+                          <span>{t('livestream.started')} {activeStream.started_at ? formatTime(activeStream.started_at) : '3:41 PM'}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <span>Peak: {activeStream.max_viewers} viewers</span>
+                          <span>{t('livestream.peak')} {activeStream.max_viewers} {t('livestream.viewers')}</span>
                         </div>
                       </div>
                     </div>
@@ -360,15 +454,6 @@ export const LiveStreamPage: React.FC = () => {
                     <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
                       {/* Mobile: Compact icons in single line */}
                       <div className="flex sm:hidden gap-1 justify-center">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="border-red-200 text-red-700 hover:bg-red-50 p-1.5 h-7 w-7 text-xs"
-                          onClick={() => handleShare(activeStream)}
-                          title="Share"
-                        >
-                          <Share2 className="w-3 h-3" />
-                        </Button>
                         <Button 
                           variant="outline" 
                           size="sm" 
@@ -394,29 +479,20 @@ export const LiveStreamPage: React.FC = () => {
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          className="border-red-200 text-red-700 hover:bg-red-50 text-xs sm:text-sm"
-                          onClick={() => handleShare(activeStream)}
-                        >
-                          <Share2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                          Share
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="border-red-200 text-red-700 hover:bg-red-50 text-xs sm:text-sm"
+                          className={getTamilButtonClass("border-red-200 text-red-700 hover:bg-red-50 text-xs sm:text-sm")}
                           onClick={() => openInYouTube(activeStream)}
                         >
                           <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                          Chat on YouTube
+                          {t('livestream.chat.youtube')}
                         </Button>
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          className="border-red-200 text-red-700 hover:bg-red-50 text-xs sm:text-sm"
+                          className={getTamilButtonClass("border-red-200 text-red-700 hover:bg-red-50 text-xs sm:text-sm")}
                           onClick={() => openInYouTube(activeStream)}
                         >
                           <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                          Full Features
+                          {t('livestream.full.features')}
                         </Button>
                       </div>
                     </div>
@@ -491,9 +567,9 @@ export const LiveStreamPage: React.FC = () => {
         <div className={`grid gap-4 sm:gap-6 lg:grid-cols-2 mb-8 sm:mb-12 ${isVisible ? 'animate-slideInRight stagger-1' : 'opacity-0'}`}>
           <Card className="border-green-200 card-hover">
             <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-green-800 text-lg sm:text-xl">
+              <CardTitle className={getTamilHeadingClass("flex items-center gap-2 text-green-800 text-lg sm:text-xl")}>
                 <Clock className="w-5 h-5 animate-float" />
-                Daily Mass Timings
+                {t('livestream.daily.timings')}
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
@@ -502,11 +578,11 @@ export const LiveStreamPage: React.FC = () => {
                   <div key={index} className={`flex justify-between items-center p-3 rounded-lg ${
                     mass.type === 'sunday' ? 'bg-blue-50' : 'bg-green-50'
                   }`}>
-                    <span className="text-gray-700 font-medium text-sm sm:text-base">{mass.name}</span>
+                    <span className={getTamilClass("text-gray-700 font-medium text-sm sm:text-base")}>{t(mass.name)}</span>
                     <Badge variant="outline" className={`text-xs sm:text-sm ${
                       mass.type === 'sunday' ? 'border-blue-200 text-blue-700' : 'border-green-200 text-green-700'
                     }`}>
-                      {mass.time}
+                      {t(mass.time)}
                     </Badge>
                   </div>
                 ))}
@@ -516,17 +592,17 @@ export const LiveStreamPage: React.FC = () => {
 
           <Card className="border-green-200 card-hover">
             <CardHeader className="pb-4">
-              <CardTitle className="flex items-center gap-2 text-green-800 text-lg sm:text-xl">
+              <CardTitle className={getTamilHeadingClass("flex items-center gap-2 text-green-800 text-lg sm:text-xl")}>
                 <Calendar className="w-5 h-5 animate-float" style={{animationDelay: '0.5s'}} />
-                Special Events
+                {t('livestream.special.events')}
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
               <div className="space-y-3">
                 {DEFAULT_SPECIAL_EVENTS.map((event, index) => (
                   <div key={index} className="p-3 bg-green-50 rounded-lg">
-                    <p className="font-medium text-gray-900 mb-1 text-sm sm:text-base">{event.name}</p>
-                    <p className="text-xs sm:text-sm text-gray-600">{event.date}</p>
+                    <p className={getTamilClass("font-medium text-gray-900 mb-1 text-sm sm:text-base")}>{t(event.name)}</p>
+                    <p className={getTamilClass("text-xs sm:text-sm text-gray-600")}>{t(event.date)}</p>
                   </div>
                 ))}
               </div>
@@ -583,20 +659,20 @@ export const LiveStreamPage: React.FC = () => {
         {/* YouTube Channel Link */}
         <Card className={`border-green-200 bg-gradient-to-r from-green-50 to-blue-50 card-hover ${isVisible ? 'animate-scaleIn stagger-1' : 'opacity-0'}`}>
           <CardContent className="p-6 sm:p-8 text-center">
-            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">
-              Visit Our YouTube Channel
+            <h3 className={getTamilHeadingClass("text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4")}>
+              {t('livestream.youtube.channel')}
             </h3>
-            <p className="text-gray-700 mb-4 sm:mb-6 text-sm sm:text-base px-2 sm:px-0">
-              Subscribe to our channel for notifications about upcoming streams and access to recorded masses
+            <p className={getTamilClass("text-gray-700 mb-4 sm:mb-6 text-sm sm:text-base px-2 sm:px-0")}>
+              {t('livestream.youtube.subscribe')}
             </p>
-            <Button asChild className="bg-red-600 hover:bg-red-700 animate-pulse-custom text-sm sm:text-base px-4 sm:px-6">
+            <Button asChild className={getTamilButtonClass("bg-red-600 hover:bg-red-700 animate-pulse-custom text-sm sm:text-base px-4 sm:px-6")}>
               <a
                 href={youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
-                Visit YouTube Channel
+                {t('livestream.visit.channel')}
               </a>
             </Button>
           </CardContent>
@@ -605,40 +681,122 @@ export const LiveStreamPage: React.FC = () => {
         {/* Important Notes */}
         <Card className={`border-green-200 bg-green-50 mt-6 sm:mt-8 card-hover ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
           <CardContent className="p-4 sm:pt-6 sm:px-6 sm:pb-6">
-            <h4 className="text-green-800 mb-3 sm:mb-4 font-semibold text-base sm:text-lg">Important Information</h4>
+            <h4 className={getTamilHeadingClass("text-green-800 mb-3 sm:mb-4 font-semibold text-base sm:text-lg")}>{t('livestream.important.info')}</h4>
             <ul className="space-y-2 sm:space-y-3 text-gray-700 text-xs sm:text-sm">
               <li className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                <span className="leading-relaxed">Live streaming is available during scheduled mass times</span>
+                <span className={getTamilClass("leading-relaxed")}>{t('livestream.info.1')}</span>
               </li>
               <li className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                <span className="leading-relaxed">For full YouTube features (live chat, super chat, reactions), click "Chat on YouTube" or "Full Features"</span>
+                <span className={getTamilClass("leading-relaxed")}>{t('livestream.info.2')}</span>
               </li>
               <li className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                <span className="leading-relaxed">Check our YouTube channel for recorded masses if you miss the live stream</span>
+                <span className={getTamilClass("leading-relaxed")}>{t('livestream.info.3')}</span>
               </li>
               <li className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                <span className="leading-relaxed">For special ceremonies and feast day celebrations, check our announcements</span>
+                <span className={getTamilClass("leading-relaxed")}>{t('livestream.info.4')}</span>
               </li>
               <li className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                <span className="leading-relaxed">You can participate in prayers and responses from wherever you are</span>
+                <span className={getTamilClass("leading-relaxed")}>{t('livestream.info.5')}</span>
               </li>
               <li className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                <span className="leading-relaxed">Feel free to leave your prayer intentions in the YouTube live chat</span>
+                <span className={getTamilClass("leading-relaxed")}>{t('livestream.info.6')}</span>
               </li>
               <li className="flex items-start gap-2">
                 <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                <span className="leading-relaxed">Use the share button to invite family and friends to join the live mass</span>
+                <span className={getTamilClass("leading-relaxed")}>{t('livestream.info.7')}</span>
               </li>
             </ul>
           </CardContent>
         </Card>
       </div>
+
+      {/* Fullscreen Styles */}
+      <style jsx>{`
+        /* Fullscreen video container styles */
+        .fullscreen-video-container {
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          width: 100vw !important;
+          height: 100vh !important;
+          z-index: 9999 !important;
+          background: black !important;
+        }
+
+        /* Hide scrollbars in fullscreen */
+        .fullscreen-video-container::-webkit-scrollbar {
+          display: none;
+        }
+
+        /* Ensure iframe takes full space in fullscreen */
+        .fullscreen-video-container iframe {
+          width: 100% !important;
+          height: 100% !important;
+          border: none !important;
+          outline: none !important;
+        }
+
+        /* Prevent body scroll when in fullscreen */
+        body.fullscreen-active {
+          overflow: hidden !important;
+          position: fixed !important;
+          width: 100% !important;
+          height: 100% !important;
+        }
+
+        /* Enhanced controls visibility in fullscreen */
+        .fullscreen-controls {
+          opacity: 0;
+          transition: opacity 0.3s ease-in-out;
+          pointer-events: none;
+        }
+
+        .fullscreen-controls:hover,
+        .fullscreen-controls.show {
+          opacity: 1;
+          pointer-events: auto;
+        }
+
+        /* Touch-friendly controls for mobile */
+        @media (max-width: 768px) {
+          .fullscreen-controls {
+            opacity: 1;
+            pointer-events: auto;
+          }
+          
+          /* Prevent auto-rotation by maintaining aspect ratio */
+          .aspect-video {
+            aspect-ratio: 16 / 9;
+            max-height: 60vh; /* Limit height on mobile to prevent auto-rotation */
+          }
+          
+          /* Mobile video container optimization */
+          .touch-manipulation {
+            touch-action: manipulation;
+          }
+        }
+
+        /* Specific mobile portrait mode handling */
+        @media screen and (orientation: portrait) and (max-width: 768px) {
+          .aspect-video {
+            max-height: 50vh !important;
+            width: 100% !important;
+          }
+        }
+
+        /* Mobile landscape - only when user manually rotates */
+        @media screen and (orientation: landscape) and (max-width: 768px) {
+          .aspect-video {
+            max-height: 80vh !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };

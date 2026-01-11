@@ -126,9 +126,9 @@ const initialSiteContent: SiteContent = {
   mapLng: 77.5145,
   youtubeStreamUrl: 'https://www.youtube.com/embed/jfKfPfyJRdk',
   massBookingAmount: 500,
-  facebookUrl: 'https://facebook.com/devasahayamshrine',
-  youtubeUrl: 'https://youtube.com/@devasahayamshrine',
-  instagramUrl: 'https://instagram.com/devasahayamshrine',
+  facebookUrl: 'https://www.facebook.com/DVmount',
+  youtubeUrl: 'https://www.youtube.com/@devasahayammountshrine5677',
+  instagramUrl: 'https://www.instagram.com/popular/devasahayam-mount/?utm_source=chatgpt.com',
 };
 
 const initialDonationPurposes: DonationPurpose[] = [

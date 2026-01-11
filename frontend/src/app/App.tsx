@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ShrineDataProvider } from './context/ShrineDataContext';
 import { ShrineAuthProvider, useShrineAuth } from './context/ShrineAuthContext';
+import { LanguageProvider } from './context/LanguageContext';
 import { Toaster } from './components/ui/sonner';
+
+// Splash Screen
+import SplashScreen from './pages/SplashScreen';
 
 // Public Components
 import { PublicNavigation } from './components/PublicNavigation';
@@ -19,6 +23,7 @@ import { TestimoniesPage } from './pages/TestimoniesPage';
 import { PrayerRequestPage } from './pages/PrayerRequestPage';
 import { AnnouncementsPage } from './pages/AnnouncementsPage';
 import { ContactPage } from './pages/ContactPage';
+import BusDetails from './pages/BusDetails';
 
 // Admin Components & Pages
 import { AdminNavigation } from './components/AdminNavigation';
@@ -106,6 +111,23 @@ const PublicLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 };
 
 const AppContent = () => {
+  const [showSplash, setShowSplash] = useState(() => {
+    // Check if splash was already shown in this session
+    const splashShown = sessionStorage.getItem('splashShown');
+    return !splashShown;
+  });
+
+  const handleSplashComplete = () => {
+    setShowSplash(false);
+    // Mark splash as shown for this session
+    sessionStorage.setItem('splashShown', 'true');
+  };
+
+  // Show splash screen on initial load
+  if (showSplash) {
+    return <SplashScreen onComplete={handleSplashComplete} />;
+  }
+
   return (
     <Routes>
       {/* Public Routes */}
@@ -166,6 +188,12 @@ const AppContent = () => {
       <Route path="/contact" element={
         <PublicLayout>
           <ContactPage />
+        </PublicLayout>
+      } />
+      
+      <Route path="/bus-details" element={
+        <PublicLayout>
+          <BusDetails />
         </PublicLayout>
       } />
       
@@ -298,12 +326,14 @@ const AppContent = () => {
 
 const App: React.FC = () => {
   return (
-    <ShrineAuthProvider>
-      <ShrineDataProvider>
-        <AppContent />
-        <Toaster position="top-right" />
-      </ShrineDataProvider>
-    </ShrineAuthProvider>
+    <LanguageProvider>
+      <ShrineAuthProvider>
+        <ShrineDataProvider>
+          <AppContent />
+          <Toaster position="top-right" />
+        </ShrineDataProvider>
+      </ShrineAuthProvider>
+    </LanguageProvider>
   );
 };
 
