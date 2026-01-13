@@ -546,7 +546,7 @@ export const HomePage: React.FC = () => {
               <div className="rounded-lg overflow-hidden shadow-lg premium-card-hover">
                 <img
                   src="/mary.jpeg"
-                  alt="Our Lady of Sorrows"
+                  alt="St. Devasahayam Martyrdom place"
                   className="w-full h-96 object-cover"
                 />
               </div>
