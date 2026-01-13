@@ -75,14 +75,6 @@ A modern, responsive website for Devasahayam Mount Shrine built with React and N
 │
 ├── database/                 # Database schema and setup
 │   ├── schema.sql            # Complete database schema
-│   └── README.md             # Database documentation
-│
-└── deployment/               # Deployment package
-    ├── frontend-dist/        # Built frontend (generated)
-    ├── backend/              # Clean backend for deployment
-    ├── database/             # Database setup files
-    ├── scripts/              # Deployment scripts
-    └── README.md             # Deployment guide
 ```
 
 ## 🚀 Quick Start
