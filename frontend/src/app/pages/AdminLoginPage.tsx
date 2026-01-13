@@ -75,7 +75,7 @@ export const AdminLoginPage: React.FC = () => {
             <Lock className="w-8 h-8 text-white" />
           </div>
           <CardTitle className="text-green-800 text-2xl">Admin Login</CardTitle>
-          <p className="text-gray-600 text-sm">Devasahayam Mount Shrine</p>
+          <p className="text-gray-600 text-sm">Our Lady Of Sorrows Shrine</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">

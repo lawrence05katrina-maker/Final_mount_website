@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { useShrineData } from '../../context/ShrineDataContext';
-import { IndianRupee, Calendar, MessageCircle, Star, TrendingUp, Users } from 'lucide-react';
+import { IndianRupee, Calendar, MessageCircle, Star, TrendingUp } from 'lucide-react';
 
 interface DonationStats {
   total_donations: number;
   total_amount: number;
   pending_count: number;
   verified_count: number;
-  rejected_count: number;
 }
 
 export const AdminDashboard: React.FC = () => {
@@ -17,8 +16,7 @@ export const AdminDashboard: React.FC = () => {
     total_donations: 0,
     total_amount: 0,
     pending_count: 0,
-    verified_count: 0,
-    rejected_count: 0
+    verified_count: 0
   });
   const [loading, setLoading] = useState(true);
 
@@ -52,7 +50,7 @@ export const AdminDashboard: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
           <h1 className="text-green-800 mb-2">Dashboard</h1>
-          <p className="text-gray-600">Welcome to the Devasahayam Mount Shrine Admin Panel</p>
+          <p className="text-gray-600">Welcome to the Our Lady Of Sorrows Shrine Admin Panel</p>
         </div>
 
         {/* Statistics Cards */}
@@ -107,7 +105,7 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Donation Status Breakdown */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
           <Card className="border-orange-200">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-2">
@@ -131,19 +129,6 @@ export const AdminDashboard: React.FC = () => {
                 {loading ? '...' : donationStats.verified_count}
               </p>
               <p className="text-xs text-gray-500 mt-1">Successfully verified</p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-red-200">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-sm text-gray-600">Rejected Donations</p>
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-              </div>
-              <p className="text-2xl text-gray-800">
-                {loading ? '...' : donationStats.rejected_count}
-              </p>
-              <p className="text-xs text-gray-500 mt-1">Verification failed</p>
             </CardContent>
           </Card>
         </div>

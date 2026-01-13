@@ -4,7 +4,7 @@ import { Bus, Clock, MapPin, ArrowRight } from "lucide-react";
 import "./BusDetails.css";
 
 const BusDetails: React.FC = () => {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
 
   const getTamilClass = (baseClass: string = '') => {
     return language === 'தமிழ்' ? `${baseClass} tamil-text` : baseClass;
@@ -82,7 +82,7 @@ const BusDetails: React.FC = () => {
       <div className="header-container">
         <Bus className="bus-icon" />
         <h1 className={getTamilHeadingClass("page-title")}>
-          {language === 'தமிழ்' ? 'பேருந்து நேரங்கள் – தேவசகாயம் மலை' : 'Bus Timings – Devasahayam Mount'}
+          {t('bus.title')}
         </h1>
       </div>
 
@@ -91,28 +91,25 @@ const BusDetails: React.FC = () => {
         <div className="route-header">
           <MapPin className="route-icon" />
           <h2 className={getTamilHeadingClass("route-title")}>
-            {language === 'தமிழ்' ? 'பேருந்து வழித்தட விவரம்' : 'Bus Route Information'}
+            {t('bus.route.info')}
           </h2>
         </div>
         
         <div className="route-info-grid">
           <div className="route-info-left">
             <p className={getTamilClass("route-info-text")}>
-              <strong>{language === 'தமிழ்' ? 'பேருந்து எண்:' : 'Bus No:'}</strong> 15V
+              <strong>{t('bus.number')}</strong> 15V
             </p>
             <p className={getTamilClass("route-info-text")}>
-              <strong>{language === 'தமிழ்' ? 'வழித்தடம்:' : 'Route:'}</strong> 
-              {language === 'தமிழ்' ? ' தேவசகாயம் மலை ↔ நாகர்கோவில்' : ' Devasahayam Mount ↔ Nagercoil'}
+              <strong>{t('bus.route')}</strong> {t('bus.route.path')}
             </p>
           </div>
           <div className="route-info-right">
             <p className={getTamilClass("route-info-text")}>
-              <strong>{language === 'தமிழ்' ? 'பயண நேரம்:' : 'Travel Time:'}</strong> 
-              {language === 'தமிழ்' ? ' 45 நிமிடங்கள் (ஒரு வழி)' : ' 45 minutes (one way)'}
+              <strong>{t('bus.travel.time')}</strong> {t('bus.travel.duration')}
             </p>
             <p className={getTamilClass("route-info-text")}>
-              <strong>{language === 'தமிழ்' ? 'நாகர்கோவில் நிறுத்த நேரம்:' : 'Stand Time at Nagercoil:'}</strong> 
-              {language === 'தமிழ்' ? ' 10 நிமிடங்கள்' : ' 10 minutes'}
+              <strong>{t('bus.stand.time')}</strong> {t('bus.stand.duration')}
             </p>
           </div>
         </div>
@@ -126,25 +123,25 @@ const BusDetails: React.FC = () => {
               <th className={getTamilClass("table-header")}>
                 <div className="table-header-content">
                   <Clock className="table-icon" />
-                  <span className={getTamilClass("header-text")}>{language === 'தமிழ்' ? 'மலையிலிருந்து' : 'From Mount'}</span>
+                  <span className={getTamilClass("header-text")}>{t('bus.from.mount')}</span>
                 </div>
               </th>
               <th className={getTamilClass("table-header")}>
                 <div className="table-header-content">
                   <ArrowRight className="table-icon" />
-                  <span className={getTamilClass("header-text")}>{language === 'தமிழ்' ? 'நாகர்கோவில் அடையும்' : 'Reach Nagercoil'}</span>
+                  <span className={getTamilClass("header-text")}>{t('bus.reach.nagercoil')}</span>
                 </div>
               </th>
               <th className={getTamilClass("table-header")}>
                 <div className="table-header-content">
                   <Clock className="table-icon" />
-                  <span className={getTamilClass("header-text")}>{language === 'தமிழ்' ? 'திரும்பும் நேரம்' : 'Return Start'}</span>
+                  <span className={getTamilClass("header-text")}>{t('bus.return.start')}</span>
                 </div>
               </th>
               <th className={getTamilClass("table-header")}>
                 <div className="table-header-content">
                   <ArrowRight className="table-icon" />
-                  <span className={getTamilClass("header-text")}>{language === 'தமிழ்' ? 'மீண்டும் மலை அடையும்' : 'Reach Mount Back'}</span>
+                  <span className={getTamilClass("header-text")}>{t('bus.reach.mount.back')}</span>
                 </div>
               </th>
             </tr>
@@ -166,7 +163,7 @@ const BusDetails: React.FC = () => {
               <td className="table-cell">{getTimeDisplay('10:00 PM')}</td>
               <td className="table-cell">{getTimeDisplay('10:45 PM')}</td>
               <td colSpan={2} className={getTamilClass("table-cell special-note")}>
-                {language === 'தமிழ்' ? 'மலையிலேயே நிறுத்தம்' : 'Stay at Mount'}
+                {t('bus.stay.mount')}
               </td>
             </tr>
           </tbody>
@@ -176,35 +173,20 @@ const BusDetails: React.FC = () => {
       {/* Additional Information */}
       <div className="info-section">
         <h3 className={getTamilHeadingClass("info-title")}>
-          {language === 'தமிழ்' ? 'முக்கிய குறிப்புகள்' : 'Important Notes'}
+          {t('bus.notes.title')}
         </h3>
         <ul className={getTamilClass("info-list")}>
           <li className={getTamilClass("info-item")}>
             <span className="info-bullet">•</span>
-            <span>
-              {language === 'தமிழ்' 
-                ? 'வானிலை மற்றும் போக்குவரத்து காரணங்களால் பேருந்து நேரங்களில் மாற்றம் இருக்கலாம்'
-                : 'Bus timings may vary due to weather and traffic conditions'
-              }
-            </span>
+            <span>{t('bus.note.weather')}</span>
           </li>
           <li className={getTamilClass("info-item")}>
             <span className="info-bullet">•</span>
-            <span>
-              {language === 'தமிழ்' 
-                ? 'திருவிழா நாட்களில் கூடுதல் பேருந்துகள் இயக்கப்படும்'
-                : 'Additional buses operate during festival days'
-              }
-            </span>
+            <span>{t('bus.note.festival')}</span>
           </li>
           <li className={getTamilClass("info-item")}>
             <span className="info-bullet">•</span>
-            <span>
-              {language === 'தமிழ்' 
-                ? 'கூடுதல் தகவல்களுக்கு தொடர்பு கொள்ளவும்: +91 89037 60869'
-                : 'For more information, contact +91 89037 60869'
-              }
-            </span>
+            <span>{t('bus.note.contact')}</span>
           </li>
         </ul>
       </div>

@@ -504,18 +504,6 @@ export const MassBookingPage: React.FC = () => {
                   <li>
                     <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.friday.evening')}</span>
                   </li>
-                  <li>
-                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.friday.night')}</span>
-                  </li>
-                  <li className="novena-section">
-                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena1')}</span>
-                  </li>
-                  <li className="novena-section">
-                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena2')}</span>
-                  </li>
-                  <li className="novena-section">
-                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena3')}</span>
-                  </li>
                 </ul>
               </div>
 
@@ -530,19 +518,7 @@ export const MassBookingPage: React.FC = () => {
                     <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.saturday.morning2')}</span>
                   </li>
                   <li>
-                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.saturday.evening')}</span>
-                  </li>
-                  <li>
-                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.saturday.night')}</span>
-                  </li>
-                  <li className="novena-section">
-                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena1')}</span>
-                  </li>
-                  <li className="novena-section">
-                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena2')}</span>
-                  </li>
-                  <li className="novena-section">
-                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena3')}</span>
+                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.saturday.morning3')}</span>
                   </li>
                 </ul>
               </div>
@@ -563,18 +539,6 @@ export const MassBookingPage: React.FC = () => {
                   <li>
                     <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.sunday.evening')}</span>
                   </li>
-                  <li>
-                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.sunday.night')}</span>
-                  </li>
-                  <li className="novena-section">
-                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena1')}</span>
-                  </li>
-                  <li className="novena-section">
-                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena2')}</span>
-                  </li>
-                  <li className="novena-section">
-                    <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.novena3')}</span>
-                  </li>
                 </ul>
               </div>
 
@@ -587,27 +551,27 @@ export const MassBookingPage: React.FC = () => {
                 <div className="special-days-grid">
                   <ul>
                     <li>
-                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.15th')}</span>
+                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.13th')}</span>
                     </li>
                     <li>
                       <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.14th')}</span>
                     </li>
                     <li>
-                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.tuesday')}</span>
+                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.15th')}</span>
                     </li>
                     <li>
-                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.wednesday')}</span>
+                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.tuesday')}</span>
                     </li>
                   </ul>
                   <ul>
                     <li>
+                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.wednesday')}</span>
+                    </li>
+                    <li>
                       <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.friday')}</span>
                     </li>
                     <li>
-                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.saturday1')}</span>
-                    </li>
-                    <li>
-                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.saturday2')}</span>
+                      <span className={isTamil ? 'tamil-text' : ''}>{t('mass.timings.special.saturday')}</span>
                     </li>
                   </ul>
                 </div>

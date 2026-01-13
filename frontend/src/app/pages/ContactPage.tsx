@@ -244,7 +244,7 @@ export const ContactPage: React.FC = () => {
                   style={{ border: 0 }}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Devasahayam Mount Shrine Location"
+                  title="Our Lady Of Sorrows Shrine Location"
                 />
 
               </div>

@@ -76,9 +76,8 @@ const getYouTubeEmbedUrl = (url: string): string => {
   
   if (videoId) {
     // Return proper embed URL with mobile-optimized parameters
-    // Removed playsinline=1 to allow proper mobile controls
-    // Added origin parameter for better mobile compatibility
-    return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&showinfo=1&rel=0&modestbranding=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=0&enablejsapi=1&origin=${window.location.origin}`;
+    // Enhanced mobile controls support
+    return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&showinfo=1&rel=0&modestbranding=0&fs=1&cc_load_policy=0&iv_load_policy=3&autohide=0&enablejsapi=1&playsinline=1&origin=${window.location.origin}`;
   }
   
   return url;
@@ -378,8 +377,8 @@ export const LiveStreamPage: React.FC = () => {
                       border: 'none',
                       outline: 'none'
                     }}
-                    // Add these attributes for better mobile control
-                    sandbox="allow-same-origin allow-scripts allow-presentation allow-forms"
+                    // Enhanced mobile control support
+                    sandbox="allow-same-origin allow-scripts allow-presentation allow-forms allow-popups"
                   />
                   
                   {/* Enhanced Video Controls Overlay - Mobile optimized */}
@@ -659,141 +658,192 @@ export const LiveStreamPage: React.FC = () => {
         {/* YouTube Channel Link */}
         <Card className={`border-green-200 bg-gradient-to-r from-green-50 to-blue-50 card-hover ${isVisible ? 'animate-scaleIn stagger-1' : 'opacity-0'}`}>
           <CardContent className="p-6 sm:p-8 text-center">
-            <h3 className={getTamilHeadingClass("text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4")}>
+            <h3 className={getTamilHeadingClass("text-lg sm:text-xl font-semibold text-gray-900 mb-4")}>
               {t('livestream.youtube.channel')}
             </h3>
-            <p className={getTamilClass("text-gray-700 mb-4 sm:mb-6 text-sm sm:text-base px-2 sm:px-0")}>
+            <p className={getTamilClass("text-gray-600 mb-6 text-sm sm:text-base")}>
               {t('livestream.youtube.subscribe')}
             </p>
-            <Button asChild className={getTamilButtonClass("bg-red-600 hover:bg-red-700 animate-pulse-custom text-sm sm:text-base px-4 sm:px-6")}>
-              <a
-                href={youtubeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
-                {t('livestream.visit.channel')}
-              </a>
+            <Button 
+              className={getTamilButtonClass("bg-red-600 hover:bg-red-700 text-white")}
+              onClick={() => window.open(youtubeUrl, '_blank')}
+            >
+              <ExternalLink className="w-4 h-4 mr-2" />
+              {t('livestream.visit.channel')}
             </Button>
           </CardContent>
         </Card>
 
-        {/* Important Notes */}
-        <Card className={`border-green-200 bg-green-50 mt-6 sm:mt-8 card-hover ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
-          <CardContent className="p-4 sm:pt-6 sm:px-6 sm:pb-6">
-            <h4 className={getTamilHeadingClass("text-green-800 mb-3 sm:mb-4 font-semibold text-base sm:text-lg")}>{t('livestream.important.info')}</h4>
-            <ul className="space-y-2 sm:space-y-3 text-gray-700 text-xs sm:text-sm">
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                <span className={getTamilClass("leading-relaxed")}>{t('livestream.info.1')}</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                <span className={getTamilClass("leading-relaxed")}>{t('livestream.info.2')}</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                <span className={getTamilClass("leading-relaxed")}>{t('livestream.info.3')}</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                <span className={getTamilClass("leading-relaxed")}>{t('livestream.info.4')}</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                <span className={getTamilClass("leading-relaxed")}>{t('livestream.info.5')}</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                <span className={getTamilClass("leading-relaxed")}>{t('livestream.info.6')}</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 bg-green-600 rounded-full mt-2 flex-shrink-0"></div>
-                <span className={getTamilClass("leading-relaxed")}>{t('livestream.info.7')}</span>
-              </li>
+        {/* Important Information */}
+        <Card className={`border-green-200 mt-8 card-hover ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`}>
+          <CardHeader>
+            <CardTitle className={getTamilHeadingClass("text-green-800 text-lg sm:text-xl")}>
+              {t('livestream.important.info')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className={getTamilClass("space-y-2 text-gray-700 text-sm sm:text-base")}>
+              <li>• {t('livestream.info.1')}</li>
+              <li>• {t('livestream.info.2')}</li>
+              <li>• {t('livestream.info.3')}</li>
+              <li>• {t('livestream.info.4')}</li>
+              <li>• {t('livestream.info.5')}</li>
+              <li>• {t('livestream.info.6')}</li>
+              <li>• {t('livestream.info.7')}</li>
             </ul>
           </CardContent>
         </Card>
       </div>
 
-      {/* Fullscreen Styles */}
-      <style jsx>{`
-        /* Fullscreen video container styles */
-        .fullscreen-video-container {
-          position: fixed !important;
-          top: 0 !important;
-          left: 0 !important;
-          width: 100vw !important;
-          height: 100vh !important;
-          z-index: 9999 !important;
-          background: black !important;
+      {/* Mobile Video Control Enhancement Styles */}
+      <style>{`
+        /* Enhanced mobile video controls */
+        .touch-manipulation iframe {
+          touch-action: manipulation;
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -khtml-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
         }
 
-        /* Hide scrollbars in fullscreen */
-        .fullscreen-video-container::-webkit-scrollbar {
-          display: none;
-        }
-
-        /* Ensure iframe takes full space in fullscreen */
-        .fullscreen-video-container iframe {
-          width: 100% !important;
-          height: 100% !important;
-          border: none !important;
-          outline: none !important;
-        }
-
-        /* Prevent body scroll when in fullscreen */
-        body.fullscreen-active {
-          overflow: hidden !important;
-          position: fixed !important;
-          width: 100% !important;
-          height: 100% !important;
-        }
-
-        /* Enhanced controls visibility in fullscreen */
-        .fullscreen-controls {
-          opacity: 0;
-          transition: opacity 0.3s ease-in-out;
-          pointer-events: none;
-        }
-
-        .fullscreen-controls:hover,
-        .fullscreen-controls.show {
-          opacity: 1;
-          pointer-events: auto;
-        }
-
-        /* Touch-friendly controls for mobile */
+        /* Improve mobile video interaction */
         @media (max-width: 768px) {
-          .fullscreen-controls {
-            opacity: 1;
-            pointer-events: auto;
-          }
-          
-          /* Prevent auto-rotation by maintaining aspect ratio */
-          .aspect-video {
-            aspect-ratio: 16 / 9;
-            max-height: 60vh; /* Limit height on mobile to prevent auto-rotation */
-          }
-          
-          /* Mobile video container optimization */
           .touch-manipulation {
-            touch-action: manipulation;
+            -webkit-overflow-scrolling: touch;
+            overflow: hidden;
+          }
+          
+          .touch-manipulation iframe {
+            pointer-events: auto;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
           }
         }
 
-        /* Specific mobile portrait mode handling */
-        @media screen and (orientation: portrait) and (max-width: 768px) {
-          .aspect-video {
-            max-height: 50vh !important;
-            width: 100% !important;
+        /* Fullscreen mobile optimizations */
+        .fullscreen-active {
+          overflow: hidden;
+          position: fixed;
+          width: 100%;
+          height: 100%;
+        }
+
+        /* Tamil font sizing */
+        .tamil-text {
+          font-size: 0.85em;
+        }
+
+        .tamil-heading {
+          font-size: 0.8em;
+        }
+
+        .tamil-button {
+          font-size: 0.8em;
+        }
+
+        /* Animation classes */
+        .animate-fadeInUp {
+          animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .animate-slideInLeft {
+          animation: slideInLeft 0.6s ease-out forwards;
+        }
+
+        .animate-slideInRight {
+          animation: slideInRight 0.6s ease-out forwards;
+        }
+
+        .animate-scaleIn {
+          animation: scaleIn 0.6s ease-out forwards;
+        }
+
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-pulse-custom {
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .card-hover {
+          transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Stagger animations */
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+        .stagger-5 { animation-delay: 0.5s; }
+        .stagger-6 { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
           }
         }
 
-        /* Mobile landscape - only when user manually rotates */
-        @media screen and (orientation: landscape) and (max-width: 768px) {
-          .aspect-video {
-            max-height: 80vh !important;
+        @keyframes slideInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes slideInRight {
+          from {
+            opacity: 0;
+            transform: translateX(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: .5;
           }
         }
       `}</style>

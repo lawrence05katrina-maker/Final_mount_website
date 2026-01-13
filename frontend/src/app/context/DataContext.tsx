@@ -126,22 +126,22 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 const defaultSettings: SiteSettings = {
   massBookingAmount: 500,
   donationAmounts: [500, 1000, 2000, 5000],
-  donationPurposes: ['General Fund', 'Festival Celebration', 'Shrine Renovation', 'Charity Work', 'Poor & Needy'],
+  donationPurposes: ['donations.purpose.general', 'donations.purpose.festival', 'donations.purpose.renovation', 'donations.purpose.charity', 'donations.purpose.poor'],
   liveStreamUrl: 'https://www.youtube.com/embed/jNQXAC9IVRw',
   contactInfo: {
-    address: 'Devasahayam Mount Shrine, Aralvaimozhi, Kanyakumari District, Tamil Nadu, India',
+    address: 'Mount Devasahayam,Pilgrimage Road, Aralvaimozhi, Kanyakumari District, Tamil Nadu, India',
     phone: '+91 89037 60869',
     email: 'info@devasahayammountshrine.com',
     mapLat: 8.2424,
     mapLng: 77.5199,
   },
   aboutContent: {
-    history: 'St. Devasahayam was born on April 23, 1712, in Nattalam, Kanyakumari District, India. Born into a Hindu family of the Nair caste, he was named Neelakanta Pillai. He served as a court official in the palace of the Maharaja of Travancore. Through his friendship with a Dutch naval commander, he came to know about Christianity and was baptized on May 14, 1745, taking the name Lazarus, meaning "God is my help" (Devasahayam in Tamil).',
+    history: 'St. Devasahayam was born on April 23, 1712, in Nattalam, Kanyakumari District, India. Born into a Hindu family , he was named Neelakanta. He served as a court official in the palace of the Maharaja of Travancore. Through his friendship with a Dutch naval commander, he came to know about Christianity and was baptized on May 14, 1745, taking the name Lazarus, meaning "God is my help" (Devasahayam in Tamil).',
     vision: 'To be a beacon of faith, hope, and charity, inspiring pilgrims from around the world to deepen their relationship with God through the intercession of St. Devasahayam.',
     mission: 'Our mission is to preserve and promote the spiritual legacy of St. Devasahayam, to provide a sacred space for prayer and pilgrimage, and to serve the community through charitable works and spiritual guidance.',
   },
   homeContent: {
-    heroTitle: 'Devasahayam Mount Shrine',
+    heroTitle: 'Our Lady Of Sorrows Shrine',
     heroSubtitle: 'A Sacred Place of Prayer and Pilgrimage',
     saintIntro: 'St. Devasahayam was a Hindu convert to Catholicism who was martyred for his faith in 1752. He was canonized by Pope Francis on May 15, 2022, becoming the first Indian layman to be declared a saint.',
   },
@@ -185,8 +185,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
           const sampleAnnouncements: Announcement[] = [
             {
               id: '1',
-              title: 'Annual Feast Day Celebration',
-              content: 'Join us for the annual feast day celebration of St. Devasahayam on January 14th. Special masses and programs throughout the day.',
+              title: 'announcements.feast.title',
+              content: 'announcements.feast.content',
               date: '2025-01-14',
               active: true,
             },

@@ -48,7 +48,7 @@ export const AdminNavigation: React.FC = () => {
               </div>
               <div className="hidden sm:block">
                 <span className="font-bold text-lg">Admin Panel</span>
-                <p className="text-green-200 text-xs">Devasahayam Mount Shrine</p>
+                <p className="text-green-200 text-xs">Our Lady Of Sorrows Shrine</p>
               </div>
             </Link>
 

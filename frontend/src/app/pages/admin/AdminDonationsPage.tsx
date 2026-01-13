@@ -15,7 +15,7 @@ import {
   Eye, 
   X,
   CheckCircle,
-  XCircle,
+  Trash2,
   Clock,
   Loader2
 } from 'lucide-react';
@@ -31,7 +31,7 @@ interface Payment {
   utr_number: string | null;
   screenshot_path: string | null;
   screenshot_name: string | null;
-  status: 'pending' | 'verified' | 'rejected';
+  status: 'pending' | 'verified';
   created_at: string;
 }
 
@@ -39,7 +39,7 @@ export const AdminDonationsPage: React.FC = () => {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'verified' | 'rejected'>('all');
+  const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'verified'>('all');
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [processingId, setProcessingId] = useState<number | null>(null);
@@ -69,7 +69,7 @@ export const AdminDonationsPage: React.FC = () => {
     }
   };
 
-  const updatePaymentStatus = async (id: number, status: 'verified' | 'rejected') => {
+  const updatePaymentStatus = async (id: number, status: 'verified') => {
     try {
       setProcessingId(id);
       const response = await fetch(`/api/donations/${id}/status`, {
@@ -93,6 +93,27 @@ export const AdminDonationsPage: React.FC = () => {
     } catch (error) {
       console.error('Error updating payment status:', error);
       toast.error('Error updating payment status');
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const deleteDonation = async (id: number) => {
+    try {
+      setProcessingId(id);
+      const response = await fetch(`/api/donations/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setPayments(prev => prev.filter(payment => payment.id !== id));
+        toast.success('Donation deleted successfully!');
+      } else {
+        toast.error('Failed to delete donation');
+      }
+    } catch (error) {
+      console.error('Error deleting donation:', error);
+      toast.error('Error deleting donation');
     } finally {
       setProcessingId(null);
     }
@@ -123,7 +144,6 @@ export const AdminDonationsPage: React.FC = () => {
 
   const pendingCount = (payments || []).filter(p => p?.status === 'pending').length;
   const verifiedCount = (payments || []).filter(p => p?.status === 'verified').length;
-  const rejectedCount = (payments || []).filter(p => p?.status === 'rejected').length;
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -139,13 +159,6 @@ export const AdminDonationsPage: React.FC = () => {
           <Badge className="bg-green-100 text-green-800 border-green-200 text-xs">
             <CheckCircle className="w-3 h-3 mr-1" />
             Verified
-          </Badge>
-        );
-      case 'rejected':
-        return (
-          <Badge className="bg-red-100 text-red-800 border-red-200 text-xs">
-            <XCircle className="w-3 h-3 mr-1" />
-            Rejected
           </Badge>
         );
       default:
@@ -188,7 +201,7 @@ export const AdminDonationsPage: React.FC = () => {
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <Card className="border-green-200">
             <CardContent className="pt-4 sm:pt-6">
               <div className="flex items-center justify-between mb-2">
@@ -219,17 +232,6 @@ export const AdminDonationsPage: React.FC = () => {
               </div>
               <p className="text-xl sm:text-2xl font-bold text-green-600">{verifiedCount}</p>
               <p className="text-xs text-gray-500 mt-1">₹{verifiedAmount.toLocaleString()}</p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-red-200 bg-red-50">
-            <CardContent className="pt-4 sm:pt-6">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs sm:text-sm text-gray-600">Rejected</p>
-                <XCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
-              </div>
-              <p className="text-xl sm:text-2xl font-bold text-red-600">{rejectedCount}</p>
-              <p className="text-xs text-gray-500 mt-1">Total rejected</p>
             </CardContent>
           </Card>
         </div>
@@ -288,18 +290,6 @@ export const AdminDonationsPage: React.FC = () => {
                   }`}
                 >
                   Verified ({verifiedCount})
-                </Button>
-                <Button
-                  size="sm"
-                  variant={filterStatus === 'rejected' ? 'default' : 'outline'}
-                  onClick={() => setFilterStatus('rejected')}
-                  className={`text-xs sm:text-sm transition-all duration-200 ${
-                    filterStatus === 'rejected' 
-                      ? 'bg-red-600 hover:bg-red-700 text-white shadow-md' 
-                      : 'border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300'
-                  }`}
-                >
-                  Rejected ({rejectedCount})
                 </Button>
               </div>
             </div>
@@ -377,7 +367,7 @@ export const AdminDonationsPage: React.FC = () => {
                             </Button>
                             <Button
                               size="sm"
-                              onClick={() => updatePaymentStatus(payment.id, 'rejected')}
+                              onClick={() => deleteDonation(payment.id)}
                               disabled={processingId === payment.id}
                               className="bg-red-600 hover:bg-red-700 text-white flex-1 text-xs shadow-sm hover:shadow-md transition-all duration-200"
                             >
@@ -385,8 +375,8 @@ export const AdminDonationsPage: React.FC = () => {
                                 <Loader2 className="w-3 h-3 animate-spin" />
                               ) : (
                                 <>
-                                  <XCircle className="w-3 h-3 mr-1" />
-                                  Reject
+                                  <Trash2 className="w-3 h-3 mr-1" />
+                                  Delete
                                 </>
                               )}
                             </Button>
@@ -449,14 +439,14 @@ export const AdminDonationsPage: React.FC = () => {
                               </Button>
                               <Button
                                 size="sm"
-                                onClick={() => updatePaymentStatus(payment.id, 'rejected')}
+                                onClick={() => deleteDonation(payment.id)}
                                 disabled={processingId === payment.id}
                                 className="bg-red-600 hover:bg-red-700 text-white shadow-sm hover:shadow-md transition-all duration-200"
                               >
                                 {processingId === payment.id ? (
                                   <Loader2 className="w-4 h-4 animate-spin" />
                                 ) : (
-                                  'Reject'
+                                  'Delete'
                                 )}
                               </Button>
                             </div>
@@ -562,7 +552,7 @@ export const AdminDonationsPage: React.FC = () => {
                       </Button>
                       <Button
                         onClick={() => {
-                          updatePaymentStatus(selectedPayment.id, 'rejected');
+                          deleteDonation(selectedPayment.id);
                           setShowPaymentModal(false);
                         }}
                         disabled={processingId === selectedPayment.id}
@@ -571,9 +561,9 @@ export const AdminDonationsPage: React.FC = () => {
                         {processingId === selectedPayment.id ? (
                           <Loader2 className="w-4 h-4 animate-spin mr-2" />
                         ) : (
-                          <XCircle className="w-4 h-4 mr-2" />
+                          <Trash2 className="w-4 h-4 mr-2" />
                         )}
-                        Reject Payment
+                        Delete Payment
                       </Button>
                     </div>
                   )}

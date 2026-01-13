@@ -25,6 +25,115 @@ export const LivestreamNotification: React.FC = () => {
   const [isDismissed, setIsDismissed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Add styles for better mobile responsiveness and Tamil text
+  const notificationStyles = `
+    <style>
+      .mobile-notification-pill {
+        max-width: calc(100vw - 2rem);
+        min-width: 280px;
+      }
+      
+      .tamil-notification-mobile {
+        min-width: 340px;
+        max-width: calc(100vw - 1rem);
+      }
+      
+      .tamil-notification-desktop {
+        min-width: 300px;
+      }
+      
+      .tamil-text {
+        font-size: 0.75rem !important;
+        line-height: 1.3 !important;
+      }
+      
+      .tamil-button {
+        font-size: 0.7rem !important;
+        padding: 0.25rem 0.5rem !important;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      
+      .tamil-heading {
+        font-size: 0.8rem !important;
+        line-height: 1.2 !important;
+        font-weight: 600 !important;
+      }
+      
+      .tamil-close-button {
+        min-width: 32px !important;
+        width: 32px !important;
+        height: 32px !important;
+        flex-shrink: 0 !important;
+        margin-left: 0.25rem !important;
+      }
+      
+      @media (max-width: 768px) {
+        .mobile-notification-pill {
+          position: fixed;
+          bottom: 1rem;
+          right: 0.5rem;
+          left: 0.5rem;
+          width: auto;
+          max-width: none;
+          margin: 0 auto;
+        }
+        
+        .tamil-notification-mobile {
+          min-width: auto;
+          max-width: none;
+        }
+        
+        .mobile-notification-pill .flex {
+          flex-wrap: nowrap;
+          align-items: center;
+          justify-content: space-between;
+        }
+        
+        .mobile-notification-pill .truncate {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        
+        .mobile-notification-content {
+          flex: 1;
+          min-width: 0;
+          margin-right: 0.5rem;
+        }
+        
+        .mobile-notification-actions {
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+          flex-shrink: 0;
+        }
+      }
+      
+      @keyframes slide-in-right {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      
+      .animate-slide-in-right {
+        animation: slide-in-right 0.3s ease-out;
+      }
+      
+      .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+    </style>
+  `;
+
   // Tamil font size classes with improved layout
   const getTamilClass = (baseClass: string = '') => {
     return language === 'தமிழ்' ? `${baseClass} tamil-text text-sm leading-relaxed` : baseClass;
@@ -134,59 +243,67 @@ export const LivestreamNotification: React.FC = () => {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 md:top-4 md:bottom-auto z-50 w-64 md:max-w-sm">
-      {/* Mobile Design - Compact Pill Style */}
-      <div className={`md:hidden bg-white rounded-full shadow-2xl border border-gray-200 overflow-hidden animate-slide-in-right mobile-notification-pill ${language === 'தமிழ்' ? 'tamil-notification-mobile' : ''}`}>
-        <div className="flex items-center p-2 gap-1">
-          {/* Live Indicator */}
-          <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold text-white flex-shrink-0 ${isLive ? 'bg-red-600' : 'bg-green-600'}`}>
-            {isLive ? (
-              <>
-                <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-                <span className={getTamilClass('text-xs')}>{t('livestream.notification.live')}</span>
-              </>
-            ) : (
-              <>
-                <Clock className="w-2.5 h-2.5" />
-                <span className={getTamilClass('text-xs')}>{t('livestream.notification.soon')}</span>
-              </>
-            )}
-          </div>
-          
-          {/* Content */}
-          <div className="flex-1 px-1 min-w-0 overflow-hidden">
-            <p className={getTamilTitleClass("text-xs font-medium text-gray-900 truncate")}>
-              {currentStream.title}
-            </p>
-            {isLive && (
-              <p className={getTamilClass("text-xs text-gray-500 truncate")}>
-                {currentStream.viewer_count} {t('livestream.notification.watching')}
+    <>
+      {/* Inject styles */}
+      <div dangerouslySetInnerHTML={{ __html: notificationStyles }} />
+      
+      <div className="fixed bottom-4 right-4 md:top-4 md:bottom-auto z-50 w-64 md:max-w-sm">
+        {/* Mobile Design - Compact Pill Style */}
+        <div className={`md:hidden bg-white rounded-full shadow-2xl border border-gray-200 overflow-hidden animate-slide-in-right mobile-notification-pill ${language === 'தமிழ்' ? 'tamil-notification-mobile' : ''}`}>
+          <div className="flex items-center p-2 gap-1">
+            {/* Live Indicator */}
+            <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold text-white flex-shrink-0 ${isLive ? 'bg-red-600' : 'bg-green-600'}`}>
+              {isLive ? (
+                <>
+                  <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
+                  <span className={getTamilClass('text-xs')}>{t('livestream.notification.live')}</span>
+                </>
+              ) : (
+                <>
+                  <Clock className="w-3 h-3" />
+                  <span className={getTamilClass('text-xs')}>{t('livestream.notification.soon')}</span>
+                </>
+              )}
+            </div>
+            
+            {/* Content */}
+            <div className="mobile-notification-content">
+              <p className={getTamilTitleClass("text-xs font-medium text-gray-900 truncate")}>
+                {currentStream.title}
               </p>
-            )}
+              {isLive && (
+                <p className={getTamilClass("text-xs text-gray-500 truncate")}>
+                  {currentStream.viewer_count} {t('livestream.notification.watching')}
+                </p>
+              )}
+            </div>
+            
+            {/* Actions Container */}
+            <div className="mobile-notification-actions">
+              {/* Action Button */}
+              <Link
+                to="/livestream"
+                className={getTamilButtonClass(`px-2 py-1 rounded-full text-xs font-medium text-white transition-all ${
+                  isLive ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'
+                }`)}
+              >
+                {isLive ? t('livestream.notification.watch') : t('livestream.notification.join')}
+              </Link>
+              
+              {/* Close Button */}
+              <button
+                onClick={handleDismiss}
+                className={`p-1.5 text-gray-400 hover:text-gray-600 transition-colors rounded-full hover:bg-gray-100 ${language === 'தமிழ்' ? 'tamil-close-button' : ''}`}
+                aria-label="Close notification"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
-          
-          {/* Action Button */}
-          <Link
-            to="/livestream"
-            className={getTamilButtonClass(`px-2 py-1 rounded-full text-xs font-medium text-white transition-all flex-shrink-0 ${
-              isLive ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'
-            }`)}
-          >
-            {isLive ? t('livestream.notification.watch') : t('livestream.notification.join')}
-          </Link>
-          
-          {/* Close Button */}
-          <button
-            onClick={handleDismiss}
-            className="ml-1 p-1 text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
-          >
-            <X className="w-3 h-3" />
-          </button>
         </div>
-      </div>
 
-      {/* Desktop Design - Original Card Style */}
-      <div className={`hidden md:block bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden animate-slide-in-right mobile-notification ${language === 'தமிழ்' ? 'tamil-notification-desktop' : ''}`}>
+        {/* Desktop Design - Original Card Style */}
+        <div className={`hidden md:block bg-white rounded-lg shadow-2xl border border-gray-200 overflow-hidden animate-slide-in-right mobile-notification ${language === 'தமிழ்' ? 'tamil-notification-desktop' : ''}`}>
         {/* Header */}
         <div className={`px-4 py-3 ${isLive ? 'bg-red-600' : 'bg-green-600'} text-white relative`}>
           <div className="flex items-center justify-between">
@@ -281,6 +398,7 @@ export const LivestreamNotification: React.FC = () => {
           </Link>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };

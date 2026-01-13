@@ -64,95 +64,6 @@ export const TestimoniesPage: React.FC = () => {
     setIsVisible(true);
   }, []);
 
-  // Add CSS styles for animations
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes slideInUp {
-        from {
-          opacity: 0;
-          transform: translateY(30px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      
-      @keyframes scaleIn {
-        from {
-          opacity: 0;
-          transform: scale(0.9);
-        }
-        to {
-          opacity: 1;
-          transform: scale(1);
-        }
-      }
-      
-      @keyframes float {
-        0%, 100% {
-          transform: translateY(0px);
-        }
-        50% {
-          transform: translateY(-10px);
-        }
-      }
-      
-      .animate-slideInUp {
-        animation: slideInUp 0.6s ease-out forwards;
-      }
-      
-      .animate-fadeInUp {
-        animation: fadeInUp 0.8s ease-out forwards;
-      }
-      
-      .animate-scaleIn {
-        animation: scaleIn 0.6s ease-out forwards;
-      }
-      
-      .animate-float {
-        animation: float 3s ease-in-out infinite;
-      }
-      
-      .animate-pulse-custom {
-        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-      }
-      
-      .card-hover {
-        transition: all 0.3s ease;
-      }
-      
-      .card-hover:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      }
-      
-      .stagger-1 { animation-delay: 0.1s; }
-      .stagger-2 { animation-delay: 0.2s; }
-      .stagger-3 { animation-delay: 0.3s; }
-      .stagger-4 { animation-delay: 0.4s; }
-      .stagger-5 { animation-delay: 0.5s; }
-      .stagger-6 { animation-delay: 0.6s; }
-    `;
-    document.head.appendChild(style);
-    
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
-
   /* ===================== HANDLERS ===================== */
 
   const handleChange = (
@@ -274,27 +185,225 @@ export const TestimoniesPage: React.FC = () => {
   /* ===================== MAIN UI ===================== */
 
   return (
-    <div className="min-h-screen py-16 px-4 bg-gray-50">
+    <div className="min-h-screen py-8 sm:py-16 px-3 sm:px-4 bg-gray-50">
+      <style>{`
+        /* Tamil text sizing - 15% smaller than English */
+        .tamil-text {
+          font-size: 0.85em;
+          line-height: 1.4;
+        }
+        
+        .tamil-heading {
+          font-size: 0.85em;
+          line-height: 1.3;
+        }
+        
+        .tamil-button {
+          font-size: 0.85em;
+          line-height: 1.2;
+        }
+
+        /* Mobile responsive improvements */
+        @media (max-width: 768px) {
+          .testimonies-title {
+            font-size: 1.875rem !important;
+          }
+          
+          .testimonies-subtitle {
+            font-size: 0.875rem !important;
+            line-height: 1.4 !important;
+            padding: 0 0.5rem;
+          }
+          
+          .testimonies-share-button {
+            font-size: 0.875rem !important;
+            padding: 0.75rem 1rem !important;
+            height: auto !important;
+            min-height: 2.75rem !important;
+            white-space: normal !important;
+            line-height: 1.2 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+          
+          .testimonies-share-button.tamil {
+            font-size: 0.85rem !important;
+            padding: 0.75rem 0.75rem !important;
+            text-align: center !important;
+          }
+          
+          .testimonies-form-input {
+            height: 2.75rem !important;
+            font-size: 0.875rem !important;
+          }
+          
+          .testimonies-form-textarea {
+            font-size: 0.875rem !important;
+            min-height: 6rem !important;
+          }
+          
+          .testimonies-form-label {
+            font-size: 0.875rem !important;
+            margin-bottom: 0.5rem !important;
+          }
+          
+          .testimonies-submit-button {
+            height: 2.75rem !important;
+            font-size: 0.875rem !important;
+            white-space: normal !important;
+            line-height: 1.2 !important;
+          }
+          
+          .testimonies-submit-button.tamil {
+            font-size: 0.75rem !important;
+            padding: 0.75rem 0.5rem !important;
+          }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+          .testimonies-title {
+            font-size: 1.5rem !important;
+          }
+          
+          .testimonies-subtitle {
+            font-size: 0.8rem !important;
+          }
+          
+          .testimonies-share-button {
+            font-size: 0.8rem !important;
+            padding: 0.625rem 0.75rem !important;
+            min-height: 2.5rem !important;
+          }
+          
+          .testimonies-share-button.tamil {
+            font-size: 0.85rem !important;
+            padding: 0.625rem 0.5rem !important;
+          }
+          
+          .testimonies-form-input {
+            height: 2.5rem !important;
+            font-size: 0.8rem !important;
+          }
+          
+          .testimonies-form-textarea {
+            font-size: 0.8rem !important;
+            min-height: 5rem !important;
+          }
+          
+          .testimonies-submit-button {
+            height: 2.5rem !important;
+            font-size: 0.8rem !important;
+          }
+          
+          .testimonies-submit-button.tamil {
+            font-size: 0.7rem !important;
+          }
+        }
+
+        /* Animation classes */
+        @keyframes slideInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes scaleIn {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+        
+        .animate-slideInUp {
+          animation: slideInUp 0.6s ease-out forwards;
+        }
+        
+        .animate-fadeInUp {
+          animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .animate-scaleIn {
+          animation: scaleIn 0.6s ease-out forwards;
+        }
+        
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+        
+        .animate-pulse-custom {
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .card-hover {
+          transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+        .stagger-5 { animation-delay: 0.5s; }
+        .stagger-6 { animation-delay: 0.6s; }
+      `}</style>
+      
       <div className="max-w-7xl mx-auto">
 
         {/* HEADER */}
-        <div className="text-center mb-12">
-          <div className={`flex justify-center items-center gap-2 mb-4 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
-            <MessageCircle className="w-8 h-8 text-green-700 animate-float" />
-            <h1 className={getTamilHeadingClass("text-green-800")}>{t('testimonies.title')}</h1>
+        <div className="text-center mb-8 sm:mb-12">
+          <div className={`inline-flex items-center gap-2 mb-4 ${isVisible ? 'animate-fadeInUp stagger-1' : 'opacity-0'}`}>
+            <MessageCircle className="w-6 h-6 sm:w-8 sm:h-8 text-green-700 animate-float" />
+            <h1 className={getTamilHeadingClass("testimonies-title text-2xl sm:text-4xl text-green-800")}>{t('testimonies.title')}</h1>
           </div>
 
-          <p className={getTamilClass(`text-gray-700 mb-6 max-w-2xl mx-auto ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`)}>
+          <p className={getTamilClass(`testimonies-subtitle text-gray-700 mb-4 sm:mb-6 max-w-2xl mx-auto ${isVisible ? 'animate-fadeInUp stagger-2' : 'opacity-0'}`)}>
             {t('testimonies.subtitle')}
           </p>
 
-          <Button
-            onClick={() => setShowForm(true)}
-            className={getTamilButtonClass(`bg-green-700 hover:bg-green-800 ${isVisible ? 'animate-scaleIn stagger-3' : 'opacity-0'}`)}
-          >
-            <Send className="w-5 h-5 mr-2" />
-            Share Your Testimony
-          </Button>
+          <div className={`flex justify-center ${isVisible ? 'animate-scaleIn stagger-3' : 'opacity-0'}`}>
+            <Button
+              onClick={() => setShowForm(true)}
+              className={`testimonies-share-button ${getTamilButtonClass('')} bg-green-700 hover:bg-green-800`}
+            >
+              <Send className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+              {t('testimonies.share.title')}
+            </Button>
+          </div>
         </div>
 
         {/* TESTIMONY SUBMISSION FORM */}
@@ -304,13 +413,13 @@ export const TestimoniesPage: React.FC = () => {
               <CardHeader>
                 <CardTitle className="text-green-800 flex items-center gap-2">
                   <Send className="w-5 h-5" />
-                  Share Your Testimony
+                  {t('testimonies.share.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
-                    <Label htmlFor="name">Your Name</Label>
+                    <Label htmlFor="name" className="testimonies-form-label">Your Name</Label>
                     <Input
                       id="name"
                       name="name"
@@ -318,28 +427,28 @@ export const TestimoniesPage: React.FC = () => {
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="Enter your full name"
-                      className="mt-1"
+                      className="testimonies-form-input mt-1"
                       required
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="testimony">Your Testimony</Label>
+                    <Label htmlFor="testimony" className="testimonies-form-label">Your Testimony</Label>
                     <Textarea
                       id="testimony"
                       name="testimony"
                       value={formData.testimony}
                       onChange={handleChange}
                       placeholder="Share your miracle, answered prayer, or spiritual experience through Saint Devasahayam..."
-                      className="mt-1 min-h-[120px]"
+                      className="testimonies-form-textarea mt-1"
                       required
                     />
                   </div>
 
-                  <div className="flex gap-3">
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <Button
                       type="submit"
-                      className="bg-green-700 hover:bg-green-800 flex-1"
+                      className="testimonies-submit-button bg-green-700 hover:bg-green-800 flex-1"
                     >
                       <Send className="w-4 h-4 mr-2" />
                       Submit Testimony
@@ -408,7 +517,7 @@ export const TestimoniesPage: React.FC = () => {
                   onClick={() => setShowForm(true)}
                   className="bg-green-700 hover:bg-green-800"
                 >
-                  Share Testimony
+                  {t('testimonies.share.button')}
                 </Button>
               </CardContent>
             </Card>

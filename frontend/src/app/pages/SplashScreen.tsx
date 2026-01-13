@@ -107,7 +107,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
             alt="Devasahayam Mount Shrine"
             className="splash-logo"
           />
-          <h1 className="splash-title">Devasahayam Mount Shrine</h1>
+          <h1 className="splash-title">Our Lady Of Sorrows Shrine</h1>
           <p className="splash-subtitle">Welcome to our spiritual home</p>
         </div>
       </div>

@@ -26,7 +26,7 @@ class DonationModel {
         purpose VARCHAR(255) NOT NULL,
         purpose_id INTEGER REFERENCES donation_purposes(id),
         donation_type VARCHAR(50) DEFAULT 'online' CHECK (donation_type IN ('online', 'offline', 'cash')),
-        status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'verified', 'rejected')),
+        status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'verified')),
         payment_method VARCHAR(50) DEFAULT 'upi' CHECK (payment_method IN ('upi', 'cash', 'cheque', 'bank_transfer')),
         utr_number VARCHAR(50),
         screenshot_path VARCHAR(500),
@@ -233,8 +233,7 @@ class DonationModel {
         COUNT(*) as total_donations,
         COALESCE(SUM(amount), 0) as total_amount,
         COUNT(CASE WHEN status = 'pending' THEN 1 END) as pending_count,
-        COUNT(CASE WHEN status = 'verified' THEN 1 END) as verified_count,
-        COUNT(CASE WHEN status = 'rejected' THEN 1 END) as rejected_count
+        COUNT(CASE WHEN status = 'verified' THEN 1 END) as verified_count
       FROM donations
     `;
 
@@ -245,8 +244,7 @@ class DonationModel {
       total_donations: parseInt(stats.total_donations) || 0,
       total_amount: parseFloat(stats.total_amount) || 0,
       pending_count: parseInt(stats.pending_count) || 0,
-      verified_count: parseInt(stats.verified_count) || 0,
-      rejected_count: parseInt(stats.rejected_count) || 0
+      verified_count: parseInt(stats.verified_count) || 0
     };
   }
 }

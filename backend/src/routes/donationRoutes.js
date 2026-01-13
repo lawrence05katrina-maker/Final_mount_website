@@ -144,10 +144,10 @@ router.patch("/:id/status", async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
 
-    if (!["pending", "verified", "rejected"].includes(status)) {
+    if (!["pending", "verified"].includes(status)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid status. Must be pending, verified, or rejected",
+        message: "Invalid status. Must be pending or verified",
       });
     }
 

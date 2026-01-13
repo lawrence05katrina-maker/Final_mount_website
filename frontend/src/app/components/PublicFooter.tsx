@@ -37,7 +37,7 @@ export const PublicFooter: React.FC = () => {
   }, []);
 
   return (
-    <footer ref={footerRef} className="bg-green-900 text-white mt-16 overflow-hidden">
+    <footer ref={footerRef} className="bg-green-900 text-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About Section with slide-in animation */}
